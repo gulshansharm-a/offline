@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:offline_classes/Views/enquiry_registrations/payment_method.dart';
 import 'package:offline_classes/Views/enquiry_registrations/registration_successfull.dart';
+import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
@@ -730,6 +731,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
               CustomButton(
                   text: 'Register',
                   onTap: () {
+                    nextScreen(context, RazorpayScreen());
                     nextScreen(
                         context, RegistrationSuccessfull(whoareYou: 'Teacher'));
                   }),

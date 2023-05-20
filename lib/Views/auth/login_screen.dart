@@ -1,9 +1,14 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/Views/auth/otp_verify_screen.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/custom_button.dart';
@@ -38,6 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
     },
   ];
   final controller = PageController();
+
+  TextEditingController phNoController = TextEditingController();
+  String phno = "";
 
   @override
   void dispose() {
@@ -148,6 +156,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   addVerticalSpace(5),
                   Center(
                     child: TextFormField(
+                      controller: phNoController,
+                      onChanged: (value) {
+                        phno = value;
+                      },
                       keyboardType: TextInputType.number,
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(10),
@@ -168,7 +180,51 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomButton(
                 text: 'Send OTP',
                 onTap: () {
-                  nextScreen(context, OtpVeryfyScreen());
+                  if (phno.length == 10) {
+                    try {
+                      AuthController.instance.sendOTP("+91${phno.trim()}");
+                      Get.to(() => const OtpVeryfyScreen());
+                    } catch (e) {
+                      Get.snackbar(
+                        "About User",
+                        "User message",
+                        backgroundColor: Colors.redAccent,
+                        snackPosition: SnackPosition.BOTTOM,
+                        titleText: const Text(
+                          "Enter a valid phone number",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        messageText: Text(
+                          e.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }
+                    //nextScreen(context, OtpVeryfyScreen());
+                  } else {
+                    Get.snackbar(
+                      "About User",
+                      "User message",
+                      backgroundColor: Colors.redAccent,
+                      snackPosition: SnackPosition.BOTTOM,
+                      titleText: const Text(
+                        "Wrong Phone Number",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      messageText: Text(
+                        "Enter a valid Phone Number",
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }
                 })
           ],
         ),

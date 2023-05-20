@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
+import 'package:offline_classes/Views/auth/otp_controller.dart';
 import 'package:offline_classes/Views/auth/succesfull_login_screen.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:pinput/pin_put/pin_put.dart';
@@ -9,6 +13,11 @@ import 'package:sizer/sizer.dart';
 import '../../utils/constants.dart';
 
 class OtpVeryfyScreen extends StatefulWidget {
+  static String verify = "";
+  set setVerify(String ver) {
+    verify = ver;
+  }
+
   const OtpVeryfyScreen({super.key});
 
   @override
@@ -20,6 +29,7 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
   final TextEditingController _pinPutController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    var code = "";
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -46,9 +56,12 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
             child: PinPut(
               animationDuration: const Duration(seconds: 0),
               eachFieldHeight: 8.h,
-              eachFieldWidth: 20.w,
-              fieldsCount: 4,
+              eachFieldWidth: 15.w,
+              fieldsCount: 6,
               autofocus: true,
+              onChanged: (value) {
+                code = value;
+              },
               submittedFieldDecoration: k3DboxDecoration(20),
               selectedFieldDecoration: k3DboxDecoration(20),
               followingFieldDecoration: k3DboxDecoration(20),
@@ -66,7 +79,13 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
           ),
           addVerticalSpace(height(context) * 0.03),
           TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                    verificationId: OtpVeryfyScreen.verify,
+                    smsCode: code.toString().trim());
+                await AuthController.instance.auth
+                    .signInWithCredential(credential);
+              },
               child: Text(
                 'Resend OTP',
                 style: kBodyText18wBold(primary),
@@ -74,8 +93,35 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
           Spacer(),
           CustomButton(
               text: 'Verify',
-              onTap: () {
-                nextScreen(context, SuccessfullLogInscreen());
+              onTap: () async {
+                print(_pinPutController.text);
+                OtpController.instace
+                    .verifyOTP(_pinPutController.text.toString());
+                // try {
+                //   print(_pinPutController.text);
+                //   OtpController.instace
+                //       .verifyOTP(_pinPutController.text.toString());
+                // } catch (e) {
+                //   Get.snackbar(
+                //     "About User",
+                //     "User message",
+                //     backgroundColor: Colors.redAccent,
+                //     snackPosition: SnackPosition.BOTTOM,
+                //     titleText: const Text(
+                //       "Wrong OTP",
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //     messageText: Text(
+                //       "Try Again",
+                //       style: const TextStyle(
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   );
+                //   //nextScreen(context, SuccessfullLogInscreen());
+                //}
               }),
           addVerticalSpace(20)
         ],
