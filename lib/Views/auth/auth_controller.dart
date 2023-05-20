@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,6 +22,15 @@ class AuthController extends GetxController {
     super.onReady();
     _user = Rx<User?>(auth.currentUser);
     _user.bindStream(auth.userChanges());
+    StreamSubscription<User?> userSubscription = _user.listen((user) {
+      // Check if the user has provided a phone number for OTP login
+      if (user!.phoneNumber != null && user.phoneNumber!.isNotEmpty) {
+        String phoneNumber =
+            user!.phoneNumber != null ? (user.phoneNumber as String) : "";
+        // Use the phoneNumber for OTP login or any further processing
+        print('Phone Number: $phoneNumber');
+      }
+    });
     ever(_user, _initialScreen);
   }
 

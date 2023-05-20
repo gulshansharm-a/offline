@@ -1,13 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:offline_classes/Views/home/home_screen.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 import '../../model/statics_list.dart';
 
@@ -20,115 +25,199 @@ class StudentEnquiryForm extends StatefulWidget {
 
 class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
   String classValue = 'Class';
+  @override
+  void initState() {
+    GlobalData().getInfoStudentHome(
+        "/studentHome", GlobalData.auth1, GlobalData.phoneNumber);
+    mapResponse = GlobalData.mapResponseStudetHome;
+    print(mapResponse.length);
+    super.initState();
+  }
+
+  bool success = false;
+  int code = 0;
+
+  late Map<String, dynamic> mapResponse = {};
+
+  TextEditingController tfname = TextEditingController();
+  TextEditingController tfclass = TextEditingController();
+  TextEditingController tfcity = TextEditingController();
+  TextEditingController tfpincode = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar2(context, ''),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 32.h,
-                width: width(context) * 0.95,
-                decoration: kGradientBoxDecoration(42, purpleGradident()),
+      body: FutureBuilder(
+        future: GlobalData().getInfoStudentHome(
+            "/studentHome", GlobalData.auth1, GlobalData.phoneNumber),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || mapResponse.length == 0) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primary2,
+              ),
+            );
+          } else {
+            List<String> listOfClasses =
+                List<String>.filled(mapResponse["classes"].length, '');
+            for (int i = 0; i < mapResponse["classes"].length; i++) {
+              listOfClasses[i] =
+                  (mapResponse["classes"][i]["class_name"].toString());
+            }
+            List<String> classList = listOfClasses
+                .where((element) => element != null)
+                .cast<String>()
+                .toList();
+            return Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
-                        height: height(context) * 0.22,
-                        child: Image.asset('assets/images/student1.png')),
-                    Text(
-                      'Student Enquiry',
-                      style: kBodyText30wBold(white),
-                    )
+                    Container(
+                      height: 32.h,
+                      width: width(context) * 0.95,
+                      decoration: kGradientBoxDecoration(42, purpleGradident()),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                              height: height(context) * 0.22,
+                              child: Image.asset('assets/images/student1.png')),
+                          Text(
+                            'Student Enquiry',
+                            // code.toString(),
+                            style: kBodyText30wBold(white),
+                          )
+                        ],
+                      ),
+                    ),
+                    addVerticalSpace(30),
+                    CustomTextfield(
+                      controller: tfname,
+                      hintext: 'Student Name',
+                    ),
+                    addVerticalSpace(15),
+                    Container(
+                      height: 8.5.h,
+                      width: 95.w,
+                      padding: EdgeInsets.only(left: 9.w, top: 6, right: 9.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          const BoxShadow(
+                            color: textColor,
+                            offset: Offset(0, 3),
+                          ),
+                          BoxShadow(
+                            color: white.withOpacity(0.95),
+                            // spreadRadius: -2.0,
+                            blurRadius: 7.0,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: DropdownButton<String>(
+                          value: classValue,
+                          hint:
+                              Text('Select', style: kBodyText14w500(textColor)),
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: textColor,
+                            size: 30,
+                          ),
+                          // elevation: 10,
+                          style: const TextStyle(
+                              color: textColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          isExpanded: true,
+                          underline: SizedBox(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              classValue = newValue!;
+                            });
+                          },
+                          // items: classList.map((String className) {
+                          //   return DropdownMenuItem<String>(
+                          //     value: className,
+                          //     child: Text(className),
+                          //   );
+                          // }).toList(),
+                          items: classDropdownList
+                              .map<DropdownMenuItem<String>>((value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value,
+                                  style: kBodyText14w500(textColor)),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    addVerticalSpace(15),
+                    CustomTextfield(
+                      hintext: 'City/Town',
+                      controller: tfcity,
+                    ),
+                    addVerticalSpace(15),
+                    CustomTextfield(
+                      hintext: 'Pincode',
+                      controller: tfpincode,
+                      keyBoardType: TextInputType.number,
+                    ),
+                    addVerticalSpace(height(context) * 0.07),
+                    CustomButton(
+                      text: 'Enquire',
+                      onTap: () async {
+                        try {
+                          var url = Uri.parse(
+                              'https://trusher.shellcode.co.in/api/studentEnquiry?');
+                          var headers = {'Content-Type': 'application/json'};
+                          var response = await http.post(
+                            url,
+                            body: {
+                              'student_name': tfname.text.toString(),
+                              'class': classValue,
+                              'city': tfcity.text.toString(),
+                              'pincode': tfpincode.text.toLowerCase(),
+                              'mobile': "91${GlobalData.phoneNumber}",
+                              'authKey': GlobalData.auth1,
+                            },
+                          );
+
+                          if (response.statusCode == 200) {
+                            // Request successful, parse the response
+                            print('Response body: ${response.body}');
+                            success = true;
+                            Get.to(() => HomeScreen(
+                                  whoAreYou: 'Student',
+                                  serviceList: studentServiceList,
+                                  sliderList: const [
+                                    'Trusted Teachers',
+                                    'Home to Home tuition service'
+                                  ],
+                                  heading:
+                                      'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
+                                ));
+                          } else {
+                            // Request failed
+                            print(
+                                'Request failed with status: ${response.statusCode}');
+                          }
+                        } catch (e) {
+                          // Error occurred during HTTP request
+                          print('Error: $e');
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
-              addVerticalSpace(30),
-              CustomTextfield(
-                hintext: 'Student Name',
-              ),
-              addVerticalSpace(15),
-              Container(
-                height: 8.5.h,
-                width: 95.w,
-                padding: EdgeInsets.only(left: 9.w, top: 6, right: 9.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  boxShadow: [
-                    const BoxShadow(
-                      color: textColor,
-                      offset: Offset(0, 3),
-                    ),
-                    BoxShadow(
-                      color: white.withOpacity(0.95),
-                      // spreadRadius: -2.0,
-                      blurRadius: 7.0,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: DropdownButton<String>(
-                    value: classValue,
-                    hint: Text('Select', style: kBodyText14w500(textColor)),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: textColor,
-                      size: 30,
-                    ),
-                    // elevation: 10,
-                    style: const TextStyle(
-                        color: textColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    isExpanded: true,
-                    underline: SizedBox(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        classValue = newValue!;
-                      });
-                    },
-                    items: classDropdownList
-                        .map<DropdownMenuItem<String>>((value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value, style: kBodyText14w500(textColor)),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-              addVerticalSpace(15),
-              CustomTextfield(hintext: 'City/Town'),
-              addVerticalSpace(15),
-              const CustomTextfield(
-                hintext: 'Pincode',
-                keyBoardType: TextInputType.number,
-              ),
-              addVerticalSpace(height(context) * 0.07),
-              CustomButton(
-                  text: 'Enquire',
-                  onTap: () {
-                    nextScreen(
-                        context,
-                        HomeScreen(
-                          whoAreYou: 'Student',
-                          serviceList: studentServiceList,
-                          sliderList: [
-                            'Trusted Teachers',
-                            'Home to Home tuition service'
-                          ],
-                          heading:
-                              'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
-                        ));
-                  })
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }
