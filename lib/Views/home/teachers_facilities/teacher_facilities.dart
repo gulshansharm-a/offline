@@ -9,6 +9,7 @@ import 'package:offline_classes/Views/home/students_facilities/settings_screen.d
 import 'package:offline_classes/Views/home/teachers_facilities/gk_screen_for_teachers.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/list_of_students.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/write_to_us_screen.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../model/statics_list.dart';
@@ -26,7 +27,7 @@ class TeacherFacilities extends StatelessWidget {
         foregroundColor: black,
         leading: SizedBox(),
         title: Text(
-          'Student Facilities',
+          'Teacher Facilities',
           style: kBodyText20wBold(primary),
         ),
       ),
@@ -42,9 +43,9 @@ class TeacherFacilities extends StatelessWidget {
                         username: 'Anup Sharma'));
               },
               child: Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(8),
                 padding: EdgeInsets.only(
-                    left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
+                    left: 2.w, right: 5.w, top: 2.h, bottom: 2.h),
                 // height: 12.h,
                 width: 93.w,
                 decoration: kGradientBoxDecoration(35, purpleGradident()),
@@ -66,13 +67,13 @@ class TeacherFacilities extends StatelessWidget {
                             style: kBodyText12wNormal(white),
                           ),
                           Text(
-                            '+91-987543210',
+                            GlobalData.phoneNumber,
                             style: kBodyText12wNormal(white),
                           )
                         ],
                       ),
                     ),
-                    Spacer(),
+                    SizedBox(width: 10),
                     Container(
                       height: 12.h,
                       width: 25.w,

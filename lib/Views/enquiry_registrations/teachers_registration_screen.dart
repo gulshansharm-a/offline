@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:offline_classes/Views/enquiry_registrations/payment_method.dart';
 import 'package:offline_classes/Views/enquiry_registrations/registration_successfull.dart';
+import 'package:offline_classes/Views/enquiry_registrations/ztest.dart';
 import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
@@ -42,7 +45,39 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
   int? selectedSubject;
   int? selectedClass;
 
-  File? photo 
+  ImagePicker picker = ImagePicker();
+  bool showSpinner = false;
+
+  @override
+  void initState() {
+    getAllImages();
+    super.initState();
+  }
+
+  TextEditingController tfname = TextEditingController();
+  TextEditingController tffname = TextEditingController();
+  TextEditingController tfmname = TextEditingController();
+  TextEditingController tfphno = TextEditingController();
+  TextEditingController tfcity = TextEditingController();
+  TextEditingController tfpin = TextEditingController();
+  TextEditingController tfarea = TextEditingController();
+  TextEditingController tfcadd = TextEditingController();
+  TextEditingController tfpadd = TextEditingController();
+
+  List<String> imageText = ["Photo", "Aadhar Card", "Signatures"];
+
+  List<String> preferredClass = [];
+  String medium = "";
+  String subject = "";
+
+  File? photo, aadhar, signature;
+
+  List<File?> allImages = List<File?>.filled(3, null);
+
+  getAllImages() {
+    allImages = [photo, aadhar, signature];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,11 +125,20 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                 ],
               ),
               addVerticalSpace(30),
-              CustomTextfield(hintext: 'Teacher Name'),
+              CustomTextfield(
+                hintext: "Teacher Name",
+                controller: tfname,
+              ),
               addVerticalSpace(15),
-              CustomTextfield(hintext: "Father's Name"),
+              CustomTextfield(
+                hintext: "Father's Name",
+                controller: tffname,
+              ),
               addVerticalSpace(15),
-              CustomTextfield(hintext: "Mother's Name"),
+              CustomTextfield(
+                hintext: "Mother's Name",
+                controller: tfmname,
+              ),
               addVerticalSpace(15),
               Row(
                 children: [
@@ -174,6 +218,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
               ),
               addVerticalSpace(15),
               CustomTextfield(
+                controller: tfphno,
                 hintext: "Phone Number",
                 keyBoardType: TextInputType.number,
               ),
@@ -306,13 +351,13 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
               addVerticalSpace(15),
               CustomItemSelectedField(
                 onTap: () {
-                  isSubject = !isSubject;
+                  isPrefferedClass = !isPrefferedClass;
                   setState(() {});
                 },
                 title: 'Preferred Class',
-                isChanged: isSubject,
+                isChanged: isPrefferedClass,
               ),
-              if (isSubject)
+              if (isPrefferedClass)
                 Column(
                   children: [
                     addVerticalSpace(10),
@@ -340,7 +385,16 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                     onTap: () {
                                       classList[i]['select'] =
                                           !classList[i]['select'];
-                                      setState(() {});
+                                      setState(() {
+                                        if (preferredClass
+                                            .contains(classList[i]['title'])) {
+                                          preferredClass
+                                              .remove(classList[i]['title']);
+                                        } else {
+                                          preferredClass
+                                              .add(classList[i]['title']);
+                                        }
+                                      });
                                     },
                                     child: Container(
                                       height: 45,
@@ -396,7 +450,9 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                 InkWell(
                                   onTap: () {
                                     selectMedium = i;
-                                    setState(() {});
+                                    setState(() {
+                                      medium = mediumList[i];
+                                    });
                                   },
                                   child: Container(
                                     height: 45,
@@ -429,13 +485,13 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
               addVerticalSpace(10),
               CustomItemSelectedField(
                 onTap: () {
-                  isPrefferedClass = !isPrefferedClass;
+                  isSubject = !isSubject;
                   setState(() {});
                 },
                 title: 'Subject',
-                isChanged: isPrefferedClass,
+                isChanged: isSubject,
               ),
-              if (isPrefferedClass)
+              if (isSubject)
                 Column(
                   children: [
                     addVerticalSpace(10),
@@ -460,7 +516,9 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                 InkWell(
                                   onTap: () {
                                     selectedSubject = i;
-                                    setState(() {});
+                                    setState(() {
+                                      subject = subjectList2[i];
+                                    });
                                   },
                                   child: Container(
                                     height: 45,
@@ -535,8 +593,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                         stateValue = newValue!;
                       });
                     },
-                    items: ['State', 'Bihar']
-                        .map<DropdownMenuItem<String>>((value) {
+                    items: indianStates.map<DropdownMenuItem<String>>((value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(
@@ -549,160 +606,94 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                 ),
               ),
               addVerticalSpace(15),
-              Container(
-                height: 8.5.h,
-                width: 95.w,
-                padding: EdgeInsets.only(left: 9.w, top: 7, right: 9.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  boxShadow: [
-                    const BoxShadow(
-                      color: textColor,
-                      offset: Offset(0, 3),
-                    ),
-                    BoxShadow(
-                      color: white.withOpacity(0.95),
-                      // spreadRadius: -2.0,
-                      blurRadius: 7.0,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: DropdownButton<String>(
-                    value: cityValue,
-                    hint: Text(
-                      'Select',
-                      style: kBodyText14w500(Color(0xffA4A4A4)),
-                    ),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: textColor,
-                      size: 30,
-                    ),
-                    // elevation: 10,
-                    style: kBodyText14w500(Color(0xffA4A4A4)),
-
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    isExpanded: true,
-                    underline: SizedBox(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        cityValue = newValue!;
-                      });
-                    },
-                    items: ['City/Town', 'Motihari']
-                        .map<DropdownMenuItem<String>>((value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: kBodyText14w500(Color(0xffA4A4A4)),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+              CustomTextfield(
+                controller: tfcity,
+                hintext: "City",
               ),
               addVerticalSpace(15),
-              CustomTextfield(hintext: "Mohalla/Area"),
+              CustomTextfield(
+                controller: tfarea,
+                hintext: "Mohalla/Area",
+              ),
               addVerticalSpace(15),
               CustomTextfield(
                 hintext: "Pincode",
+                controller: tfpin,
                 keyBoardType: TextInputType.number,
               ),
               addVerticalSpace(15),
-              CustomTextfieldMaxLine(hintext: 'Current Full Address'),
+              CustomTextfieldMaxLine(
+                hintext: 'Current Full Address',
+                controller: tfcadd,
+              ),
               addVerticalSpace(15),
-              CustomTextfieldMaxLine(hintext: 'Permanent Full Address'),
+              CustomTextfieldMaxLine(
+                hintext: 'Permanent Full Address',
+                controller: tfpadd,
+              ),
               addVerticalSpace(25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Photo',
-                    style: kBodyText16wBold(black),
-                  ),
-                  Container(
-                    height: 7.h,
-                    width: 55.w,
-                    decoration: k3DboxDecoration(14),
-                    child: Row(
+              Column(
+                children: List.generate(3, (index) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Icon(
-                            Icons.upload,
-                            size: 30,
-                            color: Color(0xffA4A4A4),
-                          ),
                           Text(
-                            'Upload Image',
-                            style: kBodyText14w500(Color(0xffA4A4A4)),
-                          )
-                        ]),
-                  )
-                ],
-              ),
-              addVerticalSpace(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Aadhar Card',
-                    style: kBodyText16wBold(black),
-                  ),
-                  Container(
-                    height: 7.h,
-                    width: 55.w,
-                    decoration: k3DboxDecoration(14),
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.upload,
-                            size: 30,
-                            color: Color(0xffA4A4A4),
+                            imageText[index],
+                            style: kBodyText16wBold(black),
                           ),
-                          Text(
-                            'Upload Image',
-                            style: kBodyText14w500(Color(0xffA4A4A4)),
+                          GestureDetector(
+                            onTap: () async {
+                              final pickedFile = await picker.pickImage(
+                                source: ImageSource.gallery,
+                                imageQuality: 80,
+                              );
+
+                              if (pickedFile != null) {
+                                File image = File(pickedFile.path);
+                                allImages[index] = image;
+                                Get.snackbar("Success", "Image Uploaded");
+                                setState(() {
+                                  showSpinner = false;
+                                });
+                              } else {
+                                Get.snackbar("Error", "Image Not Uploaded");
+                                print("No image selected");
+                              }
+                            },
+                            child: Container(
+                              height: 7.h,
+                              width: 55.w,
+                              decoration: k3DboxDecoration(14),
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      Icons.upload,
+                                      size: 30,
+                                      color: allImages[index] == null
+                                          ? Color(0xffA4A4A4)
+                                          : Colors.transparent,
+                                    ),
+                                    Text(
+                                      allImages[index] == null
+                                          ? 'Upload Image'
+                                          : 'Uploaded',
+                                      style: kBodyText14w500(Color(0xffA4A4A4)),
+                                    )
+                                  ]),
+                            ),
                           )
-                        ]),
-                  )
-                ],
-              ),
-              addVerticalSpace(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Signatures',
-                    style: kBodyText16wBold(black),
-                  ),
-                  Container(
-                    height: 7.h,
-                    width: 55.w,
-                    decoration: k3DboxDecoration(14),
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.upload,
-                            size: 30,
-                            color: Color(0xffA4A4A4),
-                          ),
-                          Text(
-                            'Upload Image',
-                            style: kBodyText14w500(Color(0xffA4A4A4)),
-                          )
-                        ]),
-                  )
-                ],
+                        ],
+                      ),
+                      addVerticalSpace(20),
+                    ],
+                  );
+                }),
               ),
               addVerticalSpace(5.h),
               Row(
@@ -755,9 +746,36 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
               CustomButton(
                   text: 'Register',
                   onTap: () {
-                    nextScreen(context, RazorpayScreen(amount: 299.00));
-                    nextScreen(
-                        context, RegistrationSuccessfull(whoareYou: 'Teacher'));
+                    if (isAgree == true) {
+                      try {
+                        String text = "";
+                        for (var j = 0; j < 3; j++) {
+                          text += "${allImages[j]!.path}\n\n";
+                        }
+                        //Get.to(() => Ztest(message: text));
+                      } catch (e) {
+                        Get.snackbar(
+                          "Error",
+                          "Select Images",
+                          backgroundGradient: purpleGradident(),
+                        );
+                      }
+                      nextScreen(
+                          context,
+                          RazorpayScreen(
+                            amount: 299.00,
+                            role: 'teacher',
+                          ));
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Agree to the terms and conditions",
+                        backgroundGradient: purpleGradident(),
+                      );
+                    }
+                    // nextScreen(context, RazorpayScreen(amount: 299.00));
+                    // nextScreen(
+                    //     context, RegistrationSuccessfull(whoareYou: 'teacher'));
                   }),
               addVerticalSpace(20),
             ],

@@ -22,7 +22,8 @@ class MyHttpOverrides extends HttpOverrides {
 
 class RazorpayScreen extends StatefulWidget {
   final double amount;
-  const RazorpayScreen({super.key, required this.amount});
+  final String role;
+  const RazorpayScreen({super.key, required this.amount, required this.role});
 
   @override
   State<RazorpayScreen> createState() => _RazorpayScreenState();
@@ -56,7 +57,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     nextScreen(
         context,
         RegistrationSuccessfull(
-          whoareYou: 'Student',
+          whoareYou: widget.role,
         ));
   }
 

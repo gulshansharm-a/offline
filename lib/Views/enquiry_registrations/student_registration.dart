@@ -645,10 +645,14 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                         if (pickedFile != null) {
                                           File image = File(pickedFile.path);
                                           allImages[ind][index] = image;
+                                          Get.snackbar(
+                                              "Success", "Image Uploaded");
                                           setState(() {
                                             showSpinner = false;
                                           });
                                         } else {
+                                          Get.snackbar(
+                                              "Error", "Image Not Uploaded");
                                           print("No image selected");
                                         }
                                       },
@@ -760,7 +764,12 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                         backgroundGradient: purpleGradident(),
                       );
                     }
-                    nextScreen(context, RazorpayScreen(amount: studentFees));
+                    nextScreen(
+                        context,
+                        RazorpayScreen(
+                          amount: studentFees,
+                          role: 'student',
+                        ));
                   } else {
                     Get.snackbar(
                       "Error",

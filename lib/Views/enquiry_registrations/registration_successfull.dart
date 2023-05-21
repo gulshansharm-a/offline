@@ -30,7 +30,6 @@ class _RegistrationSuccessfullState extends State<RegistrationSuccessfull> {
         (route) => false, // Condition to stop removing pages
       );
     });
-    // TODO: implement initState
     super.initState();
   }
 
