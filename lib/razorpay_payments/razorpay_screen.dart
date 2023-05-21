@@ -3,24 +3,39 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../Views/enquiry_registrations/registration_successfull.dart';
 import 'razor_credentials.dart' as razorCredentials;
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 class RazorpayScreen extends StatefulWidget {
-  const RazorpayScreen({Key? key}) : super(key: key);
+  final double amount;
+  const RazorpayScreen({super.key, required this.amount});
 
   @override
-  _RazorpayScreenState createState() => _RazorpayScreenState();
+  State<RazorpayScreen> createState() => _RazorpayScreenState();
 }
 
 class _RazorpayScreenState extends State<RazorpayScreen> {
-  final _razorpay = Razorpay();
+  final Razorpay _razorpay = Razorpay();
+
+  double amt = 1.0;
 
   @override
   void initState() {
+    // amt = widget.amount;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
       _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -40,11 +55,9 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     );
     nextScreen(
         context,
-        nextScreen(
-            context,
-            RegistrationSuccessfull(
-              whoareYou: 'Student',
-            )));
+        RegistrationSuccessfull(
+          whoareYou: 'Student',
+        ));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -52,7 +65,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     // Do something when payment fails
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(response.message ?? ''),
+        content: Text(response.message ?? 'Error Occured'),
       ),
     );
   }
@@ -62,7 +75,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     // Do something when an external wallet is selected
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(response.walletName ?? ''),
+        content: Text(response.walletName ?? 'External wallet selected'),
       ),
     );
   }
@@ -75,7 +88,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
     Map<String, dynamic> body = {
-      "amount": 100,
+      "amount": amt * 100,
       "currency": "INR",
       "receipt": "rcptid_11"
     };
@@ -98,15 +111,20 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
   openGateway(String orderId) {
     var options = {
       'key': razorCredentials.keyId,
-      'amount': 100, //in the smallest currency sub-unit.
+      'amount': amt * 100, //in the smallest currency sub-unit.
       'name': 'Trusir',
       'order_id': orderId, // Generate order_id using Orders API
       'description': 'Payment',
       'timeout': 60 * 5, // in seconds // 5 minutes
       'prefill': {
-        'contact': '9123456789',
-        'email': 'ary@example.com',
-      }
+        'contact': GlobalData.phoneNumber.substring(3),
+        'email': emailTextEditingController.text.toString(),
+      },
+      'method': {
+        'upi': {
+          'vpa': '8577098983@paytm',
+        },
+      },
     };
     _razorpay.open(options);
   }
@@ -152,56 +170,95 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
   @override
   void dispose() {
     _razorpay.clear(); // Removes all listeners
-
     super.dispose();
   }
 
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(bottom: 50),
-              child: Text("Razorpay Payment Gateway"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: TextField(
-                controller: textEditingController,
-                decoration: InputDecoration(
-                    hintText: "1", icon: Icon(Icons.monetization_on)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: Text("Razorpay Payment Gateway"),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: TextButton(
-                onPressed: () {
-                  createOrder();
-                },
-                child: Text(
-                  "Start Payment",
-                  style: TextStyle(color: Colors.white),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: TextField(
+                  controller: textEditingController,
+                  enabled: false,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: amt.toString(),
+                    icon: const Icon(
+                      Icons.monetization_on,
+                    ),
+                  ),
                 ),
-                style: TextButton.styleFrom(backgroundColor: Colors.blue),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: TextField(
+                  controller: nameTextEditingController,
+                  decoration: const InputDecoration(
+                    hintText: "Name",
+                    icon: Icon(
+                      Icons.monetization_on,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: TextField(
+                  controller: emailTextEditingController,
+                  decoration: const InputDecoration(
+                    hintText: "Email",
+                    icon: Icon(
+                      Icons.monetization_on,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: TextButton(
+                  onPressed: () {
+                    String name =
+                        nameTextEditingController.text.toString().trim();
+                    String email =
+                        emailTextEditingController.text.toString().trim();
+                    if (name.isNotEmpty &&
+                        name != "Name" &&
+                        email.isNotEmpty &&
+                        email.contains('@')) {
+                      createOrder();
+                    } else {
+                      if (!email.contains('@')) {
+                        Get.snackbar("Error", "Enter Valid Email");
+                      } else {
+                        Get.snackbar("Error", "Enter Values");
+                      }
+                    }
+                  },
+                  child: Text(
+                    "Start Payment",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(backgroundColor: Colors.blue),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
-  }
-}
-
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
   }
 }

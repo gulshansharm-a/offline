@@ -48,6 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    GlobalData().getInfoStudentHome(
+        "/studentHome", GlobalData.auth1, GlobalData.phoneNumber.substring(1));
+    mapResponse = GlobalData.mapResponseStudetHome;
+    print(mapResponse.length);
     super.initState();
     // print(ApiServices()
     //     .getInfoStudentHome("/studentHome", authkey, "7665512617")
@@ -66,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // final http.Response response = await http.get(Uri.parse(
     //     "https://trusher.shellcode.co.in/api/studentHome?authKey=C4NX7IelyDl14flZGWcwDrhymzMnTcYV93dYtwfcVC1O7yabAT2Uexsd4ku7L9vlxd5nWrJDsPOfEfdDjfBGnl0ekg9droyLaPrn&mobile=917665512617"));
     final http.Response response = await http.get(Uri.parse(
-        baseUrl + apiUrl + "?authKey=" + authKey + "&mobile=91" + mobno));
+        baseUrl + apiUrl + "?authKey=" + authKey + "&mobile=" + mobno));
     mapResponse = json.decode(response.body);
     if (response.statusCode == 200) {
       print(mapResponse);
@@ -135,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
               "/studentHome", authkey, GlobalData.phoneNumber),
           builder:
               (context, AsyncSnapshot<List<StudentHomeDataModel>> snapshot) {
-            if (!snapshot.hasData) {
+            if (!snapshot.hasData || mapResponse.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(
                   color: primary2,
@@ -205,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Center(
                             child: TextButton(
                                 onPressed: () {
-                                  widget.whoAreYou == 'Student'
+                                  widget.whoAreYou == 'student'
                                       ? nextScreen(
                                           context, StudentRegistration())
                                       : nextScreen(
@@ -341,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Center(
                             child: TextButton(
                                 onPressed: () {
-                                  widget.whoAreYou == 'Student'
+                                  widget.whoAreYou == 'student'
                                       ? nextScreen(
                                           context, StudentRegistration())
                                       : nextScreen(
@@ -391,7 +395,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             runSpacing: 10,
                             spacing: 10,
                             children: List.generate(
-                                mapResponse["classes"].length, (i) {
+                                GlobalData.mapResponseStudetHome["classes"]
+                                    .length, (i) {
                               return InkWell(
                                 onTap: () {
                                   selectedIndex = i;
@@ -453,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           CustomButton(
                               text: 'Registration',
                               onTap: () {
-                                widget.whoAreYou == 'Student'
+                                widget.whoAreYou == 'student'
                                     ? nextScreen(context, StudentRegistration())
                                     : nextScreen(
                                         context, TeacherRegistration());

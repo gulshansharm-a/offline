@@ -519,7 +519,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                         return Column(
                           children: [
                             SizedBox(
-                              height: 35.h,
+                              height: 38.h,
                               child: Stack(
                                 children: [
                                   Container(
@@ -564,7 +564,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                                 ],
                               ),
                             ),
-                            addVerticalSpace(2.h)
+                            addVerticalSpace(4.h)
                           ],
                         );
                       }),

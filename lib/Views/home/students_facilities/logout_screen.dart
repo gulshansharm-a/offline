@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:sizer/sizer.dart';
@@ -46,7 +47,12 @@ class LogoutScreen extends StatelessWidget {
                 width: 90.w,
                 height: 6.5.h),
             addVerticalSpace(2.h),
-            CustomButton(text: 'Logout', onTap: () {}),
+            CustomButton(
+              text: 'Logout',
+              onTap: () {
+                AuthController.instance.logout();
+              },
+            ),
             addVerticalSpace(1.h)
           ],
         ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -39,6 +41,8 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
   int? selectMedium;
   int? selectedSubject;
   int? selectedClass;
+
+  File? photo 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,24 +52,44 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                height: 32.h,
-                width: 95.w,
-                decoration: kGradientBoxDecoration(42, purpleGradident()),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                        height: 22.h,
-                        child: Image.asset('assets/images/teacher2.png')),
-                    Text(
-                      'Teacher Registration',
-                      style: kBodyText25Bold(white),
+              Stack(
+                children: [
+                  Container(
+                    height: 33.h,
+                    width: 95.w,
+                    margin: EdgeInsets.only(bottom: 20),
+                    decoration: kGradientBoxDecoration(42, purpleGradident()),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            height: 18.h,
+                            child: Image.asset('assets/images/teacher2.png')),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    height: 33.h,
+                    width: 95.w,
+                    color: Colors.transparent,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 18.h,
+                        ),
+                        Container(
+                          child: Text(
+                            "   Teacher \nRegistration",
+                            style: kBodyText25Bold(white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              addVerticalSpace(20),
+              addVerticalSpace(30),
               CustomTextfield(hintext: 'Teacher Name'),
               addVerticalSpace(15),
               CustomTextfield(hintext: "Father's Name"),
@@ -731,7 +755,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
               CustomButton(
                   text: 'Register',
                   onTap: () {
-                    nextScreen(context, RazorpayScreen());
+                    nextScreen(context, RazorpayScreen(amount: 299.00));
                     nextScreen(
                         context, RegistrationSuccessfull(whoareYou: 'Teacher'));
                   }),

@@ -12,12 +12,14 @@ class CustomTextfield extends StatelessWidget {
       this.keyBoardType,
       this.controller,
       this.sufixIcon,
+      this.onChanged,
       this.onTap});
   final String hintext;
   final TextInputType? keyBoardType;
   final TextEditingController? controller;
   final IconData? sufixIcon;
   final VoidCallback? onTap;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class CustomTextfield extends StatelessWidget {
           //   )
           // ],
           onTap: onTap,
+          onChanged: onChanged,
           decoration: InputDecoration(
               labelStyle: kBodyText14w500(Color(0xffA4A4A4)),
               border: InputBorder.none,
@@ -72,11 +75,13 @@ class CustomTextfieldMaxLine extends StatelessWidget {
       this.keyBoardType,
       this.controller,
       this.sufixIcon,
+      this.onChanged,
       this.onTap});
   final String hintext;
   final TextInputType? keyBoardType;
   final TextEditingController? controller;
   final IconData? sufixIcon;
+  final Function(String)? onChanged;
   final VoidCallback? onTap;
 
   @override
@@ -107,6 +112,7 @@ class CustomTextfieldMaxLine extends StatelessWidget {
 
             maxLines: 4,
             controller: controller,
+            onChanged: onChanged,
             keyboardType: keyBoardType,
             // style: kBodyText16wBold(black),
             // inputFormatters: [

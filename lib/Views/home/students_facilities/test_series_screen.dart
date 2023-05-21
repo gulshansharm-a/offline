@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:sizer/sizer.dart';
@@ -16,6 +20,10 @@ class TestSeriesScreen extends StatefulWidget {
 
 class _TestSeriesScreenState extends State<TestSeriesScreen> {
   bool isPaperChecked = false;
+  final ImagePicker _picker = ImagePicker();
+  bool showSpinner = false;
+
+  File? image;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +77,23 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
           ),
           addVerticalSpace(3.h),
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              final pickedFile = await _picker.pickImage(
+                source: ImageSource.gallery,
+                imageQuality: 80,
+              );
+
+              if (pickedFile != null) {
+                File image = File(pickedFile.path);
+                Get.snackbar("Success", "Image Uploaded");
+                setState(() {
+                  showSpinner = false;
+                });
+              } else {
+                Get.snackbar("Error", "Image Not Uploaded");
+                print("No image selected");
+              }
+            },
             child: Container(
               height: 17.h,
               width: width(context) * 0.92,

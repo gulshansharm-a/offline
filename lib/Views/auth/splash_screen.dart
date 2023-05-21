@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 
 import '../enquiry_registrations/enquiry_student_or_teachers.dart';

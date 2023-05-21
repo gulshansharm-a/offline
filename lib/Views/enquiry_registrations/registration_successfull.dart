@@ -20,11 +20,15 @@ class _RegistrationSuccessfullState extends State<RegistrationSuccessfull> {
   @override
   void initState() {
     Timer(Duration(seconds: 3), () {
-      nextScreen(
-          context,
-          MyBottomBar(
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyBottomBar(
             whoRYou: widget.whoareYou,
-          ));
+          ),
+        ),
+        (route) => false, // Condition to stop removing pages
+      );
     });
     // TODO: implement initState
     super.initState();

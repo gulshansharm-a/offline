@@ -1,16 +1,14 @@
-import 'dart:math';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:offline_classes/Views/enquiry_registrations/error_screen.dart';
 import 'package:offline_classes/Views/home/home_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
-import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,19 +26,36 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
   @override
   void initState() {
     GlobalData().getInfoStudentHome(
-        "/studentHome", GlobalData.auth1, GlobalData.phoneNumber);
+        "/studentHome", GlobalData.auth1, GlobalData.phoneNumber.substring(1));
     mapResponse = GlobalData.mapResponseStudetHome;
     print(mapResponse.length);
     super.initState();
   }
 
   bool success = false;
-  int code = 0;
 
   late Map<String, dynamic> mapResponse = {};
 
+  gotonextscreen() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(
+          whoAreYou: 'student',
+          serviceList: studentServiceList,
+          sliderList: const [
+            'Trusted Teachers',
+            'Home to Home tuition service'
+          ],
+          heading:
+              'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
+        ),
+      ),
+      (route) => false, // Condition to stop removing pages
+    );
+  }
+
   TextEditingController tfname = TextEditingController();
-  TextEditingController tfclass = TextEditingController();
   TextEditingController tfcity = TextEditingController();
   TextEditingController tfpincode = TextEditingController();
 
@@ -49,8 +64,8 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
     return Scaffold(
       appBar: customAppbar2(context, ''),
       body: FutureBuilder(
-        future: GlobalData().getInfoStudentHome(
-            "/studentHome", GlobalData.auth1, GlobalData.phoneNumber),
+        future: GlobalData().getInfoStudentHome("/studentHome",
+            GlobalData.auth1, GlobalData.phoneNumber.substring(1)),
         builder: (context, snapshot) {
           if (!snapshot.hasData || mapResponse.length == 0) {
             return const Center(
@@ -59,16 +74,16 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
               ),
             );
           } else {
-            List<String> listOfClasses =
-                List<String>.filled(mapResponse["classes"].length, '');
-            for (int i = 0; i < mapResponse["classes"].length; i++) {
-              listOfClasses[i] =
-                  (mapResponse["classes"][i]["class_name"].toString());
-            }
-            List<String> classList = listOfClasses
-                .where((element) => element != null)
-                .cast<String>()
-                .toList();
+            // List<String> listOfClasses =
+            //     List<String>.filled(mapResponse["classes"].length, '');
+            // for (int i = 0; i < mapResponse["classes"].length; i++) {
+            //   listOfClasses[i] =
+            //       (mapResponse["classes"][i]["class_name"].toString());
+            // }
+            // List<String> classList = listOfClasses
+            //     .where((element) => element != null)
+            //     .cast<String>()
+            //     .toList();
             return Padding(
               padding: const EdgeInsets.all(12.0),
               child: SingleChildScrollView(
@@ -86,7 +101,6 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                               child: Image.asset('assets/images/student1.png')),
                           Text(
                             'Student Enquiry',
-                            // code.toString(),
                             style: kBodyText30wBold(white),
                           )
                         ],
@@ -171,44 +185,50 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                     CustomButton(
                       text: 'Enquire',
                       onTap: () async {
-                        try {
-                          var url = Uri.parse(
-                              'https://trusher.shellcode.co.in/api/studentEnquiry?');
-                          var headers = {'Content-Type': 'application/json'};
-                          var response = await http.post(
-                            url,
-                            body: {
-                              'student_name': tfname.text.toString(),
-                              'class': classValue,
-                              'city': tfcity.text.toString(),
-                              'pincode': tfpincode.text.toLowerCase(),
-                              'mobile': "91${GlobalData.phoneNumber}",
-                              'authKey': GlobalData.auth1,
-                            },
-                          );
+                        if (tfcity.text.toString().trim().length != 0 &&
+                            tfname.text.toString().trim().length != 0 &&
+                            tfpincode.text.toString().trim().length != 0) {
+                          try {
+                            var url = Uri.parse(
+                                'https://trusher.shellcode.co.in/api/studentEnquiry?');
+                            var headers = {'Content-Type': 'application/json'};
+                            var response = await http.post(
+                              url,
+                              body: {
+                                'student_name': tfname.text.toString(),
+                                'class': classValue,
+                                'city': tfcity.text.toString(),
+                                'pincode': tfpincode.text.toLowerCase(),
+                                'mobile': GlobalData.phoneNumber.substring(1),
+                                'authKey': GlobalData.auth1,
+                              },
+                            );
 
-                          if (response.statusCode == 200) {
-                            // Request successful, parse the response
-                            print('Response body: ${response.body}');
-                            success = true;
-                            Get.to(() => HomeScreen(
-                                  whoAreYou: 'Student',
-                                  serviceList: studentServiceList,
-                                  sliderList: const [
-                                    'Trusted Teachers',
-                                    'Home to Home tuition service'
-                                  ],
-                                  heading:
-                                      'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
-                                ));
-                          } else {
-                            // Request failed
-                            print(
-                                'Request failed with status: ${response.statusCode}');
+                            if (response.statusCode == 200) {
+                              // Request successful, parse the response
+                              print('Response body: ${response.body}');
+                              success = true;
+                              gotonextscreen();
+                            } else {
+                              // Request failed
+                              print(
+                                  'Request failed with status: ${response.statusCode}');
+                              print(json.decode(response.body)["Message"]);
+                              Get.to(() => ErrorScreen(
+                                  message: json
+                                      .decode(response.body)["Message"]
+                                      .toString()));
+                            }
+                          } catch (e) {
+                            // Error occurred during HTTP request
+                            print('Error: $e');
                           }
-                        } catch (e) {
-                          // Error occurred during HTTP request
-                          print('Error: $e');
+                        } else {
+                          Get.snackbar(
+                            "Error",
+                            "All fields are mandatory.",
+                            backgroundGradient: purpleGradident(),
+                          );
                         }
                       },
                     ),
