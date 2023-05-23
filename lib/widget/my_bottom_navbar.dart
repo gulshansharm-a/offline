@@ -36,20 +36,20 @@ class _MyBottomBarState extends State<MyBottomBar> {
       case 0:
         return HomeScreenForRegisterUser(
           whoAreYou: widget.whoRYou,
-          serviceList: widget.whoRYou == 'Student'
+          serviceList: widget.whoRYou == 'student'
               ? studentServiceList
               : teacherServiceList,
-          sliderList: widget.whoRYou == 'Student'
+          sliderList: widget.whoRYou == 'student'
               ? ['Trusted Teachers', 'Home to Home tuition service']
               : const ['Annual Gift Hamper', '100% Trusted & Satisfied'],
         );
 
         break;
       case 1:
-        return widget.whoRYou == 'Student' ? CoursesTab() : TeachersCourseTab();
+        return widget.whoRYou == 'student' ? CoursesTab() : TeachersCourseTab();
         break;
       default:
-        return widget.whoRYou == 'Student'
+        return widget.whoRYou == 'student'
             ? StudentFacilities()
             : TeacherFacilities();
         break;

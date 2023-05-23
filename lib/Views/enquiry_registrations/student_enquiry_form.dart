@@ -39,8 +39,9 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
   gotonextscreen() {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(
+      MaterialPageRoute(builder: (context) {
+        GlobalData().updateRole('student');
+        return HomeScreen(
           whoAreYou: 'student',
           serviceList: studentServiceList,
           sliderList: const [
@@ -49,8 +50,8 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
           ],
           heading:
               'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
-        ),
-      ),
+        );
+      }),
       (route) => false, // Condition to stop removing pages
     );
   }

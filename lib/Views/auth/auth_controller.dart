@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
 import 'package:offline_classes/Views/auth/otp_verify_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
+import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../buffer_screens/progress_indicator_screen.dart';
 import '../enquiry_registrations/enquiry_student_or_teachers.dart';
 
 class AuthController extends GetxController {
@@ -19,32 +21,29 @@ class AuthController extends GetxController {
 
   var verificationId = "".obs;
 
+  String role = "";
+  static Map<String, dynamic> mapResponse = {};
+
   @override
   void onReady() {
     super.onReady();
     _user = Rx<User?>(auth.currentUser);
     _user.bindStream(auth.userChanges());
-    getPhoneNumber().then((phoneNumber) {
+    getPhoneNumber().then((phoneNumber) async {
       if (phoneNumber != null && phoneNumber.isNotEmpty) {
         // Use the phoneNumber for OTP login or any further processing
         print('Phone Number: $phoneNumber');
         GlobalData().updatePhoneNumber(phoneNumber);
-        GlobalData().getInfoLogin(
-            "/login", GlobalData.auth1, GlobalData.phoneNumber.substring(1));
       }
     });
     ever(_user, _initialScreen);
   }
 
-  _initialScreen(User? user) {
-    Future.delayed(Duration(seconds: 2), () {
-      // Code to be executed after the delay
-      // Place your desired code here
-    });
+  _initialScreen(User? user) async {
     if (user == null) {
       Get.offAll(() => LoginScreen());
     } else {
-      Get.offAll(() => EnquirySelectStudentOrTeachers());
+      Get.offAll(() => ProgressIndicatorScreen());
     }
   }
 
@@ -91,10 +90,16 @@ class AuthController extends GetxController {
   }
 
   Future<bool> verifyOTP(String otp) async {
-    var credentials = await auth.signInWithCredential(
-        PhoneAuthProvider.credential(
-            verificationId: this.verificationId.toString(), smsCode: otp));
-    return credentials.user != null ? true : false;
+    var credentials;
+    try {
+      credentials = await auth.signInWithCredential(
+          PhoneAuthProvider.credential(
+              verificationId: this.verificationId.toString(), smsCode: otp));
+      return credentials.user != null ? true : false;
+    } catch (e) {
+      Get.snackbar("Error", "OTP does not match");
+      return false;
+    }
   }
 
   Future<void> logout() async {

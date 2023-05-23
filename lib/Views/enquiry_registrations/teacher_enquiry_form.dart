@@ -48,8 +48,9 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
   gotonextscreen() {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(
+      MaterialPageRoute(builder: (context) {
+        GlobalData().updateRole('teacher');
+        return HomeScreen(
           whoAreYou: 'teacher',
           serviceList: studentServiceList,
           sliderList: const [
@@ -58,8 +59,8 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
           ],
           heading:
               'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
-        ),
-      ),
+        );
+      }),
       (route) => false, // Condition to stop removing pages
     );
   }
@@ -226,18 +227,18 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
                       CustomButton(
                           text: 'Enquire',
                           onTap: () async {
-                            nextScreen(
-                                context,
-                                HomeScreen(
-                                  whoAreYou: 'Teacher',
-                                  serviceList: teacherServiceList,
-                                  sliderList: const [
-                                    'Annual Gift Hamper',
-                                    '100% Trusted & Satisfied'
-                                  ],
-                                  heading:
-                                      'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
-                                ));
+                            // nextScreen(
+                            //     context,
+                            //     HomeScreen(
+                            //       whoAreYou: 'Teacher',
+                            //       serviceList: teacherServiceList,
+                            //       sliderList: const [
+                            //         'Annual Gift Hamper',
+                            //         '100% Trusted & Satisfied'
+                            //       ],
+                            //       heading:
+                            //           'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
+                            //     ));
                             if (tfcity.text.toString().trim().length != 0 &&
                                 tfname.text.toString().trim().length != 0 &&
                                 tfpincode.text.toString().trim().length != 0 &&
@@ -245,22 +246,10 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
                                 genderValue != "") {
                               try {
                                 var url = Uri.parse(
-                                    'https://trusher.shellcode.co.in/api/studentEnquiry?');
-                                var headers = {
-                                  'Content-Type': 'application/json'
-                                };
-                                var response = await http.post(
-                                  url,
-                                  body: {
-                                    'student_name': tfname.text.toString(),
-                                    'qualification': qualification,
-                                    'city': tfcity.text.toString(),
-                                    'pincode': tfpincode.text.toLowerCase(),
-                                    'mobile':
-                                        GlobalData.phoneNumber.substring(1),
-                                    'authKey': GlobalData.auth1,
-                                  },
-                                );
+                                    'https://trusher.shellcode.co.in/api/teacherEnquiry?mobile=${GlobalData.phoneNumber}&authKey=${GlobalData.auth1}&teacher_name=${tfname.text.toString()}&city=${tfcity.text}&pincode=${tfpincode.text.toString()}&gender=${genderValue}&qualification=${qualification}');
+                                var response = await http.get(url);
+                                print(url);
+                                print(response.statusCode);
 
                                 if (response.statusCode == 200) {
                                   // Request successful, parse the response

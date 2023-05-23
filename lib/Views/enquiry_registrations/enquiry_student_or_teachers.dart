@@ -9,6 +9,7 @@ import 'package:offline_classes/Views/enquiry_registrations/student_enquiry_form
 import 'package:offline_classes/Views/enquiry_registrations/teacher_enquiry_form.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
+import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
 
 class EnquirySelectStudentOrTeachers extends StatefulWidget {
@@ -26,24 +27,22 @@ class _EnquirySelectStudentOrTeachersState
     GlobalData().getInfoLogin(
         "/login", GlobalData.auth1, GlobalData.phoneNumber.substring(1));
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {});
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (GlobalData.mapResponseLogin.length == 0) {
-      return Scaffold(body: Center(child: CircularProgressIndicator()));
-    } else {
-      GlobalData()
-          .updateRole(GlobalData.mapResponseLogin["logindata"][0]["role"]);
-      return GlobalData.role == "student"
-          // ? EnquiryOnlyStudent()
-          ? EnquiryOnlyTeacher()
-          : (GlobalData.role == "teacher"
-              ? EnquiryOnlyTeacher()
-              : EnquiryBoth());
-    }
+    return FutureBuilder(
+        future: GlobalData().getInfoLogin(
+            "/login", GlobalData.auth1, GlobalData.phoneNumber.substring(1)),
+        builder: (context, snapshot) {
+          String role = GlobalData.role;
+          if (!snapshot.hasData) {
+            return Scaffold(body: Center(child: CircularProgressIndicator()));
+          } else {
+            return (role == 'student' || role == 'teacher')
+                ? MyBottomBar(whoRYou: role)
+                : EnquiryBoth();
+          }
+        });
   }
 }
