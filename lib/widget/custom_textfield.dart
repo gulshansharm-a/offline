@@ -11,10 +11,12 @@ class CustomTextfield extends StatelessWidget {
       required this.hintext,
       this.keyBoardType,
       this.controller,
+      this.readOnly,
       this.sufixIcon,
       this.onChanged,
       this.onTap});
   final String hintext;
+  final bool? readOnly;
   final TextInputType? keyBoardType;
   final TextEditingController? controller;
   final IconData? sufixIcon;
@@ -46,6 +48,7 @@ class CustomTextfield extends StatelessWidget {
           textCapitalization: TextCapitalization.words,
 
           controller: controller,
+          readOnly: readOnly ?? false,
           keyboardType: keyBoardType,
           // style: kBodyText16wBold(black),
           // inputFormatters: [

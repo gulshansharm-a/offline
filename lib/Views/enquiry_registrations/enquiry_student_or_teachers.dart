@@ -7,6 +7,7 @@ import 'package:offline_classes/Views/enquiry_registrations/enquiry_screens/enqu
 import 'package:offline_classes/Views/enquiry_registrations/enquiry_screens/enquiry_only_teacher.dart';
 import 'package:offline_classes/Views/enquiry_registrations/student_enquiry_form.dart';
 import 'package:offline_classes/Views/enquiry_registrations/teacher_enquiry_form.dart';
+import 'package:offline_classes/buffer_screens/progress_indicator_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
@@ -40,7 +41,7 @@ class _EnquirySelectStudentOrTeachersState
             return Scaffold(body: Center(child: CircularProgressIndicator()));
           } else {
             return (role == 'student' || role == 'teacher')
-                ? MyBottomBar(whoRYou: role)
+                ? ProgressIndicatorScreen()
                 : EnquiryBoth();
           }
         });

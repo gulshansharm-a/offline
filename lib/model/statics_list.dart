@@ -76,19 +76,16 @@ List offeringList = [
 
 List classDropdownList = [
   'Class',
-  'Nursery',
-  'LKG',
-  "UKG",
-  '1st',
-  '2nd',
-  '3rd',
-  '4th',
-  '5th',
-  '6th',
-  '7th',
-  '8th',
-  '9th',
-  '10th'
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10'
 ];
 
 List<String> indianStates = [
@@ -135,7 +132,7 @@ List subjectList2 = [
   'English',
   'Math',
   'Science',
-  'Social\nScience',
+  'Social Science',
   'All'
 ];
 List classList = [

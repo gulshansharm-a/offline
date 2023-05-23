@@ -21,123 +21,38 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar2(context, 'Settings'),
-      body: Column(
-        children: [
-          addVerticalSpace(5.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 8.h,
-                width: 18.w,
-                decoration: kGradientBoxDecoration(20, purpleGradident()),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset('assets/images/set1.png'),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  nextScreen(
-                      context,
-                      MyProfileScreen(
-                          image: 'assets/images/dummy1.png',
-                          username: 'Diksha Shah'));
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(
-                      0, Color.fromRGBO(121, 62, 255, 0.2), 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.06),
-                      Text(
-                        'Edit Profile',
-                        style: kBodyText16wBold(black),
-                      ),
-                      Spacer(),
-                      Icon(Icons.arrow_forward_ios),
-                      addHorizontalySpace(2.w),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          addVerticalSpace(height(context) * 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 8.h,
-                width: 18.w,
-                decoration: kGradientBoxDecoration(20, purpleGradident()),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset('assets/images/set2.png'),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  nextScreen(context, ChangeMobileNumber());
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(
-                      0, Color.fromRGBO(121, 62, 255, 0.2), 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.03),
-                      Text(
-                        'Change Phone Number',
-                        style: kBodyText16wBold(black),
-                      ),
-                      Spacer(),
-                      Icon(Icons.arrow_forward_ios),
-                      addHorizontalySpace(2.w),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Visibility(
-            visible: isVisible,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SingleChildScrollView(
+          child: Container(
+            width: 110.w,
             child: Column(
               children: [
-                addVerticalSpace(height(context) * 0.02),
+                addVerticalSpace(5.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 8.h,
-                        width: 18.w,
-                        decoration:
-                            kGradientBoxDecoration(20, purpleGradident()),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset('assets/images/set3.png'),
-                        ),
+                    Container(
+                      height: 8.h,
+                      width: 18.w,
+                      decoration: kGradientBoxDecoration(20, purpleGradident()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset('assets/images/set1.png'),
                       ),
                     ),
                     InkWell(
                       onTap: () {
-                        nextScreen(context, YourDoubts());
+                        nextScreen(
+                            context,
+                            MyProfileScreen(
+                                image: 'assets/images/dummy1.png',
+                                username: 'Diksha Shah'));
                       },
                       child: Container(
                         height: 8.h,
-                        width: 75.w,
+                        width: 81.w,
                         decoration: kFillBoxDecoration(
                             0, Color.fromRGBO(121, 62, 255, 0.2), 20),
                         child: Row(
@@ -146,7 +61,194 @@ class SettingsScreen extends StatelessWidget {
                           children: [
                             addHorizontalySpace(width(context) * 0.06),
                             Text(
-                              'Your Doubts',
+                              'Edit Profile',
+                              style: kBodyText16wBold(black),
+                            ),
+                            Spacer(),
+                            Icon(Icons.arrow_forward_ios),
+                            addHorizontalySpace(2.w),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                addVerticalSpace(height(context) * 0.02),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 8.h,
+                      width: 18.w,
+                      decoration: kGradientBoxDecoration(20, purpleGradident()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset('assets/images/set2.png'),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        nextScreen(context, ChangeMobileNumber());
+                      },
+                      child: Container(
+                        height: 8.h,
+                        width: 81.w,
+                        decoration: kFillBoxDecoration(
+                            0, Color.fromRGBO(121, 62, 255, 0.2), 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            addHorizontalySpace(width(context) * 0.03),
+                            Text(
+                              'Change Phone Number',
+                              style: kBodyText16wBold(black),
+                            ),
+                            Spacer(),
+                            Icon(Icons.arrow_forward_ios),
+                            addHorizontalySpace(2.w),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Visibility(
+                  visible: isVisible,
+                  child: Column(
+                    children: [
+                      addVerticalSpace(height(context) * 0.02),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              height: 8.h,
+                              width: 18.w,
+                              decoration:
+                                  kGradientBoxDecoration(20, purpleGradident()),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset('assets/images/set3.png'),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              nextScreen(context, YourDoubts());
+                            },
+                            child: Container(
+                              height: 8.h,
+                              width: 81.w,
+                              decoration: kFillBoxDecoration(
+                                  0, Color.fromRGBO(121, 62, 255, 0.2), 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  addHorizontalySpace(width(context) * 0.06),
+                                  Text(
+                                    'Your Doubts',
+                                    style: kBodyText16wBold(black),
+                                  ),
+                                  Spacer(),
+                                  Icon(Icons.arrow_forward_ios),
+                                  addHorizontalySpace(2.w),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(height(context) * 0.02),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              // nextScreen(context, screen),
+                            },
+                            child: Container(
+                              height: 8.h,
+                              width: 18.w,
+                              decoration:
+                                  kGradientBoxDecoration(20, purpleGradident()),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset('assets/images/sf8.png'),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              nextScreen(context, ParentsDoubtsSaved());
+                            },
+                            child: Container(
+                              height: 8.h,
+                              width: 81.w,
+                              decoration: kFillBoxDecoration(
+                                  0, Color.fromRGBO(121, 62, 255, 0.2), 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  addHorizontalySpace(width(context) * 0.06),
+                                  Text(
+                                    'Parents Doubts',
+                                    style: kBodyText16wBold(black),
+                                  ),
+                                  Spacer(),
+                                  Icon(Icons.arrow_forward_ios),
+                                  addHorizontalySpace(2.w),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                addVerticalSpace(height(context) * 0.02),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // nextScreen(context, screen),
+                      },
+                      child: Container(
+                        height: 8.h,
+                        width: 18.w,
+                        decoration:
+                            kGradientBoxDecoration(20, purpleGradident()),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset('assets/images/set5.png'),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        nextScreen(context, AboutUs());
+                      },
+                      child: Container(
+                        height: 8.h,
+                        width: 81.w,
+                        decoration: kFillBoxDecoration(
+                            0, Color.fromRGBO(121, 62, 255, 0.2), 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            addHorizontalySpace(width(context) * 0.06),
+                            Text(
+                              'About Us',
                               style: kBodyText16wBold(black),
                             ),
                             Spacer(),
@@ -174,17 +276,17 @@ class SettingsScreen extends StatelessWidget {
                             kGradientBoxDecoration(20, purpleGradident()),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset('assets/images/sf8.png'),
+                          child: Image.asset('assets/images/set5.png'),
                         ),
                       ),
                     ),
                     InkWell(
                       onTap: () {
-                        nextScreen(context, ParentsDoubtsSaved());
+                        nextScreen(context, ContactUs());
                       },
                       child: Container(
                         height: 8.h,
-                        width: 75.w,
+                        width: 81.w,
                         decoration: kFillBoxDecoration(
                             0, Color.fromRGBO(121, 62, 255, 0.2), 20),
                         child: Row(
@@ -193,7 +295,54 @@ class SettingsScreen extends StatelessWidget {
                           children: [
                             addHorizontalySpace(width(context) * 0.06),
                             Text(
-                              'Parents Doubts',
+                              'Contact Us',
+                              style: kBodyText16wBold(black),
+                            ),
+                            Spacer(),
+                            Icon(Icons.arrow_forward_ios),
+                            addHorizontalySpace(2.w),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                addVerticalSpace(height(context) * 0.02),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // nextScreen(context, screen),
+                      },
+                      child: Container(
+                        height: 8.h,
+                        width: 18.w,
+                        decoration:
+                            kGradientBoxDecoration(20, purpleGradident()),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset('assets/images/set6.png'),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        nextScreen(context, TermsAndConditions());
+                      },
+                      child: Container(
+                        height: 8.h,
+                        width: 81.w,
+                        decoration: kFillBoxDecoration(
+                            0, Color.fromRGBO(121, 62, 255, 0.2), 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            addHorizontalySpace(width(context) * 0.06),
+                            Text(
+                              'Terms & Conditions',
                               style: kBodyText16wBold(black),
                             ),
                             Spacer(),
@@ -208,145 +357,7 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
           ),
-          addVerticalSpace(height(context) * 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  // nextScreen(context, screen),
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 18.w,
-                  decoration: kGradientBoxDecoration(20, purpleGradident()),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/set5.png'),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  nextScreen(context, AboutUs());
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(
-                      0, Color.fromRGBO(121, 62, 255, 0.2), 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.06),
-                      Text(
-                        'About Us',
-                        style: kBodyText16wBold(black),
-                      ),
-                      Spacer(),
-                      Icon(Icons.arrow_forward_ios),
-                      addHorizontalySpace(2.w),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          addVerticalSpace(height(context) * 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  // nextScreen(context, screen),
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 18.w,
-                  decoration: kGradientBoxDecoration(20, purpleGradident()),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/set5.png'),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  nextScreen(context, ContactUs());
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(
-                      0, Color.fromRGBO(121, 62, 255, 0.2), 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.06),
-                      Text(
-                        'Contact Us',
-                        style: kBodyText16wBold(black),
-                      ),
-                      Spacer(),
-                      Icon(Icons.arrow_forward_ios),
-                      addHorizontalySpace(2.w),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          addVerticalSpace(height(context) * 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  // nextScreen(context, screen),
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 18.w,
-                  decoration: kGradientBoxDecoration(20, purpleGradident()),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/set6.png'),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  nextScreen(context, TermsAndConditions());
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(
-                      0, Color.fromRGBO(121, 62, 255, 0.2), 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.06),
-                      Text(
-                        'Terms & Conditions',
-                        style: kBodyText16wBold(black),
-                      ),
-                      Spacer(),
-                      Icon(Icons.arrow_forward_ios),
-                      addHorizontalySpace(2.w),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

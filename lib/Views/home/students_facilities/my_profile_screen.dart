@@ -1,17 +1,32 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:offline_classes/Views/home/students_facilities/student_profile_edit.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../utils/constants.dart';
 import '../../../widget/custom_back_button.dart';
 
-class MyProfileScreen extends StatelessWidget {
+class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen(
       {super.key, required this.image, required this.username});
   final String image;
   final String username;
 
+  @override
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
+}
+
+class _MyProfileScreenState extends State<MyProfileScreen> {
+  File? image;
+  ImagePicker picker = ImagePicker();
+  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +67,18 @@ class MyProfileScreen extends StatelessWidget {
                           width: 39.w,
                           decoration:
                               kGradientBoxDecoration(40, orangeGradient()),
-                          child: Image.asset(image),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                            child: Image.network(
+                              "${GlobalStudent.urlPrefix}${GlobalStudent.specificProfile["data"][0]["image"]}",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            nextScreen(context, StudentProfileEdit());
+                          },
                           child: Container(
                             height: 40,
                             width: 40,
@@ -69,9 +92,9 @@ class MyProfileScreen extends StatelessWidget {
                         )
                       ],
                     ),
-                    addVerticalSpace(2.h),
+                    addVerticalSpace(0.5.h),
                     Text(
-                      username,
+                      GlobalStudent.specificProfile["data"][0]["name"],
                       style: kBodyText27wBold(white),
                     )
                   ],
@@ -99,7 +122,7 @@ class MyProfileScreen extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '23rd Sept 2013',
+                        GlobalStudent.specificProfile["data"][0]["dob"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -130,7 +153,8 @@ class MyProfileScreen extends StatelessWidget {
                       SizedBox(
                         width: 68.w,
                         child: Text(
-                          'A.B.C English Medium School',
+                          GlobalStudent.specificProfile["data"][0]
+                              ["school_name"],
                           style: kBodyText16wBold(black),
                         ),
                       ),
@@ -160,7 +184,7 @@ class MyProfileScreen extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '5th Class',
+                        GlobalStudent.specificProfile["data"][0]["class"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -191,7 +215,7 @@ class MyProfileScreen extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        'Mathematics, Science',
+                        GlobalStudent.specificProfile["data"][0]["subject"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -224,7 +248,7 @@ class MyProfileScreen extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        'Mumbai, Maharashtra',
+                        '${GlobalStudent.specificProfile["data"][0]["city"]}, ${GlobalStudent.specificProfile["data"][0]["state"]}',
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -258,7 +282,7 @@ class MyProfileScreen extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '9130168812',
+                        GlobalData.phoneNumber,
                         style: kBodyText16wBold(black),
                       ),
                     ],

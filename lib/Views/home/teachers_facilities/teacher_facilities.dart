@@ -14,6 +14,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../../model/statics_list.dart';
 import '../../../utils/constants.dart';
+import 'complaints.dart';
+import 'suggestions.dart';
 
 class TeacherFacilities extends StatelessWidget {
   const TeacherFacilities({super.key});
@@ -125,6 +127,10 @@ class TeacherFacilities extends StatelessWidget {
                           nextScreen(context, LogoutScreen());
                         } else if (i == 6) {
                           nextScreen(context, ListOfStudentsScreen());
+                        } else if (i == 7) {
+                          nextScreen(context, ComplaintsScreen());
+                        } else if (i == 8) {
+                          nextScreen(context, SuggestionsScreen());
                         }
                       },
                       child: Container(

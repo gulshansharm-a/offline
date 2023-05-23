@@ -6,9 +6,14 @@ import 'package:sizer/sizer.dart';
 
 import '../../../utils/constants.dart';
 
-class ParentsDoubtsSaved extends StatelessWidget {
+class ParentsDoubtsSaved extends StatefulWidget {
   const ParentsDoubtsSaved({super.key});
 
+  @override
+  State<ParentsDoubtsSaved> createState() => _ParentsDoubtsSavedState();
+}
+
+class _ParentsDoubtsSavedState extends State<ParentsDoubtsSaved> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

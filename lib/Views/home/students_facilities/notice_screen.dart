@@ -81,6 +81,8 @@ class AddNoticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController title = TextEditingController();
+    TextEditingController description = TextEditingController();
     return Scaffold(
       appBar: customAppbar2(context, 'Add Notice'),
       body: Padding(
@@ -88,10 +90,16 @@ class AddNoticeScreen extends StatelessWidget {
         child: Column(
           children: [
             addVerticalSpace(2.h),
-            CustomTextfield(hintext: 'Title'),
+            CustomTextfield(
+              hintext: 'Title',
+              controller: title,
+            ),
             addVerticalSpace(3.h),
-            CustomTextfieldMaxLine(hintext: 'Description'),
-            Spacer(),
+            CustomTextfieldMaxLine(
+              hintext: 'Description',
+              controller: title,
+            ),
+            const Spacer(),
             CustomButton(text: 'Post', onTap: () {})
           ],
         ),

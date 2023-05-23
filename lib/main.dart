@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
-import 'package:offline_classes/Views/auth/splash_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import 'Views/auth/auth_controller.dart';

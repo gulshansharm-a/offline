@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:offline_classes/Views/home/students_facilities/attendance_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/my_profile_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/notice_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/progress_reports.dart';
-import 'package:offline_classes/Views/home/students_facilities/student_doubts.dart';
-import 'package:offline_classes/Views/home/students_facilities/test_series_screen.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/gk_screen_for_teachers.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/test_series_teacher.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
@@ -47,33 +43,31 @@ class StudentsDetails extends StatelessWidget {
                       'Diksha Shah',
                       style: kBodyText22bold(white),
                     ),
-                    addVerticalSpace(5),
+                    addVerticalSpace(2),
                     Text(
                       '+91-987543210',
                       style: kBodyText12wNormal(white),
                     ),
-                    addVerticalSpace(10),
-                    Row(
-                      children: [
-                        Text(
-                          'Science & English',
-                          style: kBodyText12wNormal(white),
-                        ),
-                        addHorizontalySpace(2.w),
-                        InkWell(
-                          onTap: () {
-                            nextScreen(
-                                context,
-                                const MyProfileScreen(
-                                    image: 'assets/images/tf1.png',
-                                    username: 'Rahul tripathi'));
-                          },
-                          child: Text(
-                            'View Profile',
-                            style: kBodyText10wBold(Colors.amber),
+                    addVerticalSpace(2),
+                    Text(
+                      'Science & English',
+                      style: kBodyText12wNormal(white),
+                    ),
+                    addHorizontalySpace(2.w),
+                    InkWell(
+                      onTap: () {
+                        nextScreen(
+                          context,
+                          const MyProfileScreen(
+                            image: 'assets/images/tf1.png',
+                            username: 'Rahul tripathi',
                           ),
-                        )
-                      ],
+                        );
+                      },
+                      child: Text(
+                        'View Profile',
+                        style: kBodyText10wBold(Colors.amber),
+                      ),
                     ),
                   ],
                 ),

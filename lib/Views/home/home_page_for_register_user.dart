@@ -7,6 +7,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:offline_classes/Views/enquiry_registrations/student_registration.dart';
 import 'package:offline_classes/Views/enquiry_registrations/teachers_registration_screen.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/model/statics_list.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/custom_button.dart';
@@ -118,7 +120,10 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hi Sumit,',
+                    GlobalData.role == 'student'
+                        ? "Hi " +
+                            GlobalStudent.specificProfile["data"][0]["name"]
+                        : 'Hi Sumit,',
                     style: TextStyle(
                         color: blue,
                         fontSize: 30.sp,

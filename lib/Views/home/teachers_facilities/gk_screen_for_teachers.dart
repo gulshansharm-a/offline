@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:offline_classes/model/statics_list.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
@@ -68,8 +73,21 @@ class GKScreenForTeacher extends StatelessWidget {
   }
 }
 
-class AddGKContent extends StatelessWidget {
-  const AddGKContent({super.key});
+class AddGKContent extends StatefulWidget {
+  AddGKContent({super.key});
+
+  @override
+  State<AddGKContent> createState() => _AddGKContentState();
+}
+
+class _AddGKContentState extends State<AddGKContent> {
+  TextEditingController title = TextEditingController();
+
+  TextEditingController description = TextEditingController();
+
+  File? image;
+
+  bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,13 +99,22 @@ class AddGKContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             addVerticalSpace(2.h),
-            CustomTextfield(hintext: 'Title'),
+            CustomTextfield(
+              hintext: 'Title',
+              controller: title,
+            ),
             addVerticalSpace(3.h),
-            CustomTextfieldMaxLine(hintext: 'Description'),
+            CustomTextfieldMaxLine(
+              hintext: 'Description',
+              controller: description,
+            ),
             addVerticalSpace(3.h),
             InkWell(
               onTap: () {
-                selectFile(context);
+                setState(() {
+                  selectFile(context, image, showSpinner);
+                });
+                setState(() {});
               },
               child: Container(
                 margin: EdgeInsets.only(left: 7),
@@ -102,11 +129,11 @@ class AddGKContent extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.add_link,
-                      color: textColor,
+                      color: image != null ? Colors.transparent : textColor,
                     ),
                     addHorizontalySpace(6),
                     Text(
-                      'Attach File',
+                      image == null ? 'Attach File' : 'File attached',
                       style: kBodyText14w500(textColor),
                     ),
                   ],
@@ -129,94 +156,130 @@ class AddGKContent extends StatelessWidget {
     );
   }
 
-  Future<dynamic> selectFile(BuildContext context) {
+  Future<dynamic> selectFile(BuildContext context, File? image, bool) {
+    ImagePicker _picker = ImagePicker();
     return showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              contentPadding: const EdgeInsets.all(6),
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  var height = MediaQuery.of(context).size.height;
-                  var width = MediaQuery.of(context).size.width;
+      context: context,
+      builder: (_) => AlertDialog(
+        contentPadding: const EdgeInsets.all(6),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            var height = MediaQuery.of(context).size.height;
+            var width = MediaQuery.of(context).size.width;
 
-                  return Container(
-                      height: height * 0.35,
-                      // decoration: kFillBoxDecoration(0, white, 40),
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Select a File',
-                            style: kBodyText18wBold(black),
-                          ),
-                          addVerticalSpace(5.h),
-                          Row(
+            return Container(
+              height: height * 0.35,
+              // decoration: kFillBoxDecoration(0, white, 40),
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    'Select a File',
+                    style: kBodyText18wBold(black),
+                  ),
+                  addVerticalSpace(5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          final pickedFile = await _picker.pickImage(
+                            source: ImageSource.camera,
+                            imageQuality: 80,
+                          );
+
+                          if (pickedFile != null) {
+                            image = File(pickedFile.path);
+                            Get.snackbar("Success", "Image Selected");
+                            setState(() {
+                              showSpinner = false;
+                            });
+                          } else {
+                            Get.snackbar("Error", "Image Not Selected");
+                            print("No image selected");
+                          }
+                        },
+                        child: Container(
+                          height: 12.h,
+                          width: 30.w,
+                          decoration:
+                              kGradientBoxDecoration(10, purpleGradident()),
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 12.h,
-                                  width: 30.w,
-                                  decoration: kGradientBoxDecoration(
-                                      10, purpleGradident()),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      SizedBox(
-                                          height: 5.h,
-                                          child: Image.asset(
-                                              'assets/images/camera.png')),
-                                      Text(
-                                        'Camera',
-                                        style: kBodyText12wBold(white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 12.h,
-                                  width: 30.w,
-                                  decoration: kGradientBoxDecoration(
-                                      10, purpleGradident()),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      SizedBox(
-                                          height: 7.h,
-                                          child: Image.asset(
-                                              'assets/images/gallary.png')),
-                                      Text(
-                                        'Gallary',
-                                        style: kBodyText12wBold(white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              SizedBox(
+                                  height: 5.h,
+                                  child:
+                                      Image.asset('assets/images/camera.png')),
+                              Text(
+                                'Camera',
+                                style: kBodyText12wBold(white),
+                              )
                             ],
                           ),
-                          addVerticalSpace(4.h),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'Upload',
-                                  style: kBodyText16wBold(primary),
-                                )),
-                          )
-                        ],
-                      ));
-                },
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          final pickedFile = await _picker.pickImage(
+                            source: ImageSource.gallery,
+                            imageQuality: 80,
+                          );
+
+                          if (pickedFile != null) {
+                            image = File(pickedFile.path);
+                            Get.snackbar("Success", "Image Selected");
+                            setState(() {
+                              showSpinner = false;
+                            });
+                          } else {
+                            Get.snackbar("Error", "Image Not Selected");
+                            print("No image selected");
+                          }
+                        },
+                        child: Container(
+                          height: 12.h,
+                          width: 30.w,
+                          decoration:
+                              kGradientBoxDecoration(10, purpleGradident()),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SizedBox(
+                                  height: 7.h,
+                                  child:
+                                      Image.asset('assets/images/gallary.png')),
+                              Text(
+                                'Gallary',
+                                style: kBodyText12wBold(white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  addVerticalSpace(4.h),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      onPressed: () {
+                        setState;
+                      },
+                      child: Text(
+                        'Upload',
+                        style: kBodyText16wBold(primary),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ));
+            );
+          },
+        ),
+      ),
+    );
   }
 }

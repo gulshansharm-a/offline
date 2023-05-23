@@ -25,7 +25,7 @@ class FeePaymentScreen extends StatelessWidget {
               margin: EdgeInsets.all(10),
 
               padding:
-                  EdgeInsets.only(left: 9.w, right: 3.w, top: 2.h, bottom: 2.h),
+                  EdgeInsets.only(left: 4.w, right: 3.w, top: 2.h, bottom: 2.h),
               // height: 12.h,
               width: 93.w,
               decoration: kGradientBoxDecoration(35, purpleGradident()),
@@ -102,7 +102,7 @@ class FeePaymentScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 13.h,
+                          height: 16.h,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -170,6 +170,7 @@ class _ShowFeePaymnetOfMonthState extends State<ShowFeePaymnetOfMonth> {
                       child: Center(
                         child: Text(
                           subjectList2[i],
+                          overflow: TextOverflow.visible,
                           style: kBodyText14wBold(white),
                         ),
                       ),
@@ -199,83 +200,86 @@ class _ShowFeePaymnetOfMonthState extends State<ShowFeePaymnetOfMonth> {
                   }),
             ),
             addVerticalSpace(1.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, Colors.yellow, 10),
-                      child: Center(
-                        child: Text('25'),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: 5.h,
+                        width: 13.w,
+                        decoration: kFillBoxDecoration(0, Colors.yellow, 10),
+                        child: Center(
+                          child: Text('25'),
+                        ),
                       ),
-                    ),
-                    addVerticalSpace(1.3.h),
-                    Text(
-                      'Total \nclasses taken',
-                      style: kBodyText12wNormal(black),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                addHorizontalySpace(3.w),
-                Column(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, Colors.green, 10),
-                      child: Center(
-                        child: Text('21'),
+                      addVerticalSpace(1.3.h),
+                      Text(
+                        'Total \nclasses taken',
+                        style: kBodyText12wNormal(black),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                  addHorizontalySpace(3.w),
+                  Column(
+                    children: [
+                      Container(
+                        height: 5.h,
+                        width: 13.w,
+                        decoration: kFillBoxDecoration(0, Colors.green, 10),
+                        child: Center(
+                          child: Text('21'),
+                        ),
                       ),
-                    ),
-                    addVerticalSpace(3.h),
-                    Text(
-                      'Present',
-                      style: kBodyText14w500(black),
-                    )
-                  ],
-                ),
-                addHorizontalySpace(7.w),
-                Column(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, Colors.red, 10),
-                      child: Center(
-                        child: Text('4'),
+                      addVerticalSpace(3.h),
+                      Text(
+                        'Present',
+                        style: kBodyText14w500(black),
+                      )
+                    ],
+                  ),
+                  addHorizontalySpace(7.w),
+                  Column(
+                    children: [
+                      Container(
+                        height: 5.h,
+                        width: 13.w,
+                        decoration: kFillBoxDecoration(0, Colors.red, 10),
+                        child: Center(
+                          child: Text('4'),
+                        ),
                       ),
-                    ),
-                    addVerticalSpace(3.h),
-                    Text(
-                      'Absent',
-                      style: kBodyText12wNormal(black),
-                    )
-                  ],
-                ),
-                addHorizontalySpace(7.w),
-                Column(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, boxColor, 10),
-                      child: Center(
-                        child: Text('2'),
+                      addVerticalSpace(3.h),
+                      Text(
+                        'Absent',
+                        style: kBodyText12wNormal(black),
+                      )
+                    ],
+                  ),
+                  addHorizontalySpace(7.w),
+                  Column(
+                    children: [
+                      Container(
+                        height: 5.h,
+                        width: 13.w,
+                        decoration: kFillBoxDecoration(0, boxColor, 10),
+                        child: Center(
+                          child: Text('2'),
+                        ),
                       ),
-                    ),
-                    addVerticalSpace(1.3.h),
-                    Text(
-                      'Class \nnot taken',
-                      textAlign: TextAlign.center,
-                      style: kBodyText12wNormal(black),
-                    )
-                  ],
-                ),
-              ],
+                      addVerticalSpace(1.3.h),
+                      Text(
+                        'Class \nnot taken',
+                        textAlign: TextAlign.center,
+                        style: kBodyText12wNormal(black),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
             addVerticalSpace(2.h),
             Text(

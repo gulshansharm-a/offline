@@ -11,6 +11,6 @@ class OtpController extends GetxController {
     var isVerified = await AuthController.instance.verifyOTP(otp);
     GlobalData().getInfoLogin(
         "/login", GlobalData.auth1, GlobalData.phoneNumber.substring(1));
-    isVerified ? Get.offAll(const SuccessfullLogInscreen()) : Get.back();
+    isVerified ? Get.offAll(() => const SuccessfullLogInscreen()) : Get.back();
   }
 }

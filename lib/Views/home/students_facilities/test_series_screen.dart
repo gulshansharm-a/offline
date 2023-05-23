@@ -84,13 +84,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               );
 
               if (pickedFile != null) {
-                File image = File(pickedFile.path);
-                Get.snackbar("Success", "Image Uploaded");
+                image = File(pickedFile.path);
+                Get.snackbar("Success", "Image Selected");
                 setState(() {
                   showSpinner = false;
                 });
               } else {
-                Get.snackbar("Error", "Image Not Uploaded");
+                Get.snackbar("Error", "Image Not Selected");
                 print("No image selected");
               }
             },

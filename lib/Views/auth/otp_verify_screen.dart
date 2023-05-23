@@ -31,6 +31,7 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
   Widget build(BuildContext context) {
     var code = "";
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,8 +96,12 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
               text: 'Verify',
               onTap: () async {
                 print(_pinPutController.text);
-                OtpController.instace
-                    .verifyOTP(_pinPutController.text.toString());
+                try {
+                  OtpController.instace
+                      .verifyOTP(_pinPutController.text.toString());
+                } catch (e) {
+                  Get.snackbar("Wrong OTP", "Try Again");
+                }
                 // try {
                 //   print(_pinPutController.text);
                 //   OtpController.instace

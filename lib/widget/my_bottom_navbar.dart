@@ -1,14 +1,18 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:offline_classes/Views/home/courses_tab.dart';
 import 'package:offline_classes/Views/home/home_page_for_register_user.dart';
-import 'package:offline_classes/Views/home/home_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:offline_classes/Views/home/students_facilities/select_student_profile.dart';
 import 'package:offline_classes/Views/home/students_facilities/student_facilities.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/teacher_course_tab.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/teacher_facilities.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/model/statics_list.dart';
 
+import '../global_data/GlobalData.dart';
 import '../utils/constants.dart';
 
 class MyBottomBar extends StatefulWidget {
@@ -17,6 +21,8 @@ class MyBottomBar extends StatefulWidget {
     required this.whoRYou,
   }) : super(key: key);
   final String whoRYou;
+
+  static int? id;
 
   @override
   State<MyBottomBar> createState() => _MyBottomBarState();
@@ -62,6 +68,26 @@ class _MyBottomBarState extends State<MyBottomBar> {
     });
   }
 
+  static Map<String, dynamic> specificProfile = {};
+  int? id = SelectStudentProfile.id;
+
+  Future<void> checkSpecificProfiles() async {
+    id = SelectStudentProfile().getId();
+    MyBottomBar.id = SelectStudentProfile().getId();
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
+    specificProfile = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(id);
+      print(MyBottomBar.id);
+      print(specificProfile);
+    } else {
+      return;
+    }
+  }
+
+  checkTeacherProfile() async {}
+
   DateTime? currentBackPressTime;
 
   Future<bool> _onWillPop() async {
@@ -82,53 +108,67 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        onWillPop: _onWillPop,
-        child: Center(
-          child: getPage(_selectedIndex),
-        ),
-      ),
-      bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
-        ),
-        child: SizedBox(
-          height: height(context) * 0.08,
-          child: BottomNavigationBar(
-            elevation: 7,
-            backgroundColor: Color.fromRGBO(239, 239, 239, 1),
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/images/nav1.png')),
-                label: 'Home',
+    String role = widget.whoRYou;
+    return FutureBuilder(
+      future: widget.whoRYou == 'student'
+          ? checkSpecificProfiles()
+          : checkTeacherProfile(),
+      builder: (context, snapshot) {
+        if ((role == 'student' && specificProfile.isNotEmpty)) {
+          GlobalStudent().updateSpecificProfile(specificProfile);
+          return Scaffold(
+            body: WillPopScope(
+              onWillPop: _onWillPop,
+              child: Center(
+                child: getPage(_selectedIndex),
               ),
-              BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/images/nav2.png')),
-                // activeIcon: ImageIcon(AssetImage('assets/images/active2.png')),
+            ),
+            bottomNavigationBar: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+              ),
+              child: SizedBox(
+                height: height(context) * 0.08,
+                child: BottomNavigationBar(
+                  elevation: 7,
+                  backgroundColor: Color.fromRGBO(239, 239, 239, 1),
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage('assets/images/nav1.png')),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage('assets/images/nav2.png')),
+                      // activeIcon: ImageIcon(AssetImage('assets/images/active2.png')),
 
-                label: 'Courses',
-              ),
-              BottomNavigationBarItem(
-                // icon: ImageIcon(AssetImage('assets/images/inactive3.png')),
-                icon: ImageIcon(AssetImage('assets/images/nav3.png')),
+                      label: 'Courses',
+                    ),
+                    BottomNavigationBarItem(
+                      // icon: ImageIcon(AssetImage('assets/images/inactive3.png')),
+                      icon: ImageIcon(AssetImage('assets/images/nav3.png')),
 
-                label: 'Menu',
+                      label: 'Menu',
+                    ),
+                  ],
+                  currentIndex: _selectedIndex,
+                  unselectedItemColor: Colors.grey,
+                  selectedItemColor: primary2,
+                  selectedFontSize: 12,
+                  unselectedFontSize: 12,
+                  type: BottomNavigationBarType.fixed,
+                  onTap: _onItemTapped,
+                  showSelectedLabels: true,
+                  showUnselectedLabels: true,
+                ),
               ),
-            ],
-            currentIndex: _selectedIndex,
-            unselectedItemColor: Colors.grey,
-            selectedItemColor: primary2,
-            selectedFontSize: 12,
-            unselectedFontSize: 12,
-            type: BottomNavigationBarType.fixed,
-            onTap: _onItemTapped,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return const Center(
+              child: CircularProgressIndicator(color: primary2));
+        }
+      },
     );
   }
 }

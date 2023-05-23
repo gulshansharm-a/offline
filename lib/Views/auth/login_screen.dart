@@ -23,6 +23,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String dropDownValue = 'Language';
+  List dropDownList = ['Language', 'English', 'Hindi'];
+
   List pageviewList = [
     {
       'title': 'Home Tuitions',
@@ -61,29 +64,50 @@ class _LoginScreenState extends State<LoginScreen> {
     double Width = MediaQuery.of(context).size.width;
     size = width(context) * 0.93;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: white,
+        elevation: 0,
+        foregroundColor: black,
+        leadingWidth: width(context) * 0.3,
+        actions: [
+          DropdownButton<String>(
+            value: dropDownValue,
+            hint: const Text(
+              'Select',
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xffB1B1B3),
+                  fontWeight: FontWeight.w400),
+            ),
+            icon: const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: black,
+              size: 26,
+            ),
+            // elevation: 10,
+            style: const TextStyle(
+                color: black, fontSize: 18, fontWeight: FontWeight.w500),
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            // isExpanded: true,s
+            underline: SizedBox(),
+            onChanged: (String? newValue) {
+              setState(() {
+                dropDownValue = newValue!;
+              });
+            },
+            items: dropDownList.map<DropdownMenuItem<String>>((value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            addVerticalSpace(23),
-            Row(
-              children: [
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    log(size.toString());
-                  },
-                  child: Text(
-                    'Language',
-                    style: kBodyText18wNormal(black),
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_drop_down,
-                  size: 22,
-                ),
-              ],
-            ),
             addVerticalSpace(40),
             SizedBox(
               height: 57.h,
@@ -101,9 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 36,
                               fontWeight: FontWeight.w800),
                         ),
-                        addVerticalSpace(1.5.h),
+                        addVerticalSpace(0.2.h),
                         SizedBox(
-                          width: width(context) * 0.7,
+                          width: width(context) * 0.9,
                           child: Text(
                             pageviewList[i]['subtitle'],
                             textAlign: TextAlign.center,
@@ -112,10 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         addVerticalSpace(10),
                         Center(
-                            child: Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Image.asset('assets/images/loginimg.png'),
-                        ))
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: Image.asset('assets/images/loginimg.png'),
+                          ),
+                        ),
                       ],
                     );
                   }),
@@ -134,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
             addVerticalSpace(30),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-              height: height(context) * 0.065,
+              height: height(context) * 0.069,
               width: width(context) * 0.9,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
@@ -153,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  addVerticalSpace(5),
+                  addVerticalSpace(2.0),
                   Center(
                     child: TextFormField(
                       controller: phNoController,
@@ -176,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            addVerticalSpace(height(context) * 0.055),
+            addVerticalSpace(height(context) * 0.045),
             CustomButton(
                 text: 'Send OTP',
                 onTap: () {

@@ -22,7 +22,7 @@ class SelectTeacherForCall extends StatelessWidget {
                   itemBuilder: (ctx, i) {
                     return InkWell(
                       onTap: () {
-                        // nextScreen(context, TeacherProfile());
+                        nextScreen(context, TeacherProfile());
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),
@@ -47,7 +47,7 @@ class SelectTeacherForCall extends StatelessWidget {
                               children: [
                                 Text(
                                   'Anup Sharma',
-                                  style: kBodyText24wBold(white),
+                                  style: kBodyText20wBold(white),
                                 ),
                                 addVerticalSpace(10),
                                 Text(

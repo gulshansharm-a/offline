@@ -15,6 +15,8 @@ import 'package:offline_classes/Views/home/students_facilities/settings_screen.d
 import 'package:offline_classes/Views/home/students_facilities/student_doubts.dart';
 import 'package:offline_classes/Views/home/students_facilities/teachers_list.dart';
 import 'package:offline_classes/Views/home/students_facilities/test_series_screen.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/model/statics_list.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:sizer/sizer.dart';
@@ -50,40 +52,49 @@ class StudentFacilities extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.only(
-                    left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                // height: 12.h,
-                width: 93.w,
+                    left: 7.w, right: 5.w, top: 2.h, bottom: 2.h),
+                height: 18.h,
+                width: 95.w,
                 decoration: kGradientBoxDecoration(35, purpleGradident()),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 12.h,
+                      height: 16.h,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            'Diksha Shah',
+                            GlobalStudent.specificProfile["data"][0]["name"],
                             style: kBodyText24wBold(white),
                           ),
                           Text(
-                            'Mumbai, Maharashtra',
+                            GlobalStudent.specificProfile["data"][0]["city"] +
+                                ',' +
+                                GlobalStudent.specificProfile["data"][0]
+                                    ["state"],
                             style: kBodyText12wNormal(white),
                           ),
                           Text(
-                            '+91-987543210',
+                            GlobalData.phoneNumber,
                             style: kBodyText12wNormal(white),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                    Spacer(),
+                    addHorizontalySpace(10),
                     Container(
                       height: 12.h,
-                      width: 25.w,
+                      width: 26.w,
                       decoration: kGradientBoxDecoration(18, orangeGradient()),
-                      child: Image.asset('assets/images/dummy1.png'),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        child: Image.network(
+                          "${GlobalStudent.urlPrefix}${GlobalStudent.specificProfile["data"][0]["image"]}",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -107,9 +118,10 @@ class StudentFacilities extends StatelessWidget {
                         if (i == 0) {
                           nextScreen(
                               context,
-                              const MyProfileScreen(
+                              MyProfileScreen(
                                 image: 'assets/images/dummy1.png',
-                                username: 'Diksha Shah',
+                                username: GlobalStudent.specificProfile["data"]
+                                    [0]["name"],
                               ));
                         } else if (i == 1) {
                           nextScreen(context, TeachersListScreen());

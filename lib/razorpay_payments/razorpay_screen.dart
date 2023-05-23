@@ -1,14 +1,20 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../Views/enquiry_registrations/registration_successfull.dart';
+import '../global_data/student_global_data.dart';
 import 'razor_credentials.dart' as razorCredentials;
 
 class MyHttpOverrides extends HttpOverrides {
@@ -23,19 +29,32 @@ class MyHttpOverrides extends HttpOverrides {
 class RazorpayScreen extends StatefulWidget {
   final double amount;
   final String role;
-  const RazorpayScreen({super.key, required this.amount, required this.role});
+  final String payment_type;
+  final int courseid;
+  final int user_id;
+
+  const RazorpayScreen({
+    super.key,
+    required this.amount,
+    required this.role,
+    required this.payment_type,
+    this.courseid = 0,
+    this.user_id = 1,
+  });
 
   @override
   State<RazorpayScreen> createState() => _RazorpayScreenState();
 }
 
 class _RazorpayScreenState extends State<RazorpayScreen> {
-  final Razorpay _razorpay = Razorpay();
+  late Razorpay _razorpay;
 
-  double amt = 1.0;
+  double amt = 0.0;
 
   @override
   void initState() {
+    _razorpay = Razorpay();
+    amt = widget.amount;
     // amt = widget.amount;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -45,20 +64,103 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     super.initState();
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    var res = response;
+    Get.snackbar("Done", "Payment Successful");
     // Do something when payment succeeds
     print(response);
-    print("success");
-    verifySignature(
-      signature: response.signature,
-      paymentId: response.paymentId,
-      orderId: response.orderId,
-    );
-    nextScreen(
-        context,
-        RegistrationSuccessfull(
-          whoareYou: widget.role,
-        ));
+    capturePayment(response.paymentId);
+    final key = utf8.encode('NgDLPyiDRPuQpcXy1E3GKTDv');
+    final bytes = utf8.encode('${response.orderId}|${response.paymentId}');
+    final hmacSha256 = Hmac(sha256, key);
+    final generatedSignature = hmacSha256.convert(bytes);
+    String status = "authorized";
+    if (generatedSignature.toString() == response.signature) {
+      // Handle what to do after a successful payment.
+      print("Payment captured");
+      status = "captured";
+      // nextScreen(
+      //   context,
+      //   RegistrationSuccessfull(
+      //     whoareYou: widget.role,
+      //   ),
+      // )
+      Get.snackbar("Success", "Payment Captured");
+      //Get.back();
+    } else {
+      print("Payment capture failed");
+    }
+    if (widget.payment_type == 'student registration' ||
+        widget.payment_type == 'teacher registration') {
+      Map<String, dynamic> map;
+      var url = Uri.parse(
+          "https://trusher.shellcode.co.in/api/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&payment_id=${res.paymentId}&status=captured&amount=${amt}");
+      final http.Response response = await http.get(url);
+      map = json.decode(response.body);
+      if (response.statusCode == 200) {
+        if (map.isNotEmpty) {
+          print(map);
+          Get.snackbar("Registered", "");
+          nextScreen(
+            context,
+            RegistrationSuccessfull(
+              whoareYou: widget.role,
+            ),
+          );
+        } else {
+          Get.snackbar("Some Error Occured", "");
+        }
+      } else {
+        Get.snackbar("Some Error Occured", "");
+      }
+    } else {
+      Map<String, dynamic> map;
+      var url = Uri.parse(
+          "https://trusher.shellcode.co.in/api/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&amount=${amt}&status=captured&payment_id={${res.paymentId}&user_id=${GlobalStudent.id}&courseid=${widget.courseid}");
+      final http.Response response = await http.get(url);
+      map = json.decode(response.body);
+      if (response.statusCode == 200) {
+        if (map.isNotEmpty) {
+          print(map);
+          Timer(const Duration(seconds: 3), () {});
+          Navigator.pop(context);
+        } else {
+          Get.snackbar("Some Error Occured", "Course Not Added");
+        }
+      } else {
+        Get.snackbar("Some Error Occured", "Course Not Added");
+      }
+    }
+  }
+
+  void capturePayment(String? paymentId) async {
+    try {
+      final apiKey = razorCredentials.keyId;
+      final captureUrl =
+          'https://api.razorpay.com/v1/payments/$paymentId/capture';
+
+      final response = await http.post(
+        Uri.parse(captureUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Payment captured successfully
+        print(22222222222);
+        var responseData = json.decode(response.body);
+        var capturedAmount = responseData['captured_amount'];
+        print('Payment captured');
+      } else {
+        print(000000000);
+        // Failed to capture payment
+        print('Failed to capture payment');
+      }
+    } catch (e) {
+      print("Exception in captuure");
+    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -109,7 +211,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     print(res.body);
   }
 
-  openGateway(String orderId) {
+  openGateway(String orderId) async {
     var options = {
       'key': razorCredentials.keyId,
       'amount': amt * 100, //in the smallest currency sub-unit.
@@ -117,6 +219,10 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
       'order_id': orderId, // Generate order_id using Orders API
       'description': 'Payment',
       'timeout': 60 * 5, // in seconds // 5 minutes
+      'capture': true,
+      'external': {
+        'wallets': ['paytm']
+      },
       'prefill': {
         'contact': GlobalData.phoneNumber.substring(3),
         'email': emailTextEditingController.text.toString(),
@@ -130,47 +236,10 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     _razorpay.open(options);
   }
 
-  verifySignature({
-    String? signature,
-    String? paymentId,
-    String? orderId,
-  }) async {
-    Map<String, dynamic> body = {
-      'razorpay_signature': signature,
-      'razorpay_payment_id': paymentId,
-      'razorpay_order_id': orderId,
-    };
-
-    var parts = [];
-    body.forEach((key, value) {
-      parts.add('${Uri.encodeQueryComponent(key)}='
-          '${Uri.encodeQueryComponent(value)}');
-    });
-    var formData = parts.join('&');
-    var res = await http.post(
-      Uri.https(
-        "10.0.2.2", // my ip address , localhost
-        "razorpay_signature_verify.php",
-      ),
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded", // urlencoded
-      },
-      body: formData,
-    );
-
-    print(res.body);
-    if (res.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(res.body),
-        ),
-      );
-    }
-  }
-
   @override
   void dispose() {
     _razorpay.clear(); // Removes all listeners
+    _razorpay = Razorpay();
     super.dispose();
   }
 
@@ -251,6 +320,20 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
                   },
                   child: Text(
                     "Start Payment",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(backgroundColor: Colors.blue),
+                ),
+              ),
+              addVerticalSpace(70),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: TextButton(
+                  onPressed: () {
+                    AuthController.instance.logout();
+                  },
+                  child: Text(
+                    "Logout",
                     style: TextStyle(color: Colors.white),
                   ),
                   style: TextButton.styleFrom(backgroundColor: Colors.blue),

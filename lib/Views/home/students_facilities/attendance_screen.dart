@@ -94,118 +94,119 @@ class AttendaceCalendarState extends State<AttendaceCalendar> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
-      appBar: customAppbar2(context, 'Attendance'),
-      body: Column(
-        children: [
-          Container(
-            decoration: k3DboxDecoration(15),
-            margin: EdgeInsets.all(12),
-            height: 45.h,
-            child: SfDateRangePicker(
-                controller: _datePickerController,
-                view: DateRangePickerView.month,
-                monthViewSettings:
-                    DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
-                selectionMode: DateRangePickerSelectionMode.multiple,
-                showActionButtons: false,
-                endRangeSelectionColor: Colors.red,
-                selectionColor: Colors.green,
-                rangeSelectionColor: Colors.yellow,
-                todayHighlightColor: Colors.green,
-                onSubmit: (val) {
-                  print(val);
-                },
-                onCancel: () {
-                  _datePickerController.selectedRanges = null;
-                }),
+          appBar: customAppbar2(context, 'Attendance'),
+          body: Column(
+            children: [
+              Container(
+                decoration: k3DboxDecoration(15),
+                margin: EdgeInsets.all(12),
+                height: 45.h,
+                child: SfDateRangePicker(
+                    controller: _datePickerController,
+                    view: DateRangePickerView.month,
+                    monthViewSettings:
+                        DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
+                    selectionMode: DateRangePickerSelectionMode.multiple,
+                    showActionButtons: false,
+                    endRangeSelectionColor: Colors.red,
+                    selectionColor: Colors.green,
+                    rangeSelectionColor: Colors.yellow,
+                    todayHighlightColor: Colors.green,
+                    onSubmit: (val) {
+                      print(val);
+                    },
+                    onCancel: () {
+                      _datePickerController.selectedRanges = null;
+                    }),
+              ),
+              addVerticalSpace(1.h),
+              Padding(
+                padding: EdgeInsets.all(2.h),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          height: 5.h,
+                          width: 13.w,
+                          decoration: kFillBoxDecoration(0, Colors.yellow, 10),
+                          child: Center(
+                            child: Text('25'),
+                          ),
+                        ),
+                        addHorizontalySpace(5.w),
+                        Text(
+                          'Total classes taken',
+                          style: kBodyText14w500(black),
+                        )
+                      ],
+                    ),
+                    addVerticalSpace(1.h),
+                    Row(
+                      children: [
+                        Container(
+                          height: 5.h,
+                          width: 13.w,
+                          decoration: kFillBoxDecoration(0, Colors.green, 10),
+                          child: Center(
+                            child: Text('21'),
+                          ),
+                        ),
+                        addHorizontalySpace(5.w),
+                        Text(
+                          'Present',
+                          style: kBodyText14w500(black),
+                        )
+                      ],
+                    ),
+                    addVerticalSpace(1.h),
+                    Row(
+                      children: [
+                        Container(
+                          height: 5.h,
+                          width: 13.w,
+                          decoration: kFillBoxDecoration(0, Colors.red, 10),
+                          child: Center(
+                            child: Text('4'),
+                          ),
+                        ),
+                        addHorizontalySpace(5.w),
+                        Text(
+                          'Absent',
+                          style: kBodyText14w500(black),
+                        )
+                      ],
+                    ),
+                    addVerticalSpace(1.h),
+                    Row(
+                      children: [
+                        Container(
+                          height: 5.h,
+                          width: 13.w,
+                          decoration: kFillBoxDecoration(0, boxColor, 10),
+                          child: Center(
+                            child: Text('2'),
+                          ),
+                        ),
+                        addHorizontalySpace(5.w),
+                        Text(
+                          'Class not taken',
+                          style: kBodyText14w500(black),
+                        )
+                      ],
+                    ),
+                    addVerticalSpace(3.h),
+                    Center(
+                      child: CustomButton(text: 'Send Approval', onTap: () {}),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-          addVerticalSpace(1.h),
-          Padding(
-            padding: EdgeInsets.all(2.h),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, Colors.yellow, 10),
-                      child: Center(
-                        child: Text('25'),
-                      ),
-                    ),
-                    addHorizontalySpace(5.w),
-                    Text(
-                      'Total classes taken',
-                      style: kBodyText14w500(black),
-                    )
-                  ],
-                ),
-                addVerticalSpace(1.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, Colors.green, 10),
-                      child: Center(
-                        child: Text('21'),
-                      ),
-                    ),
-                    addHorizontalySpace(5.w),
-                    Text(
-                      'Present',
-                      style: kBodyText14w500(black),
-                    )
-                  ],
-                ),
-                addVerticalSpace(1.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, Colors.red, 10),
-                      child: Center(
-                        child: Text('4'),
-                      ),
-                    ),
-                    addHorizontalySpace(5.w),
-                    Text(
-                      'Absent',
-                      style: kBodyText14w500(black),
-                    )
-                  ],
-                ),
-                addVerticalSpace(1.h),
-                Row(
-                  children: [
-                    Container(
-                      height: 5.h,
-                      width: 13.w,
-                      decoration: kFillBoxDecoration(0, boxColor, 10),
-                      child: Center(
-                        child: Text('2'),
-                      ),
-                    ),
-                    addHorizontalySpace(5.w),
-                    Text(
-                      'Class not taken',
-                      style: kBodyText14w500(black),
-                    )
-                  ],
-                ),
-                addVerticalSpace(3.h),
-                Center(
-                  child: CustomButton(text: 'Send Approval', onTap: () {}),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+        ));
   }
 
   Future<dynamic> approvalPopup(BuildContext context) {
@@ -221,7 +222,7 @@ class AttendaceCalendarState extends State<AttendaceCalendar> {
                   var width = MediaQuery.of(context).size.width;
 
                   return Container(
-                      height: height * 0.3,
+                      height: height * 0.35,
                       // decoration: kFillBoxDecoration(0, white, 40),
                       padding: EdgeInsets.all(10),
                       child: Column(
@@ -263,6 +264,7 @@ class AttendaceCalendarState extends State<AttendaceCalendar> {
                                       }))
                             ],
                           ),
+                          addVerticalSpace(20),
                         ],
                       ));
                 },

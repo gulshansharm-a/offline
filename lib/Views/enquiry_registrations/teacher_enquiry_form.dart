@@ -52,7 +52,7 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
         GlobalData().updateRole('teacher');
         return HomeScreen(
           whoAreYou: 'teacher',
-          serviceList: studentServiceList,
+          serviceList: teacherServiceList,
           sliderList: const [
             'Trusted Teachers',
             'Home to Home tuition service'

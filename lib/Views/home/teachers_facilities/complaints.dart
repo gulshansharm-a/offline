@@ -6,20 +6,20 @@ import '../../../utils/my_appbar.dart';
 import '../../../widget/custom_button.dart';
 import '../../../widget/custom_textfield.dart';
 
-class WriteToUsScreen extends StatefulWidget {
-  const WriteToUsScreen({super.key});
+class ComplaintsScreen extends StatefulWidget {
+  const ComplaintsScreen({super.key});
 
   @override
-  State<WriteToUsScreen> createState() => _WriteToUsScreenState();
+  State<ComplaintsScreen> createState() => _ComplaintsScreenState();
 }
 
-class _WriteToUsScreenState extends State<WriteToUsScreen> {
+class _ComplaintsScreenState extends State<ComplaintsScreen> {
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppbar2(context, 'Write To Us '),
+      appBar: customAppbar2(context, 'Complaints'),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(

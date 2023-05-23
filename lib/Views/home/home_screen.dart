@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/Views/enquiry_registrations/student_registration.dart';
 import 'package:offline_classes/Views/enquiry_registrations/teachers_registration_screen.dart';
 import 'package:offline_classes/Views/home/home_page_for_register_user.dart';
@@ -90,7 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
         foregroundColor: black,
         leadingWidth: width(context) * 0.3,
         leading: InkWell(
-          onTap: () {},
+          onTap: () {
+            AuthController.instance.logout();
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -395,8 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             runSpacing: 10,
                             spacing: 10,
                             children: List.generate(
-                                GlobalData.mapResponseStudetHome["classes"]
-                                    .length, (i) {
+                                mapResponse["classes"].length, (i) {
                               return InkWell(
                                 onTap: () {
                                   selectedIndex = i;

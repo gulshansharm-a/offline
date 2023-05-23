@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:offline_classes/Views/home/students_facilities/view_progress_report.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:sizer/sizer.dart';
@@ -108,15 +109,26 @@ class ProgressReports extends StatelessWidget {
                           ],
                         ),
                         Spacer(),
-                        Container(
-                          width: width(context) * 0.26,
-                          height: 4.h,
-                          decoration:
-                              kGradientBoxDecoration(40, greenGradient()),
-                          child: Center(
-                            child: Text(
-                              'View Report',
-                              style: kBodyText10wBold(white),
+                        InkWell(
+                          onTap: () {
+                            nextScreen(
+                                context,
+                                ViewProgressReport(
+                                  subject: "Mathematics",
+                                  date: '27th Dec 2022',
+                                  marks: "73/100",
+                                ));
+                          },
+                          child: Container(
+                            width: width(context) * 0.26,
+                            height: 4.h,
+                            decoration:
+                                kGradientBoxDecoration(40, greenGradient()),
+                            child: Center(
+                              child: Text(
+                                'View Report',
+                                style: kBodyText10wBold(white),
+                              ),
                             ),
                           ),
                         )

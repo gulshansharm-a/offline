@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:offline_classes/Views/home/students_facilities/select_student_profile.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
@@ -20,15 +21,25 @@ class _RegistrationSuccessfullState extends State<RegistrationSuccessfull> {
   @override
   void initState() {
     Timer(Duration(seconds: 3), () {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyBottomBar(
-            whoRYou: widget.whoareYou,
+      if (widget.whoareYou == 'teacher') {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyBottomBar(
+              whoRYou: widget.whoareYou,
+            ),
           ),
-        ),
-        (route) => false, // Condition to stop removing pages
-      );
+          (route) => false, // Condition to stop removing pages
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SelectStudentProfile(),
+          ),
+          (route) => false, // Condition to stop removing pages
+        );
+      }
     });
     super.initState();
   }

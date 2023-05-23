@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/my_appbar.dart';
@@ -22,9 +23,12 @@ class ErrorScreen extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(text.length, (index) {
-                return Text(
-                  text[index],
-                  style: styles[index],
+                return GestureDetector(
+                  onTap: AuthController.instance.logout,
+                  child: Text(
+                    text[index],
+                    style: styles[index],
+                  ),
                 );
               })
               //<Widget>[

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
 import 'package:offline_classes/Views/auth/otp_verify_screen.dart';
@@ -97,7 +98,16 @@ class AuthController extends GetxController {
               verificationId: this.verificationId.toString(), smsCode: otp));
       return credentials.user != null ? true : false;
     } catch (e) {
-      Get.snackbar("Error", "OTP does not match");
+      print("Error");
+      Fluttertoast.showToast(
+        msg: "Invalid OTP",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: Colors.grey.withOpacity(0.7),
+        textColor: Colors.white,
+        fontSize: 15,
+      );
       return false;
     }
   }

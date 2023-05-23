@@ -18,10 +18,11 @@ class SuccessfullLogInscreen extends StatefulWidget {
 class _SuccessfullLogInscreenState extends State<SuccessfullLogInscreen> {
   void initState() {
     Timer(Duration(seconds: 1), () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (ctx) => EnquirySelectStudentOrTeachers()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => EnquirySelectStudentOrTeachers()),
+        (route) => route.isFirst,
+      );
     });
     super.initState();
   }
