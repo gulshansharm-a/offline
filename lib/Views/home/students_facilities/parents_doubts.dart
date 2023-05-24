@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:offline_classes/Views/home/students_facilities/teachers_list.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
@@ -40,6 +41,8 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
     }
   }
 
+  submit() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +61,9 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
                 width: 50.w,
                 child: CustomButton(
                   text: 'Submit',
-                  onTap: () {},
+                  onTap: () {
+                    submit();
+                  },
                 ),
               ),
               addVerticalSpace(6.h),
@@ -117,7 +122,8 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
                   ),
                   InkWell(
                     onTap: () {
-                      _launchPhone('8577098983');
+                      //_launchPhone('8577098983');
+                      nextScreen(context, TeachersListScreen());
                     },
                     child: Container(
                       height: 16.h,

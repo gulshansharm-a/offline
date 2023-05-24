@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:offline_classes/Views/home/students_facilities/cancel_course_screen.dart';
 import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
@@ -35,9 +33,9 @@ class _CoursesTabState extends State<CoursesTab> {
     }
   }
 
-  List moveCourse = [];
-
   Map<String, dynamic> courses = {};
+
+  List moveCourse = [];
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +69,8 @@ class _CoursesTabState extends State<CoursesTab> {
           future: getCourses(),
           builder: (context, snapshot) {
             if (courses.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: CircularProgressIndicator(color: primary2));
             } else {
               GlobalStudent().updateCourses(courses);
               return SingleChildScrollView(
@@ -270,87 +269,56 @@ class _CoursesTabState extends State<CoursesTab> {
                     ),
                     addVerticalSpace(10),
                     ListView.builder(
-                        itemCount: courses["data"].length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (ctx, i) {
-                          return (GlobalStudent.moveCourse
-                                      .contains(courses["data"][i]["id"])) ||
-                                  GlobalStudent.purchasedCourses
-                                      .contains(courses["data"][i]["id"])
-                              ? const SizedBox(height: 0.1)
-                              : GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (GlobalStudent.moveCourse
-                                          .contains(courses["data"][i]["id"])) {
-                                        GlobalStudent.moveCourse
-                                            .remove(courses["data"][i]["id"]);
-                                      } else {
-                                        GlobalStudent.moveCourse
-                                            .add(courses["data"][i]["id"]);
-                                      }
-                                    });
-                                  },
-                                  child: Container(
-                                      // height: 8.h,
-                                      padding: EdgeInsets.all(2.h),
-                                      width: 93.w,
-                                      margin: EdgeInsets.all(10),
-                                      decoration: k3DboxDecoration(25),
-                                      child: Column(
+                      itemCount: courses["data"].length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, i) {
+                        return (GlobalStudent.moveCourse
+                                    .contains(courses["data"][i]["id"])) ||
+                                GlobalStudent.purchasedCourses
+                                    .contains(courses["data"][i]["id"])
+                            ? const SizedBox(height: 0.1)
+                            : GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (GlobalStudent.moveCourse
+                                        .contains(courses["data"][i]["id"])) {
+                                      GlobalStudent.moveCourse
+                                          .remove(courses["data"][i]["id"]);
+                                    } else {
+                                      GlobalStudent.moveCourse
+                                          .add(courses["data"][i]["id"]);
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  // height: 8.h,
+                                  padding: EdgeInsets.all(2.h),
+                                  width: 93.w,
+                                  margin: EdgeInsets.all(10),
+                                  decoration: k3DboxDecoration(25),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                courses["data"][i]
-                                                    ["course_name"],
-                                                style:
-                                                    kBodyText18wBold(primary),
-                                              ),
-                                              Spacer(),
-                                              Text(
-                                                "Rs. ${courses["data"][i]["price"].toString()}",
-                                                style:
-                                                    kBodyText16wNormal(primary),
-                                              ),
-                                            ],
+                                          Text(
+                                            courses["data"][i]["course_name"],
+                                            style: kBodyText18wBold(primary),
                                           ),
-                                          addVerticalSpace(2.5.h),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              CustomButtonOutline(
-                                                  textWidget: Text(
-                                                    'Book Demo',
-                                                    style:
-                                                        kBodyText12wBold(black),
-                                                  ),
-                                                  ontap: () {},
-                                                  width: 38.w,
-                                                  height: 4.5.h),
-                                              addHorizontalySpace(5.w),
-                                              Container(
-                                                width: 30.w,
-                                                height: 4.5.h,
-                                                decoration:
-                                                    kGradientBoxDecoration(
-                                                        30, greenGradient()),
-                                                child: Center(
-                                                  child: Text(
-                                                    'Buy Course',
-                                                    style:
-                                                        kBodyText12wBold(white),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          )
+                                          Spacer(),
+                                          Text(
+                                            "Rs. ${courses["data"][i]["price"].toString()}",
+                                            style: kBodyText16wNormal(primary),
+                                          ),
                                         ],
-                                      )),
-                                );
-                        }),
+                                      ),
+                                      addVerticalSpace(2.5.h),
+                                    ],
+                                  ),
+                                ),
+                              );
+                      },
+                    ),
                     addVerticalSpace(15),
                   ],
                 ),

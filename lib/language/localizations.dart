@@ -1,26 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'language_model.dart';
+class LocalizationController extends GetxController {
+  var selectedLanguage = ''.obs;
 
-class LanguageManager {
-  static const String kLanguageCodeKey = 'languageCode';
-  static const String kCountryCodeKey = 'countryCode';
-
-  static Future<LanguageModel> getSelectedLanguage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String languageCode = prefs.getString(kLanguageCodeKey) ?? 'en';
-    String countryCode = prefs.getString(kCountryCodeKey) ?? 'US';
-
-    return LanguageModel(
-      languageCode: languageCode,
-      countryCode: countryCode,
-      languageName: '',
-    );
+  @override
+  void onInit() {
+    super.onInit();
+    initLanguage();
   }
 
-  static Future<void> setSelectedLanguage(LanguageModel language) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(kLanguageCodeKey, language.languageCode);
-    await prefs.setString(kCountryCodeKey, language.countryCode);
+  Future<void> initLanguage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    selectedLanguage.value = prefs.getString('language') ?? 'en';
+  }
+
+  Future<void> changeLanguage(String languageCode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language', languageCode);
+    selectedLanguage.value = languageCode;
+    Get.updateLocale(Locale(languageCode));
   }
 }

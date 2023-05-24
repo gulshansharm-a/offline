@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:sizer/sizer.dart';
@@ -12,63 +14,97 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:table_calendar/table_calendar.dart';
 // import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../../global_data/GlobalData.dart';
+import '../../../global_data/student_global_data.dart';
 import '../../../utils/constants.dart';
 
 class AttendanceTeacersList extends StatelessWidget {
-  const AttendanceTeacersList({super.key});
+  AttendanceTeacersList({super.key});
+
+  Future<void> getTeacherList() async {
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+    teacherList = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(teacherList);
+    } else {
+      print("Unsuccessful");
+    }
+  }
+
+  Map<String, dynamic> teacherList = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppbar2(context, 'Attendance'),
-      body: Column(
-        children: [
-          Expanded(
-              child: ListView.builder(
-                  itemCount: 3,
-                  itemBuilder: (ctx, i) {
-                    return InkWell(
-                      onTap: () {
-                        nextScreen(context, AttendaceCalendar());
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        padding: EdgeInsets.all(12),
-                        // height: 12.h,
-                        width: 93.w,
-                        decoration:
-                            kGradientBoxDecoration(35, purpleGradident()),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 11.h,
-                              width: 25.w,
-                              decoration:
-                                  kGradientBoxDecoration(18, orangeGradient()),
-                              child: Image.asset('assets/images/dummy2.png'),
-                            ),
-                            addHorizontalySpace(width(context) * 0.06),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Anup Sharma',
-                                  style: kBodyText22bold(white),
+      body: FutureBuilder(
+        future: getTeacherList(),
+        builder: (context, snapshot) {
+          if (teacherList.isEmpty) {
+            return Center(child: CircularProgressIndicator(color: primary2));
+          } else {
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: teacherList["data"].length,
+                    itemBuilder: (ctx, i) {
+                      return InkWell(
+                        onTap: () {
+                          nextScreen(context, AttendaceCalendar());
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(12),
+                          // height: 12.h,
+                          width: 93.w,
+                          decoration:
+                              kGradientBoxDecoration(35, purpleGradident()),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 11.h,
+                                width: 25.w,
+                                decoration: kGradientBoxDecoration(
+                                    18, orangeGradient()),
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12)),
+                                  child: Image.network(
+                                    GlobalStudent.urlPrefix +
+                                        teacherList["data"][i]["image"],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                addVerticalSpace(10),
-                                Text(
-                                  'Science',
-                                  style: kBodyText20wNormal(white),
-                                ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              addHorizontalySpace(width(context) * 0.06),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    teacherList["data"][i]["name"],
+                                    style: kBodyText22bold(white),
+                                  ),
+                                  addVerticalSpace(10),
+                                  Text(
+                                    teacherList["data"][i]["subject"],
+                                    style: kBodyText20wNormal(white),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }))
-        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }

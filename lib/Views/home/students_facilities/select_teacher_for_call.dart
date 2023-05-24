@@ -22,7 +22,7 @@ class SelectTeacherForCall extends StatelessWidget {
                   itemBuilder: (ctx, i) {
                     return InkWell(
                       onTap: () {
-                        nextScreen(context, TeacherProfile());
+                        nextScreen(context, TeacherProfile(id: 49));
                       },
                       child: Container(
                         margin: EdgeInsets.all(10),

@@ -16,7 +16,7 @@ import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   ];
   final controller = PageController();
 
-  TextEditingController phNoController = TextEditingController();
+  static TextEditingController phNoController = TextEditingController();
   String phno = "";
 
   @override
@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (phno.length == 10) {
                     try {
                       AuthController.instance.sendOTP("+91${phno.trim()}");
-                      Get.to(() => const OtpVeryfyScreen());
+                      Get.to(() => OtpVeryfyScreen(mobno: "+91${phno.trim()}"));
                     } catch (e) {
                       Get.snackbar(
                         "About User",

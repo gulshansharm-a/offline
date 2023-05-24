@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
+import 'package:offline_classes/buffer_screens/progress_indicator_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 
@@ -25,10 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigateToNextScreen() async {
     await Future.delayed(const Duration(milliseconds: 4000), () {});
     if (mounted) {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (ctx) => EnquirySelectStudentOrTeachers()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (ctx) => const ProgressIndicatorScreen()));
     }
   }
 

@@ -1,21 +1,27 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
+import 'package:offline_classes/Views/auth/splash_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import 'Views/auth/auth_controller.dart';
+import 'language/localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Firebase.initializeApp().then((value) => Get.put(AuthController()));
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final LocalizationController localizationController =
+      Get.put(LocalizationController());
 
   // This widget is the root of your application.
   @override
@@ -24,11 +30,21 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         title: 'Offline Classes',
         debugShowCheckedModeBanner: false,
+        locale: Locale(localizationController.selectedLanguage.value),
+        supportedLocales: const [
+          Locale("en", "US"),
+          Locale("hi", ""),
+        ],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         theme: ThemeData(
           primarySwatch: Colors.blue,
           fontFamily: GoogleFonts.poppins().fontFamily,
         ),
-        home: const LoginScreen(),
+        home: const SplashScreen(),
       );
     });
   }

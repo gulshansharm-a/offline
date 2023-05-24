@@ -75,16 +75,19 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
               ),
             );
           } else {
-            // List<String> listOfClasses =
-            //     List<String>.filled(mapResponse["classes"].length, '');
-            // for (int i = 0; i < mapResponse["classes"].length; i++) {
-            //   listOfClasses[i] =
-            //       (mapResponse["classes"][i]["class_name"].toString());
-            // }
-            // List<String> classList = listOfClasses
-            //     .where((element) => element != null)
-            //     .cast<String>()
-            //     .toList();
+            List<String> listOfClasses =
+                List<String>.filled(mapResponse["classes"].length, '');
+            for (int i = 0; i < mapResponse["classes"].length; i++) {
+              listOfClasses[i] =
+                  (mapResponse["classes"][i]["class_name"].toString());
+            }
+            List<String> classLists = listOfClasses
+                .where((element) => element != null)
+                .cast<String>()
+                .toList();
+            List<String> myclassList = ["Class"];
+            myclassList.addAll(classLists);
+            print(myclassList);
             return Padding(
               padding: const EdgeInsets.all(12.0),
               child: SingleChildScrollView(
@@ -160,7 +163,7 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                           //     child: Text(className),
                           //   );
                           // }).toList(),
-                          items: classDropdownList
+                          items: myclassList
                               .map<DropdownMenuItem<String>>((value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -188,7 +191,8 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                       onTap: () async {
                         if (tfcity.text.toString().trim().length != 0 &&
                             tfname.text.toString().trim().length != 0 &&
-                            tfpincode.text.toString().trim().length != 0) {
+                            tfpincode.text.toString().trim().length != 0 &&
+                            classValue != "Class") {
                           try {
                             var url = Uri.parse(
                                 'https://trusher.shellcode.co.in/api/studentEnquiry?');
@@ -215,10 +219,13 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                               print(
                                   'Request failed with status: ${response.statusCode}');
                               print(json.decode(response.body)["Message"]);
-                              Get.to(() => ErrorScreen(
+                              Get.to(
+                                () => ErrorScreen(
                                   message: json
                                       .decode(response.body)["Message"]
-                                      .toString()));
+                                      .toString(),
+                                ),
+                              );
                             }
                           } catch (e) {
                             // Error occurred during HTTP request

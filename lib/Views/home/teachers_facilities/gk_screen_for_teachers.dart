@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:offline_classes/model/statics_list.dart';
 import 'package:offline_classes/utils/constants.dart';
@@ -12,10 +13,25 @@ import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../global_data/GlobalData.dart';
+import '../../../global_data/student_global_data.dart';
 import '../../../widget/custom_textfield.dart';
 
 class GKScreenForTeacher extends StatelessWidget {
-  const GKScreenForTeacher({super.key});
+  GKScreenForTeacher({super.key});
+
+  Future<void> getCourses() async {
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/gk?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}"));
+    gk = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(gk);
+    } else {
+      print("Unsuccessful");
+    }
+  }
+
+  Map<String, dynamic> gk = {};
 
   @override
   Widget build(BuildContext context) {
@@ -185,20 +201,24 @@ class _AddGKContentState extends State<AddGKContent> {
                     children: [
                       InkWell(
                         onTap: () async {
-                          final pickedFile = await _picker.pickImage(
-                            source: ImageSource.camera,
-                            imageQuality: 80,
-                          );
+                          try {
+                            final pickedFile = await _picker.pickImage(
+                              source: ImageSource.camera,
+                              imageQuality: 80,
+                            );
 
-                          if (pickedFile != null) {
-                            image = File(pickedFile.path);
-                            Get.snackbar("Success", "Image Selected");
-                            setState(() {
-                              showSpinner = false;
-                            });
-                          } else {
-                            Get.snackbar("Error", "Image Not Selected");
-                            print("No image selected");
+                            if (pickedFile != null) {
+                              image = File(pickedFile.path);
+                              Get.snackbar("Success", "Image Selected");
+                              setState(() {
+                                showSpinner = false;
+                              });
+                            } else {
+                              Get.snackbar("Error", "Image Not Selected");
+                              print("No image selected");
+                            }
+                          } catch (e) {
+                            Get.snackbar("Access Denied", "");
                           }
                         },
                         child: Container(

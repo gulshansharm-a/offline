@@ -11,6 +11,7 @@ import 'package:pinput/pin_put/pin_put.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/constants.dart';
+import 'login_screen.dart';
 
 class OtpVeryfyScreen extends StatefulWidget {
   static String verify = "";
@@ -18,7 +19,9 @@ class OtpVeryfyScreen extends StatefulWidget {
     verify = ver;
   }
 
-  const OtpVeryfyScreen({super.key});
+  String mobno;
+
+  OtpVeryfyScreen({super.key, required this.mobno});
 
   @override
   State<OtpVeryfyScreen> createState() => _OtpVeryfyScreenState();
@@ -81,11 +84,12 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
           addVerticalSpace(height(context) * 0.03),
           TextButton(
               onPressed: () async {
-                PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                    verificationId: OtpVeryfyScreen.verify,
-                    smsCode: code.toString().trim());
-                await AuthController.instance.auth
-                    .signInWithCredential(credential);
+                // PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                //     verificationId: OtpVeryfyScreen.verify,
+                //     smsCode: code.toString().trim());
+                // await AuthController.instance.auth
+                //     .signInWithCredential(credential);
+                AuthController.instance.sendOTP("+91${widget.mobno.trim()}");
               },
               child: Text(
                 'Resend OTP',

@@ -1,32 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:offline_classes/Views/home/students_facilities/student_profile_edit.dart';
-import 'package:offline_classes/global_data/GlobalData.dart';
-import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../utils/constants.dart';
 import '../../../widget/custom_back_button.dart';
 
-class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen(
+class MyProfileScreenTeacher extends StatelessWidget {
+  const MyProfileScreenTeacher(
       {super.key, required this.image, required this.username});
   final String image;
   final String username;
 
-  @override
-  State<MyProfileScreen> createState() => _MyProfileScreenState();
-}
-
-class _MyProfileScreenState extends State<MyProfileScreen> {
-  File? image;
-  ImagePicker picker = ImagePicker();
-  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +19,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         child: Column(
           children: [
             Container(
-              height: 42.h,
+              // height: 42.h,
               padding: EdgeInsets.all(2.h),
               width: width(context),
               decoration: BoxDecoration(
@@ -56,7 +41,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                       ],
                     ),
-                    addVerticalSpace(10),
+                    addVerticalSpace(2.w),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -67,18 +52,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           width: 39.w,
                           decoration:
                               kGradientBoxDecoration(40, orangeGradient()),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(40)),
-                            child: Image.network(
-                              "${GlobalStudent.urlPrefix}${GlobalStudent.specificProfile["data"][0]["image"]}",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                          child: Image.asset(image),
                         ),
                         InkWell(
-                          onTap: () {
-                            nextScreen(context, StudentProfileEdit());
-                          },
+                          onTap: () {},
                           child: Container(
                             height: 40,
                             width: 40,
@@ -92,9 +69,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         )
                       ],
                     ),
-                    addVerticalSpace(0.5.h),
+                    addVerticalSpace(1.h),
                     Text(
-                      GlobalStudent.specificProfile["data"][0]["name"],
+                      username,
                       style: kBodyText27wBold(white),
                     )
                   ],
@@ -122,7 +99,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        GlobalStudent.specificProfile["data"][0]["dob"],
+                        '23rd Sept 2013',
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -153,8 +130,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       SizedBox(
                         width: 68.w,
                         child: Text(
-                          GlobalStudent.specificProfile["data"][0]
-                              ["school_name"],
+                          'A.B.C English Medium School',
                           style: kBodyText16wBold(black),
                         ),
                       ),
@@ -184,7 +160,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        GlobalStudent.specificProfile["data"][0]["class"],
+                        '5th Class',
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -215,7 +191,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        GlobalStudent.specificProfile["data"][0]["subject"],
+                        'Mathematics, Science',
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -242,19 +218,16 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   height: 8.h,
                   width: 75.w,
                   decoration: kFillBoxDecoration(0, skinColor, 20),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        addHorizontalySpace(width(context) * 0.06),
-                        Text(
-                          '${GlobalStudent.specificProfile["data"][0]["city"]}, ${GlobalStudent.specificProfile["data"][0]["state"]}',
-                          style: kBodyText16wBold(black),
-                        ),
-                      ],
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      addHorizontalySpace(width(context) * 0.06),
+                      Text(
+                        'Mumbai, Maharashtra',
+                        style: kBodyText16wBold(black),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -285,7 +258,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        GlobalData.phoneNumber,
+                        '9130168812',
                         style: kBodyText16wBold(black),
                       ),
                     ],

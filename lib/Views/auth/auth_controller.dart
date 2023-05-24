@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
 import 'package:offline_classes/Views/auth/otp_verify_screen.dart';
+import 'package:offline_classes/Views/auth/splash_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +45,7 @@ class AuthController extends GetxController {
     if (user == null) {
       Get.offAll(() => LoginScreen());
     } else {
-      Get.offAll(() => ProgressIndicatorScreen());
+      Get.offAll(() => SplashScreen());
     }
   }
 
@@ -66,6 +67,7 @@ class AuthController extends GetxController {
       codeSent: (String verificationId, int? resendToken) {
         this.verificationId.value = verificationId;
         GlobalData().updatePhoneNumber(phno);
+        OtpVeryfyScreen.verify = verificationId;
         print("OTP Sent");
         print(verificationId);
       },

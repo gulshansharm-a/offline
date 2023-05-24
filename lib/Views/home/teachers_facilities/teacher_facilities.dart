@@ -15,6 +15,7 @@ import 'package:sizer/sizer.dart';
 import '../../../model/statics_list.dart';
 import '../../../utils/constants.dart';
 import 'complaints.dart';
+import 'my_profile_screen_teacher.dart';
 import 'suggestions.dart';
 
 class TeacherFacilities extends StatelessWidget {
@@ -40,7 +41,7 @@ class TeacherFacilities extends StatelessWidget {
               onTap: () {
                 nextScreen(
                     context,
-                    MyProfileScreen(
+                    MyProfileScreenTeacher(
                         image: 'assets/images/dummy2.png',
                         username: 'Anup Sharma'));
               },
@@ -104,7 +105,7 @@ class TeacherFacilities extends StatelessWidget {
                         if (i == 0) {
                           nextScreen(
                               context,
-                              MyProfileScreen(
+                              MyProfileScreenTeacher(
                                   image: 'assets/images/dummy2.png',
                                   username: 'Anup Sharma'));
                         } else if (i == 1) {

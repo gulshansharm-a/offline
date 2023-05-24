@@ -91,7 +91,7 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
                                     addHorizontalySpace(5.w),
                                     InkWell(
                                       onTap: () {
-                                        confirmationPopup(context);
+                                        confirmationPopup(context, i);
                                       },
                                       child: const CircleAvatar(
                                         backgroundColor: Colors.white,
@@ -122,7 +122,7 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
     );
   }
 
-  Future<dynamic> confirmationPopup(BuildContext context) {
+  Future<dynamic> confirmationPopup(BuildContext context, int i) {
     return showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -173,9 +173,9 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
                           text: 'Yes',
                           onTap: () {
                             GlobalStudent.purchasedCourses.remove(
-                                GlobalStudent.courses["mycourse"][0]["id"]);
+                                GlobalStudent.courses["mycourse"][i]["id"]);
                             goBack(context);
-                            deleteCourse();
+                            deleteCourse(i);
                           },
                         ),
                       ),
@@ -190,12 +190,12 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
     );
   }
 
-  void deleteCourse() async {
+  void deleteCourse(int i) async {
     setState(() {
       showSpinner = true;
     });
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/coursesDelete?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&course_id=${GlobalStudent.courses["data"][0]["id"]}"));
+        "https://trusher.shellcode.co.in/api/coursesDelete?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&course_id=${GlobalStudent.courses["mycourse"][i]["id"]}"));
 
     Map<String, dynamic> map = json.decode(response.body);
     if (response.statusCode == 200) {

@@ -3,18 +3,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/Views/enquiry_registrations/student_registration.dart';
 import 'package:offline_classes/Views/enquiry_registrations/teachers_registration_screen.dart';
-import 'package:offline_classes/Views/home/home_page_for_register_user.dart';
-import 'package:offline_classes/model/statics_list.dart';
 import 'package:offline_classes/model/student_home_data_model.dart';
-import 'package:offline_classes/services/apiServices.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/custom_button.dart';
-import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 
@@ -237,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Container(
                                   margin: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 2),
-                                  height: height(context) * 0.25,
+                                  // height: height(context) * 0.25,
                                   width: width(context) * 0.95,
                                   decoration: kFillBoxDecoration(
                                       0,
@@ -473,94 +467,102 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           addVerticalSpace(3.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 6.5.h,
-                                width: 15.w,
-                                decoration: k3DboxDecoration(15),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.call,
-                                    size: 30,
-                                    color: Color(0xff48116A),
-                                  ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 6.5.h,
+                                      width: 15.w,
+                                      decoration: k3DboxDecoration(15),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.call,
+                                          size: 30,
+                                          color: Color(0xff48116A),
+                                        ),
+                                      ),
+                                    ),
+                                    addHorizontalySpace(6.w),
+                                    Text(
+                                      '020-28438294',
+                                      style: kBodyText18wNormal(black),
+                                    )
+                                  ],
                                 ),
-                              ),
-                              addHorizontalySpace(6.w),
-                              Text(
-                                '020-28438294',
-                                style: kBodyText18wNormal(black),
-                              )
-                            ],
-                          ),
-                          addVerticalSpace(2.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 6.5.h,
-                                width: 15.w,
-                                decoration: k3DboxDecoration(15),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.mail,
-                                    size: 30,
-                                    color: Color(0xff48116A),
-                                  ),
+                                addVerticalSpace(2.h),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 6.5.h,
+                                      width: 15.w,
+                                      decoration: k3DboxDecoration(15),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.mail,
+                                          size: 30,
+                                          color: Color(0xff48116A),
+                                        ),
+                                      ),
+                                    ),
+                                    addHorizontalySpace(6.w),
+                                    Text(
+                                      'abcd1234@gmail.com',
+                                      style: kBodyText18wNormal(black),
+                                    )
+                                  ],
                                 ),
-                              ),
-                              addHorizontalySpace(6.w),
-                              Text(
-                                'abcd1234@gmail.com',
-                                style: kBodyText18wNormal(black),
-                              )
-                            ],
-                          ),
-                          addVerticalSpace(2.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 6.5.h,
-                                width: 15.w,
-                                decoration: k3DboxDecoration(15),
-                                child: const Center(
-                                    child: ImageIcon(
-                                  AssetImage('assets/images/wpicon.png'),
-                                  size: 30,
-                                )),
-                              ),
-                              addHorizontalySpace(6.w),
-                              Text(
-                                '08346728197',
-                                style: kBodyText18wNormal(black),
-                              )
-                            ],
-                          ),
-                          addVerticalSpace(2.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 6.5.h,
-                                width: 15.w,
-                                decoration: k3DboxDecoration(15),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.location_on,
-                                    size: 30,
-                                    color: Color(0xff48116A),
-                                  ),
+                                addVerticalSpace(2.h),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 6.5.h,
+                                      width: 15.w,
+                                      decoration: k3DboxDecoration(15),
+                                      child: const Center(
+                                          child: ImageIcon(
+                                        AssetImage('assets/images/wpicon.png'),
+                                        size: 30,
+                                      )),
+                                    ),
+                                    addHorizontalySpace(6.w),
+                                    Text(
+                                      '08346728197',
+                                      style: kBodyText18wNormal(black),
+                                    )
+                                  ],
                                 ),
-                              ),
-                              addHorizontalySpace(6.w),
-                              Text(
-                                'Bihar',
-                                style: kBodyText18wNormal(black),
-                              )
-                            ],
+                                addVerticalSpace(2.h),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 6.5.h,
+                                      width: 15.w,
+                                      decoration: k3DboxDecoration(15),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.location_on,
+                                          size: 30,
+                                          color: Color(0xff48116A),
+                                        ),
+                                      ),
+                                    ),
+                                    addHorizontalySpace(6.w),
+                                    Text(
+                                      'Bihar',
+                                      style: kBodyText18wNormal(black),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           addVerticalSpace(3.5.h),
                           Center(

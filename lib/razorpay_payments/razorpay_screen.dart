@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:offline_classes/Views/auth/auth_controller.dart';
@@ -90,6 +89,8 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     } else {
       print("Payment capture failed");
     }
+    //Since the payment is not getting captured, I have kept
+    // the screen navigation code outside the successful caputre block
     if (widget.payment_type == 'student registration' ||
         widget.payment_type == 'teacher registration') {
       Map<String, dynamic> map;

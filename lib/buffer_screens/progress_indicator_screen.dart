@@ -52,7 +52,7 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
   Map<String, dynamic> mapres = {};
 
   void _startDelayedTask() {
-    Future.delayed(Duration(seconds: 5)).then((_) {
+    Future.delayed(Duration(seconds: 7)).then((_) {
       // Code to be executed after the delay
     });
   }
@@ -72,7 +72,9 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
             print("omg = " + role);
             //checkForRegister();
             _startDelayedTask();
-            registerCheck = GlobalData.mapRegisterCheck["Message"];
+            if (GlobalData.mapRegisterCheck.isNotEmpty) {
+              registerCheck = GlobalData.mapRegisterCheck["Message"];
+            }
             print(registerCheck);
             if (role == 'student' || role == 'teacher') {
               if (registerCheck == "Paymnet not done yert") {
@@ -106,9 +108,10 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
                   heading:
                       'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
                 );
-              } else if (registerCheck == "Teacher Registerd" ||
-                  registerCheck == "Student Registerd") {
+              } else if (registerCheck == "Student Registerd") {
                 return SelectStudentProfile();
+              } else if (registerCheck == "Teacher Registerd") {
+                return MyBottomBar(whoRYou: role);
               } else {
                 const EnquirySelectStudentOrTeachers();
               }

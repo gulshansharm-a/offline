@@ -5,10 +5,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:offline_classes/Views/enquiry_registrations/student_registration.dart';
 import 'package:offline_classes/Views/enquiry_registrations/teachers_registration_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/global_data/student_global_data.dart';
+import 'package:offline_classes/language/localizations.dart';
 import 'package:offline_classes/model/statics_list.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/custom_button.dart';
@@ -45,6 +47,8 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
     'Siwan',
     'Bhojpur'
   ];
+  final LocalizationController localizationController =
+      Get.put(LocalizationController());
 
   List imgList2 = [
     'assets/images/banner.jpg',
@@ -95,6 +99,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
             underline: SizedBox(),
             onChanged: (String? newValue) {
               setState(() {
+                localizationController.changeLanguage('hi');
                 dropDownValue = newValue!;
               });
             },
@@ -123,7 +128,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                     GlobalData.role == 'student'
                         ? "Hi " +
                             GlobalStudent.specificProfile["data"][0]["name"]
-                        : 'Hi Sumit,',
+                        : 'Hi Sumit,'.tr,
                     style: TextStyle(
                         color: blue,
                         fontSize: 30.sp,
@@ -244,7 +249,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                     ),
                   ),
                   addVerticalSpace(15),
-                  SizedBox(
+                  Container(
                     height: 31.h,
                     child: ListView.builder(
                         itemCount: widget.sliderList.length,
@@ -252,7 +257,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                         itemBuilder: (ctx, i) {
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 8),
-                            height: height(context) * 0.3,
+                            // height: height(context) * 0.3,
                             width: width(context) * 0.6,
                             decoration: kFillBoxDecoration(
                                 0,
@@ -306,7 +311,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                         return Container(
                           margin:
                               EdgeInsets.symmetric(vertical: 8, horizontal: 2),
-                          height: height(context) * 0.25,
+                          // height: height(context) * 0.29,
                           width: width(context) * 0.95,
                           decoration: kFillBoxDecoration(
                               0,
@@ -332,23 +337,30 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                                         // addVerticalSpace(15),
                                         SizedBox(
                                           width: 40.w,
-                                          child: Text(
-                                            widget.serviceList[i]['title'],
-                                            style: kbodyText18W600(i % 2 == 0
-                                                ? Color(0xff0C3D45)
-                                                : Color(0xff620085)),
-                                            textAlign: TextAlign.center,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: Text(
+                                              widget.serviceList[i]['title'],
+                                              style: kbodyText18W600(i % 2 == 0
+                                                  ? Color(0xff0C3D45)
+                                                  : Color(0xff620085)),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         ),
                                         addVerticalSpace(10),
                                         SizedBox(
                                           width: 40.w,
-                                          child: Text(
-                                            widget.serviceList[i]['subtitle'],
-                                            style: kBodyText14wNormal(i % 2 == 0
-                                                ? Color(0xff0A595B)
-                                                : Color(0xffA400DE)),
-                                            textAlign: TextAlign.center,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: Text(
+                                              widget.serviceList[i]['subtitle'],
+                                              style: kBodyText14wNormal(
+                                                  i % 2 == 0
+                                                      ? Color(0xff0A595B)
+                                                      : Color(0xffA400DE)),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         )
                                       ],
@@ -368,23 +380,30 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                                         // addVerticalSpace(15),
                                         SizedBox(
                                           width: 40.w,
-                                          child: Text(
-                                            widget.serviceList[i]['title'],
-                                            style: kbodyText18W600(i % 2 == 0
-                                                ? Color(0xff0C3D45)
-                                                : Color(0xff620085)),
-                                            textAlign: TextAlign.center,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: Text(
+                                              widget.serviceList[i]['title'],
+                                              style: kbodyText18W600(i % 2 == 0
+                                                  ? Color(0xff0C3D45)
+                                                  : Color(0xff620085)),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         ),
                                         addVerticalSpace(10),
                                         SizedBox(
                                           width: 40.w,
-                                          child: Text(
-                                            widget.serviceList[i]['subtitle'],
-                                            style: kBodyText14wNormal(i % 2 == 0
-                                                ? Color(0xff0A595B)
-                                                : Color(0xffA400DE)),
-                                            textAlign: TextAlign.center,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: Text(
+                                              widget.serviceList[i]['subtitle'],
+                                              style: kBodyText14wNormal(
+                                                  i % 2 == 0
+                                                      ? Color(0xff0A595B)
+                                                      : Color(0xffA400DE)),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         )
                                       ],
@@ -628,94 +647,102 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                   ),
 
                   addVerticalSpace(3.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 6.5.h,
-                        width: 15.w,
-                        decoration: k3DboxDecoration(15),
-                        child: const Center(
-                          child: Icon(
-                            Icons.call,
-                            size: 30,
-                            color: Color(0xff48116A),
-                          ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 6.5.h,
+                              width: 15.w,
+                              decoration: k3DboxDecoration(15),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.call,
+                                  size: 30,
+                                  color: Color(0xff48116A),
+                                ),
+                              ),
+                            ),
+                            addHorizontalySpace(6.w),
+                            Text(
+                              '020-28438294',
+                              style: kBodyText18wNormal(black),
+                            )
+                          ],
                         ),
-                      ),
-                      addHorizontalySpace(6.w),
-                      Text(
-                        '020-28438294',
-                        style: kBodyText18wNormal(black),
-                      )
-                    ],
-                  ),
-                  addVerticalSpace(2.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 6.5.h,
-                        width: 15.w,
-                        decoration: k3DboxDecoration(15),
-                        child: const Center(
-                          child: Icon(
-                            Icons.mail,
-                            size: 30,
-                            color: Color(0xff48116A),
-                          ),
+                        addVerticalSpace(2.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 6.5.h,
+                              width: 15.w,
+                              decoration: k3DboxDecoration(15),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.mail,
+                                  size: 30,
+                                  color: Color(0xff48116A),
+                                ),
+                              ),
+                            ),
+                            addHorizontalySpace(6.w),
+                            Text(
+                              'abcd1234@gmail.com',
+                              style: kBodyText18wNormal(black),
+                            )
+                          ],
                         ),
-                      ),
-                      addHorizontalySpace(6.w),
-                      Text(
-                        'abcd1234@gmail.com',
-                        style: kBodyText18wNormal(black),
-                      )
-                    ],
-                  ),
-                  addVerticalSpace(2.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 6.5.h,
-                        width: 15.w,
-                        decoration: k3DboxDecoration(15),
-                        child: const Center(
-                            child: ImageIcon(
-                          AssetImage('assets/images/wpicon.png'),
-                          size: 30,
-                        )),
-                      ),
-                      addHorizontalySpace(6.w),
-                      Text(
-                        '08346728197',
-                        style: kBodyText18wNormal(black),
-                      )
-                    ],
-                  ),
-                  addVerticalSpace(2.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 6.5.h,
-                        width: 15.w,
-                        decoration: k3DboxDecoration(15),
-                        child: const Center(
-                          child: Icon(
-                            Icons.location_on,
-                            size: 30,
-                            color: Color(0xff48116A),
-                          ),
+                        addVerticalSpace(2.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 6.5.h,
+                              width: 15.w,
+                              decoration: k3DboxDecoration(15),
+                              child: const Center(
+                                  child: ImageIcon(
+                                AssetImage('assets/images/wpicon.png'),
+                                size: 30,
+                              )),
+                            ),
+                            addHorizontalySpace(6.w),
+                            Text(
+                              '08346728197',
+                              style: kBodyText18wNormal(black),
+                            )
+                          ],
                         ),
-                      ),
-                      addHorizontalySpace(6.w),
-                      Text(
-                        'Bihar',
-                        style: kBodyText18wNormal(black),
-                      )
-                    ],
+                        addVerticalSpace(2.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 6.5.h,
+                              width: 15.w,
+                              decoration: k3DboxDecoration(15),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.location_on,
+                                  size: 30,
+                                  color: Color(0xff48116A),
+                                ),
+                              ),
+                            ),
+                            addHorizontalySpace(6.w),
+                            Text(
+                              'Bihar',
+                              style: kBodyText18wNormal(black),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   addVerticalSpace(3.5.h),
                   Center(

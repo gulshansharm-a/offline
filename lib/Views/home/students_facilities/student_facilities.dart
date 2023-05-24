@@ -71,12 +71,16 @@ class StudentFacilities extends StatelessWidget {
                               GlobalStudent.specificProfile["data"][0]["name"],
                               style: kBodyText24wBold(white),
                             ),
-                            Text(
-                              GlobalStudent.specificProfile["data"][0]["city"] +
-                                  ',' +
-                                  GlobalStudent.specificProfile["data"][0]
-                                      ["state"],
-                              style: kBodyText12wNormal(white),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                GlobalStudent.specificProfile["data"][0]
+                                        ["city"] +
+                                    ',' +
+                                    GlobalStudent.specificProfile["data"][0]
+                                        ["state"],
+                                style: kBodyText12wNormal(white),
+                              ),
                             ),
                             Text(
                               GlobalData.phoneNumber,

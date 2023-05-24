@@ -86,7 +86,24 @@ class _MyBottomBarState extends State<MyBottomBar> {
     }
   }
 
-  checkTeacherProfile() async {}
+  static Map<String, dynamic> teacherProfile = {};
+
+  checkTeacherProfile() async {
+    Future<void> checkSpecificProfiles() async {
+      id = SelectStudentProfile().getId();
+      MyBottomBar.id = SelectStudentProfile().getId();
+      final http.Response response = await http.get(Uri.parse(
+          "https://trusher.shellcode.co.in/api/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
+      specificProfile = json.decode(response.body);
+      if (response.statusCode == 200) {
+        print(id);
+        print(MyBottomBar.id);
+        print(specificProfile);
+      } else {
+        return;
+      }
+    }
+  }
 
   DateTime? currentBackPressTime;
 
@@ -114,7 +131,8 @@ class _MyBottomBarState extends State<MyBottomBar> {
           ? checkSpecificProfiles()
           : checkTeacherProfile(),
       builder: (context, snapshot) {
-        if ((role == 'student' && specificProfile.isNotEmpty)) {
+        if ((role == 'student' && specificProfile.isNotEmpty) ||
+            role == 'teacher') {
           GlobalStudent().updateSpecificProfile(specificProfile);
           return Scaffold(
             body: WillPopScope(
