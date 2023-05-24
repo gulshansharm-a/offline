@@ -66,9 +66,12 @@ PreferredSize customAppbar2(BuildContext context, String title) {
               )),
         ),
       ),
-      title: Text(
-        title,
-        style: kBodyText20wBold(primary),
+      title: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          title,
+          style: kBodyText20wBold(primary),
+        ),
       ),
     ),
   );

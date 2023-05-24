@@ -5,13 +5,16 @@ import 'package:offline_classes/Views/home/students_facilities/notice_screen.dar
 import 'package:offline_classes/Views/home/students_facilities/progress_reports.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/gk_screen_for_teachers.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/test_series_teacher.dart';
+import 'package:offline_classes/Views/home/teachers_facilities/view_student_profile.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../utils/constants.dart';
 
 class StudentsDetails extends StatelessWidget {
-  const StudentsDetails({super.key});
+  const StudentsDetails({super.key, required this.student});
+
+  final Map<String, dynamic> student;
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +43,17 @@ class StudentsDetails extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Diksha Shah',
+                      student["name"],
                       style: kBodyText22bold(white),
                     ),
                     addVerticalSpace(2),
                     Text(
-                      '+91-987543210',
+                      "+${student["phone"]}",
                       style: kBodyText12wNormal(white),
                     ),
                     addVerticalSpace(2),
                     Text(
-                      'Science & English',
+                      student["subject"],
                       style: kBodyText12wNormal(white),
                     ),
                     addHorizontalySpace(2.w),
@@ -58,10 +61,7 @@ class StudentsDetails extends StatelessWidget {
                       onTap: () {
                         nextScreen(
                           context,
-                          const MyProfileScreen(
-                            image: 'assets/images/tf1.png',
-                            username: 'Rahul tripathi',
-                          ),
+                          ViewStudentProfile(studentlist: student),
                         );
                       },
                       child: Text(
@@ -270,7 +270,10 @@ class StudentsDetails extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  nextScreen(context, AddGKContent());
+                  nextScreen(
+                      context,
+                      AddGKContent(
+                          student_id: student["id"], category: "foryou"));
                 },
                 child: Container(
                   height: 8.h,

@@ -1,8 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:offline_classes/Views/home/students_facilities/attendance_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/fee_payment_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/gk_screen.dart';
@@ -53,41 +49,37 @@ class StudentFacilities extends StatelessWidget {
                 margin: EdgeInsets.all(10),
                 padding: EdgeInsets.only(
                     left: 7.w, right: 5.w, top: 2.h, bottom: 2.h),
-                height: 18.h,
+                // height: 18.h,
                 width: 95.w,
                 decoration: kGradientBoxDecoration(35, purpleGradident()),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      child: SizedBox(
-                        width: 53.w,
-                        height: 16.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              GlobalStudent.specificProfile["data"][0]["name"],
-                              style: kBodyText24wBold(white),
-                            ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Text(
-                                GlobalStudent.specificProfile["data"][0]
-                                        ["city"] +
-                                    ',' +
-                                    GlobalStudent.specificProfile["data"][0]
-                                        ["state"],
-                                style: kBodyText12wNormal(white),
-                              ),
-                            ),
-                            Text(
-                              GlobalData.phoneNumber,
+                    Container(
+                      width: 54.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            GlobalStudent.specificProfile["data"][0]["name"],
+                            style: kBodyText24wBold(white),
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              GlobalStudent.specificProfile["data"][0]["city"] +
+                                  ',' +
+                                  GlobalStudent.specificProfile["data"][0]
+                                      ["state"],
                               style: kBodyText12wNormal(white),
                             ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            GlobalData.phoneNumber,
+                            style: kBodyText12wNormal(white),
+                          ),
+                        ],
                       ),
                     ),
                     addHorizontalySpace(10),

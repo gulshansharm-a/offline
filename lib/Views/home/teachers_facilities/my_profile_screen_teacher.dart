@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:offline_classes/Views/home/teachers_facilities/teacher_profile_edit.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../global_data/student_global_data.dart';
+import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
 import '../../../widget/custom_back_button.dart';
 
 class MyProfileScreenTeacher extends StatelessWidget {
-  const MyProfileScreenTeacher(
-      {super.key, required this.image, required this.username});
-  final String image;
-  final String username;
+  const MyProfileScreenTeacher({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +53,18 @@ class MyProfileScreenTeacher extends StatelessWidget {
                           width: 39.w,
                           decoration:
                               kGradientBoxDecoration(40, orangeGradient()),
-                          child: Image.asset(image),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            child: Image.network(
+                              "${GlobalTeacher.urlPrefix}${GlobalTeacher.profile["data"][0]["image"]}",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            nextScreen(context, const TeacherProfileEdit());
+                          },
                           child: Container(
                             height: 40,
                             width: 40,
@@ -71,7 +80,7 @@ class MyProfileScreenTeacher extends StatelessWidget {
                     ),
                     addVerticalSpace(1.h),
                     Text(
-                      username,
+                      GlobalTeacher.profile["data"][0]["name"],
                       style: kBodyText27wBold(white),
                     )
                   ],
@@ -99,40 +108,8 @@ class MyProfileScreenTeacher extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '23rd Sept 2013',
+                        GlobalTeacher.profile["data"][0]["dob"],
                         style: kBodyText16wBold(black),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            addVerticalSpace(height(context) * 0.02),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: 8.h,
-                  width: 18.w,
-                  decoration: kGradientBoxDecoration(20, orangeGradient()),
-                  child: Image.asset('assets/images/school.png'),
-                ),
-                Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(0, skinColor, 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.06),
-                      SizedBox(
-                        width: 68.w,
-                        child: Text(
-                          'A.B.C English Medium School',
-                          style: kBodyText16wBold(black),
-                        ),
                       ),
                     ],
                   ),
@@ -160,7 +137,7 @@ class MyProfileScreenTeacher extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '5th Class',
+                        GlobalTeacher.profile["data"][0]["preferd_class"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -191,7 +168,7 @@ class MyProfileScreenTeacher extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        'Mathematics, Science',
+                        GlobalTeacher.profile["data"][0]["subject"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -223,9 +200,12 @@ class MyProfileScreenTeacher extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
-                      Text(
-                        'Mumbai, Maharashtra',
-                        style: kBodyText16wBold(black),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          '${GlobalTeacher.profile["data"][0]["city"]},${GlobalTeacher.profile["data"][0]["state"]}',
+                          style: kBodyText16wBold(black),
+                        ),
                       ),
                     ],
                   ),
@@ -258,7 +238,7 @@ class MyProfileScreenTeacher extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '9130168812',
+                        GlobalData.phoneNumber.toString().substring(1),
                         style: kBodyText16wBold(black),
                       ),
                     ],

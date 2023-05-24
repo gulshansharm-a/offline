@@ -12,6 +12,7 @@ import 'package:offline_classes/Views/home/teachers_facilities/write_to_us_scree
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../global_data/teacher_global_data.dart';
 import '../../../model/statics_list.dart';
 import '../../../utils/constants.dart';
 import 'complaints.dart';
@@ -39,34 +40,31 @@ class TeacherFacilities extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                nextScreen(
-                    context,
-                    MyProfileScreenTeacher(
-                        image: 'assets/images/dummy2.png',
-                        username: 'Anup Sharma'));
+                nextScreen(context, const MyProfileScreenTeacher());
               },
               child: Container(
                 margin: EdgeInsets.all(8),
                 padding: EdgeInsets.only(
-                    left: 2.w, right: 5.w, top: 2.h, bottom: 2.h),
+                    left: 7.w, right: 5.w, top: 2.h, bottom: 2.h),
                 // height: 12.h,
-                width: 93.w,
+                width: 95.w,
                 decoration: kGradientBoxDecoration(35, purpleGradident()),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: 12.h,
+                      width: 53.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            'Anup Sharma',
+                            GlobalTeacher.profile["data"][0]["name"],
                             style: kBodyText22bold(white),
                           ),
                           Text(
-                            'Mumbai, Maharashtra',
+                            '${GlobalTeacher.profile["data"][0]["city"]},${GlobalTeacher.profile["data"][0]["state"]}',
                             style: kBodyText12wNormal(white),
                           ),
                           Text(
@@ -76,12 +74,18 @@ class TeacherFacilities extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(width: 10),
+                    addHorizontalySpace(10),
                     Container(
                       height: 12.h,
-                      width: 25.w,
+                      width: 26.w,
                       decoration: kGradientBoxDecoration(18, orangeGradient()),
-                      child: Image.asset('assets/images/dummy2.png'),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        child: Image.network(
+                          "${GlobalTeacher.urlPrefix}${GlobalTeacher.profile["data"][0]["image"]}",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -103,11 +107,7 @@ class TeacherFacilities extends StatelessWidget {
                     return InkWell(
                       onTap: () {
                         if (i == 0) {
-                          nextScreen(
-                              context,
-                              MyProfileScreenTeacher(
-                                  image: 'assets/images/dummy2.png',
-                                  username: 'Anup Sharma'));
+                          nextScreen(context, const MyProfileScreenTeacher());
                         } else if (i == 1) {
                           nextScreen(
                               context,

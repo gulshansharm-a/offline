@@ -10,6 +10,7 @@ import 'package:offline_classes/Views/home/students_facilities/student_facilitie
 import 'package:offline_classes/Views/home/teachers_facilities/teacher_course_tab.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/teacher_facilities.dart';
 import 'package:offline_classes/global_data/student_global_data.dart';
+import 'package:offline_classes/global_data/teacher_global_data.dart';
 import 'package:offline_classes/model/statics_list.dart';
 
 import '../global_data/GlobalData.dart';
@@ -88,20 +89,15 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   static Map<String, dynamic> teacherProfile = {};
 
-  checkTeacherProfile() async {
-    Future<void> checkSpecificProfiles() async {
-      id = SelectStudentProfile().getId();
-      MyBottomBar.id = SelectStudentProfile().getId();
-      final http.Response response = await http.get(Uri.parse(
-          "https://trusher.shellcode.co.in/api/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
-      specificProfile = json.decode(response.body);
-      if (response.statusCode == 200) {
-        print(id);
-        print(MyBottomBar.id);
-        print(specificProfile);
-      } else {
-        return;
-      }
+  Future<void> checkTeacherProfile() async {
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/teacherLogin?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
+    teacherProfile = json.decode(response.body);
+    print("caled");
+    if (response.statusCode == 200) {
+      print(teacherProfile);
+    } else {
+      return;
     }
   }
 
@@ -126,14 +122,21 @@ class _MyBottomBarState extends State<MyBottomBar> {
   @override
   Widget build(BuildContext context) {
     String role = widget.whoRYou;
+    print(teacherProfile);
     return FutureBuilder(
       future: widget.whoRYou == 'student'
           ? checkSpecificProfiles()
           : checkTeacherProfile(),
       builder: (context, snapshot) {
         if ((role == 'student' && specificProfile.isNotEmpty) ||
-            role == 'teacher') {
-          GlobalStudent().updateSpecificProfile(specificProfile);
+            (role == 'teacher' && teacherProfile.isNotEmpty)) {
+          if (role == 'student') {
+            GlobalStudent().updateSpecificProfile(specificProfile);
+          }
+          if (role == 'teacher') {
+            GlobalTeacher().updateId(teacherProfile["data"][0]["id"]);
+            GlobalTeacher().updateProfiles(teacherProfile);
+          }
           return Scaffold(
             body: WillPopScope(
               onWillPop: _onWillPop,

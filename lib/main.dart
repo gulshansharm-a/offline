@@ -30,16 +30,16 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         title: 'Offline Classes',
         debugShowCheckedModeBanner: false,
-        locale: Locale(localizationController.selectedLanguage.value),
-        supportedLocales: const [
-          Locale("en", "US"),
-          Locale("hi", ""),
-        ],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        // locale: Locale(localizationController.selectedLanguage.value),
+        // supportedLocales: const [
+        //   Locale("en", "US"),
+        //   Locale("hi", ""),
+        // ],
+        // localizationsDelegates: const [
+        //   GlobalMaterialLocalizations.delegate,
+        //   GlobalWidgetsLocalizations.delegate,
+        //   GlobalCupertinoLocalizations.delegate,
+        // ],
         theme: ThemeData(
           primarySwatch: Colors.blue,
           fontFamily: GoogleFonts.poppins().fontFamily,

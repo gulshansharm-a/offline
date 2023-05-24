@@ -121,7 +121,8 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
       if (response.statusCode == 200) {
         var httpResponse = await http.Response.fromStream(response);
         var jsonResponse = json.decode(httpResponse.body);
-        String msg = jsonResponse["message"].toString();
+        print(jsonResponse);
+        String msg = jsonResponse["Message"].toString();
         if (msg == "Registrtion successfull") {
           setState(() {
             showSpinner = false;

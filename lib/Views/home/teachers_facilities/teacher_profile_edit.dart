@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:http/http.dart' as http;
 import 'package:offline_classes/global_data/student_global_data.dart';
+import 'package:offline_classes/global_data/teacher_global_data.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
 import 'package:offline_classes/widget/image_opener.dart';
@@ -21,29 +22,31 @@ import '../../../utils/constants.dart';
 import '../../../widget/custom_button.dart';
 import '../../enquiry_registrations/error_screen.dart';
 
-class StudentProfileEdit extends StatefulWidget {
-  const StudentProfileEdit({super.key});
+class TeacherProfileEdit extends StatefulWidget {
+  const TeacherProfileEdit({super.key});
 
   @override
-  State<StudentProfileEdit> createState() => _StudentProfileEditState();
+  State<TeacherProfileEdit> createState() => _TeacherProfileEditState();
 }
 
-class _StudentProfileEditState extends State<StudentProfileEdit> {
+class _TeacherProfileEditState extends State<TeacherProfileEdit> {
   TextEditingController datofBirthControler = TextEditingController();
   TextEditingController tfname = TextEditingController();
-  TextEditingController tfschool = TextEditingController();
   TextEditingController tfclass = TextEditingController();
   TextEditingController tfsubject = TextEditingController();
+  TextEditingController tfmedium = TextEditingController();
+  TextEditingController tfadd = TextEditingController();
 
   bool showSpinner = false;
 
   @override
   initState() {
-    datofBirthControler.text = GlobalStudent.specificProfile["data"][0]["dob"];
-    tfname.text = GlobalStudent.specificProfile["data"][0]["name"];
-    tfclass.text = GlobalStudent.specificProfile["data"][0]["class"];
-    tfschool.text = GlobalStudent.specificProfile["data"][0]["school_name"];
-    tfsubject.text = GlobalStudent.specificProfile["data"][0]["subject"];
+    datofBirthControler.text = GlobalTeacher.profile["data"][0]["dob"];
+    tfname.text = GlobalTeacher.profile["data"][0]["name"];
+    tfsubject.text = GlobalTeacher.profile["data"][0]["subject"];
+    tfclass.text = GlobalTeacher.profile["data"][0]["preferd_class"];
+    tfmedium.text = GlobalTeacher.profile["data"][0]["medium"];
+    tfadd.text = GlobalTeacher.profile["data"][0]["current_full_address"];
     super.initState();
   }
 
@@ -70,19 +73,21 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
       showSpinner = true;
     });
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/editStudent?");
+    var uri =
+        Uri.parse("https://trusher.shellcode.co.in/api/editTeacherProfile?");
 
     var request = http.MultipartRequest('POST', uri);
 
     request.fields['authKey'] = GlobalData.auth1;
-    request.fields['student_name'] = tfname.text.toString().trim();
+    request.fields['teacher_id'] = GlobalTeacher.id.toString();
+    request.fields['teacher_name'] = tfname.text.toString().trim();
     request.fields['dob'] = datofBirthControler.text.toString().trim();
-    request.fields['school_name'] = tfschool.text.trim();
     request.fields['class'] = tfclass.text;
-    request.fields['user_id'] = GlobalStudent.id.toString();
+    request.fields['medium'] = tfsubject.text;
     request.fields['subject'] = tfsubject.text;
+    request.fields['address'] = tfadd.text;
 
-    var multiPart;
+    http.MultipartFile multiPart;
 
     if (image != null) {
       var stream = http.ByteStream(image!.openRead());
@@ -99,8 +104,8 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
       request.files.add(multiPart);
     } else {
       try {
-        var imageUrl = GlobalStudent.urlPrefix +
-            GlobalStudent.specificProfile["data"][0]["image"];
+        var imageUrl =
+            GlobalTeacher.urlPrefix + GlobalTeacher.profile["data"][0]["image"];
         File imageFile = await convertImageUrlToFile(imageUrl);
         request.files.add(http.MultipartFile(
           'image',
@@ -121,11 +126,13 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
       if (response.statusCode == 200) {
         var httpResponse = await http.Response.fromStream(response);
         var jsonResponse = json.decode(httpResponse.body);
-        String msg = jsonResponse["message"].toString();
-        if (msg == "Registrtion successfull") {
+        String msg = jsonResponse["Message"].toString();
+        print(jsonResponse);
+        if (msg == "Teacher Updated successfully") {
           setState(() {
             showSpinner = false;
           });
+          Get.snackbar("Done", "Updation successful");
         } else {
           setState(() {
             showSpinner = false;
@@ -214,14 +221,14 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
                           Get.snackbar(
                               "Success", "Image Selected Successfully");
                         } else {
-                          Get.snackbar("Error", "Image Not Uploaded");
+                          Get.snackbar("Error", "Image Not Selected");
                           print("No image selected");
                         }
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.w),
                         child: Image.network(
-                          "${GlobalStudent.urlPrefix}${GlobalStudent.specificProfile["data"][0]["image"]}",
+                          "${GlobalTeacher.urlPrefix}${GlobalTeacher.profile["data"][0]["image"]}",
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -244,19 +251,25 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
                 ),
                 addVerticalSpace(20),
                 CustomTextfield(
-                  hintext: 'School',
-                  controller: tfschool,
+                  hintext: 'Preferred Class',
+                  controller: tfclass,
+                  keyBoardType: TextInputType.number,
                 ),
                 addVerticalSpace(20),
                 CustomTextfield(
-                  hintext: 'Class',
-                  controller: tfclass,
+                  hintext: 'Medium (English or Hindi)',
+                  controller: tfmedium,
                   keyBoardType: TextInputType.number,
                 ),
                 addVerticalSpace(20),
                 CustomTextfield(
                   hintext: 'Subject',
                   controller: tfsubject,
+                ),
+                addVerticalSpace(20),
+                CustomTextfield(
+                  hintext: 'Address',
+                  controller: tfadd,
                 ),
                 addVerticalSpace(40),
                 CustomButton(

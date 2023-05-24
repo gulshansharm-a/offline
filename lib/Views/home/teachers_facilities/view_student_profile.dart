@@ -3,19 +3,18 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
 import '../../../widget/custom_back_button.dart';
 
 class ViewStudentProfile extends StatelessWidget {
-  const ViewStudentProfile(
-      {super.key,
-      this.username = "Anup",
-      this.image = "assets/images/dummy2.png"});
-  final String image;
-  final String username;
+  const ViewStudentProfile({super.key, required this.studentlist});
+
+  final Map<String, dynamic> studentlist;
 
   @override
   Widget build(BuildContext context) {
+    print(studentlist);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -37,7 +36,7 @@ class ViewStudentProfile extends StatelessWidget {
                         CustomBackButton(),
                         addHorizontalySpace(10),
                         Text(
-                          "My Profile",
+                          "Student Profile",
                           textAlign: TextAlign.center,
                           style: kBodyText20wBold(white),
                         ),
@@ -50,30 +49,23 @@ class ViewStudentProfile extends StatelessWidget {
                       children: [
                         addHorizontalySpace(9.w),
                         Container(
-                          height: 17.h,
-                          width: 39.w,
+                          height: 12.h,
+                          width: 26.w,
                           decoration:
-                              kGradientBoxDecoration(40, orangeGradient()),
-                          child: Image.asset(image),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration:
-                                kGradientBoxDecoration(50, orangeGradient()),
-                            child: const Icon(
-                              Icons.edit,
-                              color: white,
+                              kGradientBoxDecoration(18, orangeGradient()),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            child: Image.network(
+                              "${GlobalTeacher.urlPrefix}${studentlist["aadhar"]}",
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     addVerticalSpace(2.h),
                     Text(
-                      username,
+                      studentlist["name"],
                       style: kBodyText27wBold(white),
                     )
                   ],
@@ -101,7 +93,7 @@ class ViewStudentProfile extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '23rd Sept 2013',
+                        studentlist["dob"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -132,7 +124,7 @@ class ViewStudentProfile extends StatelessWidget {
                       SizedBox(
                         width: 68.w,
                         child: Text(
-                          'A.B.C English Medium School',
+                          studentlist["school_name"],
                           style: kBodyText16wBold(black),
                         ),
                       ),
@@ -162,7 +154,7 @@ class ViewStudentProfile extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '5th Class',
+                        studentlist["class"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -193,7 +185,7 @@ class ViewStudentProfile extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        'Mathematics, Science',
+                        studentlist["subject"],
                         style: kBodyText16wBold(black),
                       ),
                     ],
@@ -220,16 +212,22 @@ class ViewStudentProfile extends StatelessWidget {
                   height: 8.h,
                   width: 75.w,
                   decoration: kFillBoxDecoration(0, skinColor, 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      addHorizontalySpace(width(context) * 0.06),
-                      Text(
-                        'Mumbai, Maharashtra',
-                        style: kBodyText16wBold(black),
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        addHorizontalySpace(width(context) * 0.06),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            '${studentlist["city"]},${studentlist["state"]}',
+                            style: kBodyText16wBold(black),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -260,7 +258,7 @@ class ViewStudentProfile extends StatelessWidget {
                     children: [
                       addHorizontalySpace(width(context) * 0.06),
                       Text(
-                        '9130168812',
+                        studentlist["phone"].toString(),
                         style: kBodyText16wBold(black),
                       ),
                     ],

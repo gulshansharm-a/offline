@@ -17,6 +17,8 @@ import 'package:offline_classes/widget/custom_button.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../global_data/teacher_global_data.dart';
+
 class HomeScreenForRegisterUser extends StatefulWidget {
   const HomeScreenForRegisterUser({
     super.key,
@@ -99,7 +101,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
             underline: SizedBox(),
             onChanged: (String? newValue) {
               setState(() {
-                localizationController.changeLanguage('hi');
+                //localizationController.changeLanguage('hi');
                 dropDownValue = newValue!;
               });
             },
@@ -126,9 +128,8 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                 children: [
                   Text(
                     GlobalData.role == 'student'
-                        ? "Hi " +
-                            GlobalStudent.specificProfile["data"][0]["name"]
-                        : 'Hi Sumit,'.tr,
+                        ? 'Hi ${GlobalStudent.specificProfile["data"][0]["name"]}'
+                        : 'Hi ${GlobalTeacher.profile["data"][0]["name"]}',
                     style: TextStyle(
                         color: blue,
                         fontSize: 30.sp,
