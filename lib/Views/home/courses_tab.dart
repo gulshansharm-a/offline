@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:offline_classes/Views/home/students_facilities/cancel_course_screen.dart';
 import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/widget/custom_button.dart';
@@ -57,7 +58,9 @@ class _CoursesTabState extends State<CoursesTab> {
           ),
           actions: [
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  nextScreen(context, CancelCourseScreen());
+                },
                 child: Text(
                   'Cancel Courses',
                   style: kBodyText14wBold(primary2),
@@ -70,6 +73,7 @@ class _CoursesTabState extends State<CoursesTab> {
             if (courses.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             } else {
+              GlobalStudent().updateCourses(courses);
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -86,6 +90,8 @@ class _CoursesTabState extends State<CoursesTab> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: courses["mycourse"].length,
                         itemBuilder: (ctx, i) {
+                          GlobalStudent.purchasedCourses
+                              .add(courses["mycourse"][i]["id"]);
                           return Container(
                             margin: EdgeInsets.all(10),
                             padding: EdgeInsets.symmetric(
@@ -102,22 +108,35 @@ class _CoursesTabState extends State<CoursesTab> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                      courses["mycourse"][i]["course_name"],
-                                      style: kBodyText24wBold(white),
+                                    SizedBox(
+                                      width: 60.w,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Text(
+                                          courses["mycourse"][i]["course_name"],
+                                          style: kBodyText24wBold(white),
+                                        ),
+                                      ),
                                     ),
                                     Spacer(),
-                                    addHorizontalySpace(20.w),
-                                    InkWell(
-                                      onTap: () {
-                                        confirmationPopup(context);
-                                      },
-                                      child: const CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        radius: 10,
-                                        child: Icon(
-                                          Icons.close,
-                                          size: 15,
+                                    addHorizontalySpace(5.w),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(30.h),
+                                      child: Container(
+                                        color: Colors.blue,
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            confirmationPopup(context);
+                                          },
+                                          child: const CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            radius: 10,
+                                            child: Icon(
+                                              Icons.close,
+                                              size: 15,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     )
@@ -143,7 +162,9 @@ class _CoursesTabState extends State<CoursesTab> {
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (ctx, i) {
                           return !(GlobalStudent.moveCourse
-                                  .contains(courses["data"][i]["id"]))
+                                      .contains(courses["data"][i]["id"])) ||
+                                  GlobalStudent.purchasedCourses
+                                      .contains(courses["data"][i]["id"])
                               ? const SizedBox(height: 0.1)
                               : GestureDetector(
                                   onTap: () {
@@ -254,7 +275,9 @@ class _CoursesTabState extends State<CoursesTab> {
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (ctx, i) {
                           return (GlobalStudent.moveCourse
-                                  .contains(courses["data"][i]["id"]))
+                                      .contains(courses["data"][i]["id"])) ||
+                                  GlobalStudent.purchasedCourses
+                                      .contains(courses["data"][i]["id"])
                               ? const SizedBox(height: 0.1)
                               : GestureDetector(
                                   onTap: () {
@@ -338,69 +361,70 @@ class _CoursesTabState extends State<CoursesTab> {
       ),
     );
   }
-}
 
-Future<dynamic> confirmationPopup(BuildContext context) {
-  return showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      contentPadding: const EdgeInsets.all(6),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0))),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          var height = MediaQuery.of(context).size.height;
-          var width = MediaQuery.of(context).size.width;
+  Future<dynamic> confirmationPopup(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        contentPadding: const EdgeInsets.all(6),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            var height = MediaQuery.of(context).size.height;
+            var width = MediaQuery.of(context).size.width;
 
-          return Container(
-            height: height * 0.3,
-            // decoration: kFillBoxDecoration(0, white, 40),
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'Are you sure you want to cancel Mathematics Course?',
-                  style: kBodyText18wBold(black),
-                  textAlign: TextAlign.center,
-                ),
-                addVerticalSpace(2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        goBack(context);
-                      },
-                      child: Container(
-                        height: 5.h,
-                        width: 20.w,
-                        decoration: kOutlineBoxDecoration(2, green, 18),
-                        child: Center(
-                          child: Text(
-                            'No',
-                            style: kBodyText16wBold(green),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                      width: 20.w,
-                      child: CustomButton(
-                        text: 'Yes',
+            return Container(
+              height: height * 0.3,
+              // decoration: kFillBoxDecoration(0, white, 40),
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Are you sure you want to cancel this Course?',
+                    style: kBodyText18wBold(black),
+                    textAlign: TextAlign.center,
+                  ),
+                  addVerticalSpace(2.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
                         onTap: () {
                           goBack(context);
                         },
+                        child: Container(
+                          height: 5.h,
+                          width: 20.w,
+                          decoration: kOutlineBoxDecoration(2, green, 18),
+                          child: Center(
+                            child: Text(
+                              'No',
+                              style: kBodyText16wBold(green),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                      SizedBox(
+                        height: 5.h,
+                        width: 20.w,
+                        child: CustomButton(
+                          text: 'Yes',
+                          onTap: () {
+                            goBack(context);
+                            nextScreen(context, CancelCourseScreen());
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

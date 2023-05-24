@@ -60,27 +60,30 @@ class StudentFacilities extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 16.h,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            GlobalStudent.specificProfile["data"][0]["name"],
-                            style: kBodyText24wBold(white),
-                          ),
-                          Text(
-                            GlobalStudent.specificProfile["data"][0]["city"] +
-                                ',' +
-                                GlobalStudent.specificProfile["data"][0]
-                                    ["state"],
-                            style: kBodyText12wNormal(white),
-                          ),
-                          Text(
-                            GlobalData.phoneNumber,
-                            style: kBodyText12wNormal(white),
-                          ),
-                        ],
+                      child: SizedBox(
+                        width: 53.w,
+                        height: 16.h,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              GlobalStudent.specificProfile["data"][0]["name"],
+                              style: kBodyText24wBold(white),
+                            ),
+                            Text(
+                              GlobalStudent.specificProfile["data"][0]["city"] +
+                                  ',' +
+                                  GlobalStudent.specificProfile["data"][0]
+                                      ["state"],
+                              style: kBodyText12wNormal(white),
+                            ),
+                            Text(
+                              GlobalData.phoneNumber,
+                              style: kBodyText12wNormal(white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     addHorizontalySpace(10),
