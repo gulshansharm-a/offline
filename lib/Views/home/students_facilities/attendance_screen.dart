@@ -37,7 +37,7 @@ class AttendanceTeacersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppbar2(context, 'Attendance'),
+      appBar: customAppbar2(context, 'SelectTecher'),
       body: FutureBuilder(
         future: getTeacherList(),
         builder: (context, snapshot) {
@@ -110,201 +110,384 @@ class AttendanceTeacersList extends StatelessWidget {
   }
 }
 
-class AttendaceCalendar extends StatefulWidget {
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+class AttendaceCalendarView extends StatefulWidget {
+  const AttendaceCalendarView(
+      {super.key, required this.map, required this.name});
+
+  final Map<String, dynamic> map;
+  final String name;
+
   @override
-  AttendaceCalendarState createState() => AttendaceCalendarState();
+  State<AttendaceCalendarView> createState() => _AttendaceCalendarViewState();
 }
 
-/// State for MyApp
-class AttendaceCalendarState extends State<AttendaceCalendar> {
+class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
   DateRangePickerController _datePickerController = DateRangePickerController();
+
+  late Map<String, dynamic> map;
+  late String name;
+
   @override
-  void initState() {
-    Timer(Duration(seconds: 1), () {
-      approvalPopup(context);
-    });
-    // TODO: implement initState
+  initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: customAppbar2(context, 'Attendance'),
-          body: Column(
-            children: [
-              Container(
-                decoration: k3DboxDecoration(15),
-                margin: EdgeInsets.all(12),
-                height: 45.h,
-                child: SfDateRangePicker(
-                    controller: _datePickerController,
-                    view: DateRangePickerView.month,
-                    monthViewSettings:
-                        DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
-                    selectionMode: DateRangePickerSelectionMode.multiple,
-                    showActionButtons: false,
-                    endRangeSelectionColor: Colors.red,
-                    selectionColor: Colors.green,
-                    rangeSelectionColor: Colors.yellow,
-                    todayHighlightColor: Colors.green,
-                    onSubmit: (val) {
-                      print(val);
-                    },
-                    onCancel: () {
-                      _datePickerController.selectedRanges = null;
-                    }),
-              ),
-              addVerticalSpace(1.h),
-              Padding(
-                padding: EdgeInsets.all(2.h),
-                child: Column(
+    var now = DateTime.now();
+    var formatter1 = DateFormat('MM');
+    String month = formatter1.format(now);
+    var formatter2 = DateFormat('yyyy');
+    String year = formatter2.format(now);
+    var formatter3 = DateFormat('d');
+    String day = formatter3.format(now);
+    print(day);
+    print(month);
+    print(year);
+    map = widget.map;
+    name = widget.name;
+    Timer(const Duration(seconds: 1), () {
+      approvalPopup(context, day, month, year);
+    });
+    int d = int.parse(day);
+    int m = int.parse(month);
+    int y = int.parse(year);
+
+    int totalClassesTaken = 0;
+    int present = 0;
+    int absent = 0;
+    int holidays = 0;
+
+    List<DateTime> abs = [];
+    List<DateTime> spl = [];
+    List<int> weekend = [];
+
+    print(map[name]);
+
+    for (int i = 0; i < map[name].length; i++) {
+      Map temp = map[name][i];
+      print(temp);
+      if (temp["isHolyday"] == 'yes' ||
+          temp["isSunday"] == 'yes' ||
+          temp["isSecondSaturday"] == 'yes' ||
+          temp["isFourtSaturday"] == 'yes') {
+        weekend.add(int.parse(temp["dt"].trim().substring(8, 10)));
+        holidays++;
+      } else {
+        if (temp["student_attend"].toString().trim() == "yes" &&
+            temp["techer_attend"].toString().trim() == "yes") {
+          totalClassesTaken++;
+          spl.add(
+              DateTime(y, m, int.parse(temp["dt"].trim().substring(8, 10))));
+          present++;
+        } else {
+          abs.add(
+              DateTime(y, m, int.parse(temp["dt"].trim().substring(8, 10))));
+          absent++;
+        }
+      }
+    }
+    print(abs);
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            decoration: k3DboxDecoration(15),
+            margin: EdgeInsets.all(12),
+            height: 45.h,
+            child: SfDateRangePicker(
+                controller: _datePickerController,
+                view: DateRangePickerView.month,
+                monthViewSettings: DateRangePickerMonthViewSettings(
+                  firstDayOfWeek: 1,
+                  weekendDays: weekend,
+                  blackoutDates: abs,
+                  specialDates: spl,
+                ),
+                selectionMode: DateRangePickerSelectionMode.multiple,
+                showActionButtons: false,
+                monthCellStyle: DateRangePickerMonthCellStyle(
+                  specialDatesDecoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 133, 239, 137),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 54, 244, 130),
+                      width: 1,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  weekendDatesDecoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.4),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.6),
+                      width: 1,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  blackoutDatesDecoration: BoxDecoration(
+                    color: Colors.red,
+                    border: Border.all(
+                      color: const Color(0xFFF44436),
+                      width: 1,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                endRangeSelectionColor: Colors.red,
+                selectionColor: Colors.green,
+                rangeSelectionColor: Colors.yellow,
+                todayHighlightColor: Colors.green,
+                onSubmit: (val) {
+                  print(val);
+                },
+                onCancel: () {
+                  _datePickerController.selectedRanges = null;
+                }),
+          ),
+          addVerticalSpace(1.h),
+          Padding(
+            padding: EdgeInsets.all(2.h),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: 5.h,
-                          width: 13.w,
-                          decoration: kFillBoxDecoration(0, Colors.yellow, 10),
-                          child: Center(
-                            child: Text('25'),
-                          ),
-                        ),
-                        addHorizontalySpace(5.w),
-                        Text(
-                          'Total classes taken',
-                          style: kBodyText14w500(black),
-                        )
-                      ],
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, Colors.yellow, 10),
+                      child: Center(
+                        child: Text(totalClassesTaken.toString()),
+                      ),
                     ),
-                    addVerticalSpace(1.h),
-                    Row(
-                      children: [
-                        Container(
-                          height: 5.h,
-                          width: 13.w,
-                          decoration: kFillBoxDecoration(0, Colors.green, 10),
-                          child: Center(
-                            child: Text('21'),
-                          ),
-                        ),
-                        addHorizontalySpace(5.w),
-                        Text(
-                          'Present',
-                          style: kBodyText14w500(black),
-                        )
-                      ],
-                    ),
-                    addVerticalSpace(1.h),
-                    Row(
-                      children: [
-                        Container(
-                          height: 5.h,
-                          width: 13.w,
-                          decoration: kFillBoxDecoration(0, Colors.red, 10),
-                          child: Center(
-                            child: Text('4'),
-                          ),
-                        ),
-                        addHorizontalySpace(5.w),
-                        Text(
-                          'Absent',
-                          style: kBodyText14w500(black),
-                        )
-                      ],
-                    ),
-                    addVerticalSpace(1.h),
-                    Row(
-                      children: [
-                        Container(
-                          height: 5.h,
-                          width: 13.w,
-                          decoration: kFillBoxDecoration(0, boxColor, 10),
-                          child: Center(
-                            child: Text('2'),
-                          ),
-                        ),
-                        addHorizontalySpace(5.w),
-                        Text(
-                          'Class not taken',
-                          style: kBodyText14w500(black),
-                        )
-                      ],
-                    ),
-                    addVerticalSpace(3.h),
-                    Center(
-                      child: CustomButton(text: 'Send Approval', onTap: () {}),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Total classes taken',
+                      style: kBodyText14w500(black),
                     )
                   ],
                 ),
-              )
-            ],
-          ),
-        ));
+                addVerticalSpace(1.h),
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, Colors.green, 10),
+                      child: Center(
+                        child: Text(present.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Present',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(1.h),
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, Colors.red, 10),
+                      child: Center(
+                        child: Text(absent.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Absent',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(1.h),
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, boxColor, 10),
+                      child: Center(
+                        child: Text(holidays.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Holidays till now',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(3.h),
+                Center(
+                  child: CustomButton(text: 'Send Approval', onTap: () {}),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 
-  Future<dynamic> approvalPopup(BuildContext context) {
+  Future<dynamic> approvalPopup(
+      BuildContext context, String day, String month, String year) {
     return showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              contentPadding: const EdgeInsets.all(6),
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  var height = MediaQuery.of(context).size.height;
-                  var width = MediaQuery.of(context).size.width;
+      context: context,
+      builder: (BuildContext context) {
+        return Builder(builder: ((BuildContext context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(6),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                var height = MediaQuery.of(context).size.height;
+                var width = MediaQuery.of(context).size.width;
 
-                  return Container(
-                      height: height * 0.35,
-                      // decoration: kFillBoxDecoration(0, white, 40),
-                      padding: EdgeInsets.all(10),
-                      child: Column(
+                return Container(
+                  height: height * 0.35,
+                  // decoration: kFillBoxDecoration(0, white, 40),
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "Accept Approval request from this teacher for ${day}/${month}/${year}?",
+                        style: kBodyText18wBold(black),
+                        textAlign: TextAlign.center,
+                      ),
+                      addVerticalSpace(6.h),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            "Accept Approval request from ‘Teacher/Student Name’ for 28/12/2022",
-                            style: kBodyText18wBold(black),
-                            textAlign: TextAlign.center,
-                          ),
-                          addVerticalSpace(6.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  goBack(context);
-                                },
-                                child: Container(
-                                  height: 5.h,
-                                  width: 30.w,
-                                  decoration:
-                                      kOutlineBoxDecoration(2, green, 18),
-                                  child: Center(
-                                    child: Text(
-                                      'Reject',
-                                      style: kBodyText16wBold(green),
-                                    ),
-                                  ),
+                          InkWell(
+                            onTap: () {
+                              goBack(context);
+                            },
+                            child: Container(
+                              height: 5.h,
+                              width: 30.w,
+                              decoration: kOutlineBoxDecoration(2, green, 18),
+                              child: Center(
+                                child: Text(
+                                  'Reject',
+                                  style: kBodyText16wBold(green),
                                 ),
                               ),
-                              SizedBox(
-                                  height: 5.h,
-                                  width: 30.w,
-                                  child: CustomButton(
-                                      text: 'Accept',
-                                      onTap: () {
-                                        goBack(context);
-                                      }))
-                            ],
+                            ),
                           ),
-                          addVerticalSpace(20),
+                          SizedBox(
+                            height: 5.h,
+                            width: 30.w,
+                            child: CustomButton(
+                              text: 'Accept',
+                              onTap: () {
+                                goBack(context);
+                              },
+                            ),
+                          ),
                         ],
-                      ));
-                },
+                      ),
+                      addVerticalSpace(20),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        }));
+      },
+    );
+  }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+class AttendaceCalendar extends StatefulWidget {
+  const AttendaceCalendar({Key? key}) : super(key: key);
+  @override
+  AttendaceCalendarState createState() => AttendaceCalendarState();
+}
+
+/// State for MyApp
+class AttendaceCalendarState extends State<AttendaceCalendar>
+    with TickerProviderStateMixin {
+  Future<void> getAttendence() async {
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+    attendance = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print("");
+    } else {
+      print("Unsuccessful");
+    }
+  }
+
+  late TabController _tabController;
+
+  doit(int length) {
+    _tabController = TabController(length: length, vsync: this);
+  }
+
+  Map<String, dynamic> attendance = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: FutureBuilder(
+        future: getAttendence(),
+        builder: (context, snapshot) {
+          if (attendance.isEmpty) {
+            return const Center(
+                child: CircularProgressIndicator(color: primary2));
+          } else {
+            List<String> subjectName = attendance["data"].keys.toList();
+            doit(subjectName.length);
+            return Scaffold(
+              appBar: customAppbar2(context, 'Attendance'),
+              body: Column(
+                children: [
+                  TabBar(
+                      onTap: (value) {},
+                      indicator: BoxDecoration(
+                        gradient: purpleGradident(),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      controller: _tabController,
+                      tabs: List.generate(
+                        attendance["data"].length,
+                        (index) => Text(
+                          subjectName[index],
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: List.generate(
+                        attendance["data"].length,
+                        (index) => AttendaceCalendarView(
+                          map: attendance["data"],
+                          name: subjectName[index],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ));
+            );
+          }
+        },
+      ),
+    );
   }
 }

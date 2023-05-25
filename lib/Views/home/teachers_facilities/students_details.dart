@@ -6,9 +6,11 @@ import 'package:offline_classes/Views/home/students_facilities/progress_reports.
 import 'package:offline_classes/Views/home/teachers_facilities/gk_screen_for_teachers.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/test_series_teacher.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/view_student_profile.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
 
 class StudentsDetails extends StatelessWidget {
@@ -18,6 +20,7 @@ class StudentsDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(student);
     return Scaffold(
       appBar: customAppbar2(context, 'Student Profile'),
       body: Column(
@@ -36,7 +39,13 @@ class StudentsDetails extends StatelessWidget {
                   height: 11.h,
                   width: 25.w,
                   decoration: kGradientBoxDecoration(18, orangeGradient()),
-                  child: Image.asset('assets/images/dummy1.png'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                    child: Image.network(
+                      "${GlobalTeacher.urlPrefix}${student["aadhar"]}",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
                 addHorizontalySpace(5.w),
                 Column(
@@ -316,7 +325,13 @@ class StudentsDetails extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  nextScreen(context, AddNoticeScreen());
+                  nextScreen(
+                    context,
+                    AddNoticeScreen(
+                      type: "foryou",
+                      student_id: student["id"],
+                    ),
+                  );
                 },
                 child: Container(
                   height: 8.h,

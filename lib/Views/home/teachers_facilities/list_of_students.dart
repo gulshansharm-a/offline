@@ -27,6 +27,7 @@ class ListOfStudentsScreen extends StatelessWidget {
   }
 
   Map<String, dynamic> studentlist = {};
+  Map<String, dynamic> courseTest = {};
 
   @override
   Widget build(BuildContext context) {

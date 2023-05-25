@@ -102,14 +102,16 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
         var imageUrl = GlobalStudent.urlPrefix +
             GlobalStudent.specificProfile["data"][0]["image"];
         File imageFile = await convertImageUrlToFile(imageUrl);
-        request.files.add(http.MultipartFile(
-          'image',
-          imageFile.readAsBytes().asStream(),
-          imageFile.lengthSync(),
-          filename: imageFile.path.split('/').last,
-          contentType: MediaType('image',
-              'jpeg'), // Adjust the content type as per your image type
-        ));
+        Future.delayed(Duration(seconds: 4), () {
+          request.files.add(http.MultipartFile(
+            'image',
+            imageFile.readAsBytes().asStream(),
+            imageFile.lengthSync(),
+            filename: imageFile.path.split('/').last,
+            contentType: MediaType('image',
+                'jpeg'), // Adjust the content type as per your image type
+          ));
+        });
       } catch (e) {
         print(e);
       }
@@ -147,6 +149,7 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
       });
       print('API request failed with exception: $e');
     }
+    Get.snackbar("Error", "Try again");
     setState(() {
       showSpinner = false;
     });

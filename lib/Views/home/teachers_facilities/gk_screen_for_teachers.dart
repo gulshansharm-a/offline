@@ -78,6 +78,24 @@ class GKScreenForTeacher extends StatelessWidget {
                               gk["allgk"][i]["tittle"],
                               style: kBodyText18wNormal(black),
                             ),
+                            Center(
+                              child: gk["allgk"][i]["image"] != null
+                                  ? ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(25)),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(25)),
+                                        child: Image.network(
+                                          GlobalStudent.urlPrefix +
+                                              gk["allgk"][i]["image"],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                  : Image.asset("assets/images/sf9.png",
+                                      fit: BoxFit.cover),
+                            ),
                             addVerticalSpace(1.h),
                             Text(
                               gk["allgk"][i]["disc"],

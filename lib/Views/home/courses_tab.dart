@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:offline_classes/Views/home/students_facilities/cancel_course_screen.dart';
 import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
@@ -33,6 +34,22 @@ class _CoursesTabState extends State<CoursesTab> {
     }
   }
 
+  Future<void> bookDemo(String id) async {
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/demoCourse?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}&course_id=$id"));
+    var map = json.decode(response.body);
+    print("Demo");
+    print("Demo");
+    print("Demo");
+    if (response.statusCode == 200) {
+      print(map);
+      Get.snackbar("Success", "Demo Course Booked");
+    } else {
+      Get.snackbar("Error", "Course Booking Failed");
+      print("Unsuccessful");
+    }
+  }
+
   Map<String, dynamic> courses = {};
 
   List moveCourse = [];
@@ -56,13 +73,14 @@ class _CoursesTabState extends State<CoursesTab> {
           ),
           actions: [
             TextButton(
-                onPressed: () {
-                  nextScreen(context, CancelCourseScreen());
-                },
-                child: Text(
-                  'Cancel Courses',
-                  style: kBodyText14wBold(primary2),
-                ))
+              onPressed: () {
+                nextScreen(context, CancelCourseScreen());
+              },
+              child: Text(
+                'Cancel Courses',
+                style: kBodyText14wBold(primary2),
+              ),
+            )
           ],
         ),
         body: FutureBuilder(
@@ -213,7 +231,11 @@ class _CoursesTabState extends State<CoursesTab> {
                                                     style:
                                                         kBodyText12wBold(black),
                                                   ),
-                                                  ontap: () {},
+                                                  ontap: () {
+                                                    bookDemo(courses["data"][i]
+                                                            ["id"]
+                                                        .toString());
+                                                  },
                                                   width: 38.w,
                                                   height: 4.5.h),
                                               addHorizontalySpace(5.w),

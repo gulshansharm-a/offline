@@ -193,7 +193,12 @@ List studentFacilityList = [
     'img': 'assets/images/parents2.png',
     'color': pink3
   },
-  {'id': '9', 'title': 'GK', 'img': 'assets/images/sf9.png', 'color': pink4},
+  {
+    'id': '9',
+    'title': 'GK',
+    'img': 'assets/images/sf9.png',
+    'color': pink4,
+  },
   {
     'id': '10',
     'title': 'Notice',

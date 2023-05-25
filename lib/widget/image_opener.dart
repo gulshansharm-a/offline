@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:sizer/sizer.dart';
@@ -11,19 +12,21 @@ class ImageOpener extends StatelessWidget {
   final File? imageFile;
   final String? baseurl;
   final bool showOnly;
+  final bool send;
 
   const ImageOpener({
     super.key,
     required this.imageFile,
     this.baseurl = "",
     required this.showOnly,
+    required this.send,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: customAppbar2(context, "Send Doubt"),
+      appBar: customAppbar2(context, send ? "Send Doubt" : 'View'),
       body: Center(
         child: imageFile != null
             ? PhotoView(
@@ -40,8 +43,10 @@ class ImageOpener extends StatelessWidget {
               color: Colors.transparent,
               width: 25.w,
               child: CustomButton(
-                text: 'Send',
-                onTap: () {},
+                text: send ? 'Send' : 'Done',
+                onTap: () {
+                  !send ? goBack(context) : () {};
+                },
               ),
             ),
     );

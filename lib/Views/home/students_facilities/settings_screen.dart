@@ -138,7 +138,7 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              nextScreen(context, YourDoubts());
+                              nextScreen(context, SelectTeacherForDoubtShow());
                             },
                             child: Container(
                               height: 8.h,

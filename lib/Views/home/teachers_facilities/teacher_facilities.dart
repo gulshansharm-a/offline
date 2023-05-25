@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:offline_classes/Views/home/students_facilities/gk_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/logout_screen.dart';
-import 'package:offline_classes/Views/home/students_facilities/my_profile_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/notice_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/settings_screen.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/gk_screen_for_teachers.dart';
@@ -12,10 +8,12 @@ import 'package:offline_classes/Views/home/teachers_facilities/write_to_us_scree
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../global_data/student_global_data.dart';
 import '../../../global_data/teacher_global_data.dart';
 import '../../../model/statics_list.dart';
 import '../../../utils/constants.dart';
 import 'complaints.dart';
+import 'package:http/http.dart' as http;
 import 'my_profile_screen_teacher.dart';
 import 'suggestions.dart';
 
