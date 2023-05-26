@@ -7,6 +7,7 @@ import 'package:offline_classes/Views/enquiry_registrations/teacher_enquiry_form
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/utils/constants.dart';
+import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
 
@@ -41,14 +42,15 @@ class _SelectStudentProfileState extends State<SelectStudentProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: checkProfiles(),
-      builder: (context, snapshot) {
-        if (profiles.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return Scaffold(
-            body: SafeArea(
+    return Scaffold(
+      appBar: customAppbar2(context, "All Profiles"),
+      body: FutureBuilder(
+        future: checkProfiles(),
+        builder: (context, snapshot) {
+          if (profiles.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return SafeArea(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -152,10 +154,10 @@ class _SelectStudentProfileState extends State<SelectStudentProfile> {
                   ),
                 ),
               ),
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
     );
   }
 }

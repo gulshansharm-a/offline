@@ -23,12 +23,9 @@ class ErrorScreen extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(text.length, (index) {
-                return GestureDetector(
-                  onTap: AuthController.instance.logout,
-                  child: Text(
-                    text[index],
-                    style: styles[index],
-                  ),
+                return Text(
+                  text[index],
+                  style: styles[index],
                 );
               })
               //<Widget>[

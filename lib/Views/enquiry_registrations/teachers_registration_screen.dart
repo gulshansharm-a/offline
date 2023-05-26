@@ -70,6 +70,8 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
   List<String> preferredClass = [];
   String medium = "";
   String subject = "";
+  int pf = 0;
+  String prefClass = "LKG - UKG";
 
   File? photo, aadhar;
 
@@ -494,6 +496,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                     InkWell(
                                       onTap: () {
                                         setState(() {
+                                          pf = i;
                                           classList[i]['select'] =
                                               !classList[i]['select'];
                                           classValue = classList[i]['title'];
@@ -503,11 +506,13 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                         height: 45,
                                         width: 45,
                                         decoration:
-                                            classList[i]['select'] == true
+                                            // classList[i]['select'] == true
+                                            pf == i
                                                 ? kGradientBoxDecoration2(
                                                     10, greenGradient())
                                                 : k3DboxDecoration(10),
-                                        child: classList[i]['select'] == true
+                                        child: pf == i
+                                            // classList[i]['select'] == true
                                             ? const Icon(
                                                 Icons.check,
                                                 color: white,

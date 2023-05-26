@@ -89,6 +89,7 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
                 //     smsCode: code.toString().trim());
                 // await AuthController.instance.auth
                 //     .signInWithCredential(credential);
+                print(widget.mobno.trim());
                 AuthController.instance.sendOTP(widget.mobno.trim());
               },
               child: Text(

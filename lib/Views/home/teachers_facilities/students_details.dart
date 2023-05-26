@@ -5,6 +5,7 @@ import 'package:offline_classes/Views/home/students_facilities/notice_screen.dar
 import 'package:offline_classes/Views/home/students_facilities/progress_reports.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/gk_screen_for_teachers.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/test_series_teacher.dart';
+import 'package:offline_classes/Views/home/teachers_facilities/view_student_doubts.dart';
 import 'package:offline_classes/Views/home/teachers_facilities/view_student_profile.dart';
 import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
@@ -12,6 +13,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
+import 'add_progress_report.dart';
+import 'attendence_for_teacher.dart';
 
 class StudentsDetails extends StatelessWidget {
   const StudentsDetails({super.key, required this.student});
@@ -99,7 +102,8 @@ class StudentsDetails extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  nextScreen(context, AttendaceCalendar());
+                  nextScreen(context,
+                      AttendaceForTeacher(student_id: student["student_id"]));
                 },
                 child: Container(
                   height: 8.h,
@@ -143,10 +147,12 @@ class StudentsDetails extends StatelessWidget {
               InkWell(
                 onTap: () {
                   nextScreen(
-                      context,
-                      TestSeriesForTeacher(
-                        title: 'Test Series',
-                      ));
+                    context,
+                    TestSeriesForTeacher(
+                      title: 'Test Series',
+                      student_id: student["student_id"],
+                    ),
+                  );
                 },
                 child: Container(
                   height: 8.h,
@@ -189,7 +195,8 @@ class StudentsDetails extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  nextScreen(context, ProgressReports());
+                  nextScreen(context,
+                      AppProgressReportList(student_id: student["student_id"]));
                 },
                 child: Container(
                   height: 8.h,
@@ -233,10 +240,12 @@ class StudentsDetails extends StatelessWidget {
               InkWell(
                 onTap: () {
                   nextScreen(
-                      context,
-                      TestSeriesForTeacher(
-                        title: 'Students Doubts',
-                      ));
+                    context,
+                    ViewStudentDoubts(
+                      title: 'Students Doubts',
+                      student_id: student["student_id"],
+                    ),
+                  );
                 },
                 child: Container(
                   height: 8.h,

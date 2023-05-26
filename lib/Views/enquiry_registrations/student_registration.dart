@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -300,13 +301,26 @@ class _StudentRegistrationState extends State<StudentRegistration> {
               .toList();
           List<String> myclassList = ["Class"];
           myclassList.addAll(classLists);
-          print(myclassList);
+          List<String> listOfSubjects =
+              List<String>.filled(mapResponse["subjects"].length, '');
+          for (int i = 0; i < mapResponse["subjects"].length; i++) {
+            listOfSubjects[i] =
+                (mapResponse["subjects"][i]["subject_name"].toString());
+          }
+          List<String> subjectList = listOfSubjects
+              .where((element) => element != null)
+              .cast<String>()
+              .toList();
+          List<String> mySubjectList = [];
+          mySubjectList.addAll(subjectList);
+          log("HI");
+          log(mySubjectList.toString());
           phnoController[0].text = phnoController[1].text =
               phnoController[2].text = GlobalData.phoneNumber;
           return ModalProgressHUD(
             inAsyncCall: showSpinner,
             child: Scaffold(
-              appBar: customAppbar2(context, ''),
+              appBar: customAppbar2(context, 'Student Registration'),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: SingleChildScrollView(
@@ -660,10 +674,10 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                                 NeverScrollableScrollPhysics(),
                                             gridDelegate:
                                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 3,
+                                                    crossAxisCount: 2,
                                                     childAspectRatio: 1.8,
                                                     crossAxisSpacing: 8),
-                                            itemCount: subjectList2.length,
+                                            itemCount: mySubjectList.length,
 
                                             // scrollDirection: Axis.horizontal,
                                             itemBuilder: (ctx, i) {
@@ -676,7 +690,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                                           i;
                                                       setState(() {
                                                         subject[index] =
-                                                            subjectList2[i];
+                                                            mySubjectList[i];
                                                       });
                                                     },
                                                     child: Container(
@@ -704,9 +718,9 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                                   addHorizontalySpace(6),
                                                   SizedBox(
                                                     width:
-                                                        width(context) * 0.15,
+                                                        width(context) * 0.25,
                                                     child: Text(
-                                                      subjectList2[i],
+                                                      mySubjectList[i],
                                                       style: kBodyText12wBold(
                                                           textColor),
                                                     ),

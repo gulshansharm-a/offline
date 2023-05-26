@@ -28,87 +28,94 @@ class TeachersListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getTeacherList(),
-      builder: (context, snapshot) {
-        if (teacherList.isEmpty) {
-          return Center(child: CircularProgressIndicator(color: primary2));
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, 'Teachers Profile'),
-            body: Column(
-              children: [
-                addVerticalSpace(10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: teacherList["data"].length,
-                    itemBuilder: (ctx, i) {
-                      return InkWell(
-                        onTap: () {
-                          nextScreen(
-                            context,
-                            TeacherProfile(
-                              id: teacherList["data"][i]["teacher_id"],
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(12),
-                          // height: 12.h,
-                          width: 93.w,
-                          decoration:
-                              kGradientBoxDecoration(35, purpleGradident()),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 11.h,
-                                width: 25.w,
-                                decoration: kGradientBoxDecoration(
-                                    18, orangeGradient()),
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(12)),
-                                  child: Image.network(
-                                    GlobalStudent.urlPrefix +
-                                        teacherList["data"][i]["image"],
-                                    fit: BoxFit.cover,
+    return Scaffold(
+      appBar: customAppbar2(context, 'Teachers Profile'),
+      body: FutureBuilder(
+        future: getTeacherList(),
+        builder: (context, snapshot) {
+          if (teacherList.isEmpty) {
+            return Center(child: CircularProgressIndicator(color: primary2));
+          } else {
+            return teacherList["data"].isEmpty
+                ? const Center(
+                    child: Text(
+                      'Teachers will be assigned soon',
+                    ),
+                  )
+                : Column(
+                    children: [
+                      addVerticalSpace(10),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: teacherList["data"].length,
+                          itemBuilder: (ctx, i) {
+                            return InkWell(
+                              onTap: () {
+                                nextScreen(
+                                  context,
+                                  TeacherProfile(
+                                    id: teacherList["data"][i]["teacher_id"],
                                   ),
+                                );
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(12),
+                                // height: 12.h,
+                                width: 93.w,
+                                decoration: kGradientBoxDecoration(
+                                    35, purpleGradident()),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 11.h,
+                                      width: 25.w,
+                                      decoration: kGradientBoxDecoration(
+                                          18, orangeGradient()),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(12)),
+                                        child: Image.network(
+                                          GlobalStudent.urlPrefix +
+                                              teacherList["data"][i]["image"],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    addHorizontalySpace(width(context) * 0.06),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Text(
+                                            teacherList["data"][i]["name"],
+                                            style: kBodyText22bold(white),
+                                          ),
+                                        ),
+                                        addVerticalSpace(10),
+                                        Text(
+                                          teacherList["data"][i]["subject"],
+                                          style: kBodyText18wNormal(white),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              addHorizontalySpace(width(context) * 0.06),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(
-                                      teacherList["data"][i]["name"],
-                                      style: kBodyText22bold(white),
-                                    ),
-                                  ),
-                                  addVerticalSpace(10),
-                                  Text(
-                                    teacherList["data"][i]["subject"],
-                                    style: kBodyText18wNormal(white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      },
+                      ),
+                    ],
+                  );
+          }
+        },
+      ),
     );
   }
 }

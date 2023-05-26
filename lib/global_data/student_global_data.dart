@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:offline_classes/global_data/GlobalData.dart';
+
 class GlobalStudent {
   static Map<String, dynamic> profiles = {};
   static Map<String, dynamic> specificProfile = {};
@@ -9,6 +11,8 @@ class GlobalStudent {
   static String urlPrefix = "https://trusher.shellcode.co.in/";
   static List moveCourse = [];
   static List purchasedCourses = [];
+  static bool purchased = false;
+  static double feeAmount = 0.0;
 
   updateProfiles(Map<String, dynamic> map) {
     profiles = map;
@@ -38,5 +42,11 @@ class GlobalStudent {
     mycourses = map;
     print("Global Specific Profiles");
     print(mycourses);
+  }
+
+  destroy() {
+    moveCourse = [];
+    purchasedCourses = [];
+    feeAmount = 0.0;
   }
 }

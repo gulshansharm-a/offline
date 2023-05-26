@@ -16,14 +16,14 @@ import '../Views/enquiry_registrations/registration_successfull.dart';
 import '../global_data/student_global_data.dart';
 import 'razor_credentials.dart' as razorCredentials;
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
+// class MyHttpOverrides extends HttpOverrides {
+//   @override
+//   HttpClient createHttpClient(SecurityContext? context) {
+//     return super.createHttpClient(context)
+//       ..badCertificateCallback =
+//           (X509Certificate cert, String host, int port) => true;
+//   }
+// }
 
 class RazorpayScreen extends StatefulWidget {
   final double amount;
@@ -114,6 +114,24 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
       } else {
         Get.snackbar("Some Error Occured", "");
       }
+    } else if (widget.payment_type == 'renew course') {
+      Map<String, dynamic> map;
+      var url = Uri.parse(
+          "https://trusher.shellcode.co.in/api/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&amount=${amt}&status=captured&payment_id={${res.paymentId}&user_id=${GlobalStudent.id}&courseid=${widget.courseid}");
+      final http.Response response = await http.get(url);
+      map = json.decode(response.body);
+      if (response.statusCode == 200) {
+        if (map.isNotEmpty) {
+          print(map);
+          Get.snackbar("Payment Sucessful", "Fee paid");
+          Timer(const Duration(seconds: 3), () {});
+          Navigator.pop(context);
+        } else {
+          Get.snackbar("Some Error Occured", "Fee not paid");
+        }
+      } else {
+        Get.snackbar("Some Error Occured", "Fee not paid");
+      }
     } else {
       Map<String, dynamic> map;
       var url = Uri.parse(
@@ -197,8 +215,9 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
       "receipt": "rcptid_11"
     };
     var res = await http.post(
-      Uri.https(
-          "api.razorpay.com", "v1/orders"), //https://api.razorpay.com/v1/orders
+      Uri.parse(
+        "https://api.razorpay.com/v1/orders",
+      ), //https://api.razorpay.com/v1/orders
       headers: <String, String>{
         "Content-Type": "application/json",
         'authorization': basicAuth,
@@ -312,6 +331,9 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
                         email.contains('@')) {
                       createOrder();
                     } else {
+                      if (!email.isEmail) {
+                        Get.snackbar("Error", "Enter a valid email id");
+                      }
                       if (!email.contains('@')) {
                         Get.snackbar("Error", "Enter Valid Email");
                       } else {

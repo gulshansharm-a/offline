@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:offline_classes/Views/home/courses_tab.dart';
 import 'package:offline_classes/Views/home/home_page_for_register_user.dart';
@@ -73,17 +72,21 @@ class _MyBottomBarState extends State<MyBottomBar> {
   int? id = SelectStudentProfile.id;
 
   Future<void> checkSpecificProfiles() async {
-    id = SelectStudentProfile().getId();
-    MyBottomBar.id = SelectStudentProfile().getId();
-    final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
-    specificProfile = json.decode(response.body);
-    if (response.statusCode == 200) {
-      print(id);
-      print(MyBottomBar.id);
-      print(specificProfile);
-    } else {
-      return;
+    try {
+      id = SelectStudentProfile().getId();
+      MyBottomBar.id = SelectStudentProfile().getId();
+      final http.Response response = await http.get(Uri.parse(
+          "https://trusher.shellcode.co.in/api/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
+      specificProfile = json.decode(response.body);
+      if (response.statusCode == 200) {
+        print(id);
+        print(MyBottomBar.id);
+        print(specificProfile);
+      } else {
+        return;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

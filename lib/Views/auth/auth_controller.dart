@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
 import 'package:offline_classes/Views/auth/otp_verify_screen.dart';
 import 'package:offline_classes/Views/auth/splash_screen.dart';
+import 'package:offline_classes/Views/auth/splash_screen_for_login_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,7 +44,7 @@ class AuthController extends GetxController {
 
   _initialScreen(User? user) async {
     if (user == null) {
-      Get.offAll(() => LoginScreen());
+      Get.offAll(() => SplashForLoginScreen());
     } else {
       Get.offAll(() => SplashScreen());
     }

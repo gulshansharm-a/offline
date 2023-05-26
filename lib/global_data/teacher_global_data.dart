@@ -20,7 +20,7 @@ class GlobalTeacher {
 
   updateMyStudentId(int ID) {
     myStudentID = ID;
-    print("Global ID");
+    print("Global Student ID");
     print(id);
   }
 }

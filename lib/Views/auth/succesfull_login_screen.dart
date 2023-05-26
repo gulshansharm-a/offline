@@ -21,7 +21,7 @@ class _SuccessfullLogInscreenState extends State<SuccessfullLogInscreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (ctx) => EnquirySelectStudentOrTeachers()),
-        (route) => route.isFirst,
+        (route) => false,
       );
     });
     super.initState();

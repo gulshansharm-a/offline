@@ -51,62 +51,66 @@ class YourDoubts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getDoubts(),
-      builder: (context, snapshot) {
-        if (mydoubts.isEmpty) {
-          return Center(child: CircularProgressIndicator(color: primary2));
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, 'Your Doubts'),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: mydoubts["data"].length,
-                      itemBuilder: (ctx, i) {
-                        return InkWell(
-                          onTap: () async {
-                            var imageUrl = GlobalStudent.urlPrefix +
-                                mydoubts["data"][i]["file"];
-                            File imageFile =
-                                await convertImageUrlToFile(imageUrl);
-                            nextScreen(
-                              context,
-                              ImageOpener(
-                                imageFile: imageFile,
-                                showOnly: true,
-                                send: false,
-                              ),
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            padding: EdgeInsets.all(8),
-                            decoration: k3DboxDecoration(32),
-                            child: ListTile(
-                              leading: SizedBox(
-                                height: 4.h,
-                                child: Image.network(
-                                  '${GlobalStudent.urlPrefix}${mydoubts["data"][i]["file"]}',
-                                  fit: BoxFit.cover,
+    return Scaffold(
+      appBar: customAppbar2(context, 'Your Doubts'),
+      body: FutureBuilder(
+        future: getDoubts(),
+        builder: (context, snapshot) {
+          if (mydoubts.isEmpty) {
+            return Center(child: CircularProgressIndicator(color: primary2));
+          } else {
+            return mydoubts["data"].length == 0
+                ? const Center(
+                    child: Text('No Doubts Yet'),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: mydoubts["data"].length,
+                            itemBuilder: (ctx, i) {
+                              return InkWell(
+                                onTap: () async {
+                                  var imageUrl = GlobalStudent.urlPrefix +
+                                      mydoubts["data"][i]["file"];
+                                  File imageFile =
+                                      await convertImageUrlToFile(imageUrl);
+                                  nextScreen(
+                                    context,
+                                    ImageOpener(
+                                      imageFile: imageFile,
+                                      showOnly: true,
+                                      send: false,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(8),
+                                  decoration: k3DboxDecoration(32),
+                                  child: ListTile(
+                                    leading: SizedBox(
+                                      height: 4.h,
+                                      child: Image.network(
+                                        '${GlobalStudent.urlPrefix}${mydoubts["data"][i]["file"]}',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      "Doubt ${i + 1}",
+                                      style: kBodyText18wNormal(black),
+                                    ),
+                                    subtitle: Text(mydoubts["data"][i]["dt"]),
+                                  ),
                                 ),
-                              ),
-                              title: Text(
-                                "Doubt ${i + 1}",
-                                style: kBodyText18wNormal(black),
-                              ),
-                              subtitle: Text(mydoubts["data"][i]["dt"]),
-                            ),
-                          ),
-                        );
-                      }),
-                )
-              ],
-            ),
-          );
-        }
-      },
+                              );
+                            }),
+                      )
+                    ],
+                  );
+          }
+        },
+      ),
     );
   }
 }
@@ -137,85 +141,91 @@ class _SelectTeacherForDoubtShowState extends State<SelectTeacherForDoubtShow> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getTeacherList(),
-      builder: (context, snapshot) {
-        if (teacherList.isEmpty) {
-          return Center(child: CircularProgressIndicator(color: primary2));
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, 'Select Teachers'),
-            body: Column(
-              children: [
-                addVerticalSpace(10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: teacherList["data"].length,
-                    itemBuilder: (ctx, i) {
-                      return InkWell(
-                        onTap: () {
-                          nextScreen(
-                              context,
-                              YourDoubts(
-                                  teacher_id: teacherList["data"][i]["id"]));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.all(12),
-                          // height: 12.h,
-                          width: 93.w,
-                          decoration:
-                              kGradientBoxDecoration(35, purpleGradident()),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 11.h,
-                                width: 25.w,
+    return Scaffold(
+      appBar: customAppbar2(context, 'Select Teachers'),
+      body: FutureBuilder(
+        future: getTeacherList(),
+        builder: (context, snapshot) {
+          if (teacherList.isEmpty) {
+            return Center(child: CircularProgressIndicator(color: primary2));
+          } else {
+            return teacherList["data"].length == 0
+                ? const Center(
+                    child: Text('Teachers will be assigned soon'),
+                  )
+                : Column(
+                    children: [
+                      addVerticalSpace(10),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: teacherList["data"].length,
+                          itemBuilder: (ctx, i) {
+                            return InkWell(
+                              onTap: () {
+                                nextScreen(
+                                    context,
+                                    YourDoubts(
+                                        teacher_id: teacherList["data"][i]
+                                            ["id"]));
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(12),
+                                // height: 12.h,
+                                width: 93.w,
                                 decoration: kGradientBoxDecoration(
-                                    18, orangeGradient()),
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(12)),
-                                  child: Image.network(
-                                    GlobalStudent.urlPrefix +
-                                        teacherList["data"][i]["image"],
-                                    fit: BoxFit.cover,
-                                  ),
+                                    35, purpleGradident()),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 11.h,
+                                      width: 25.w,
+                                      decoration: kGradientBoxDecoration(
+                                          18, orangeGradient()),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(12)),
+                                        child: Image.network(
+                                          GlobalStudent.urlPrefix +
+                                              teacherList["data"][i]["image"],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    addHorizontalySpace(width(context) * 0.06),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Text(
+                                            teacherList["data"][i]["name"],
+                                            style: kBodyText22bold(white),
+                                          ),
+                                        ),
+                                        addVerticalSpace(10),
+                                        Text(
+                                          teacherList["data"][i]["subject"],
+                                          style: kBodyText18wNormal(white),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              addHorizontalySpace(width(context) * 0.06),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(
-                                      teacherList["data"][i]["name"],
-                                      style: kBodyText22bold(white),
-                                    ),
-                                  ),
-                                  addVerticalSpace(10),
-                                  Text(
-                                    teacherList["data"][i]["subject"],
-                                    style: kBodyText18wNormal(white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      },
+                      ),
+                    ],
+                  );
+          }
+        },
+      ),
     );
   }
 }

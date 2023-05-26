@@ -55,81 +55,87 @@ class _ParentsDoubtsSavedState extends State<ParentsDoubtsSaved> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getDoubts(),
-      builder: (context, snapshot) {
-        if (parentDoubts.isEmpty) {
-          return const Center(
-              child: CircularProgressIndicator(color: primary2));
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, 'Parents Doubts'),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(
-                    itemCount: parentDoubts["data"].length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        margin: EdgeInsets.all(1.h),
-                        width: 93.w,
-                        decoration: k3DboxDecoration(42),
-                        padding: EdgeInsets.only(
-                            left: 9.w, right: 2.w, top: 2.h, bottom: 2.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              parentDoubts["data"][i]["title"],
-                              style: kBodyText18wNormal(black),
-                            ),
-                            Text(
-                              'Posted On: ${parentDoubts["data"][i]["dt"].substring(0, parentDoubts["data"][i]["dt"].indexOf(' '))}',
-                              style: kBodyText14w500(textColor),
-                            ),
-                            addVerticalSpace(1.h),
-                            Text(
-                              parentDoubts["data"][i]["disc"],
-                              style: kBodyText14w500(black),
-                            ),
-                            addVerticalSpace(1.h),
-                            GestureDetector(
-                              onTap: () async {
-                                if (parentDoubts["data"][i]["file"] != null) {
-                                  File? image;
-                                  var imageUrl = GlobalStudent.urlPrefix +
-                                      parentDoubts["data"][i]["file"];
-                                  image = await convertImageUrlToFile(imageUrl);
-                                  nextScreen(
-                                      context,
-                                      ImageOpener(
-                                        send: false,
-                                        showOnly: true,
-                                        baseurl: GlobalStudent.urlPrefix,
-                                        imageFile: image,
-                                      ));
-                                }
-                              },
-                              child: Text(
-                                parentDoubts["data"][i]["file"] != null
-                                    ? "Image"
-                                    : "",
-                                style: kBodyText10wNormal(Colors.blue),
+    return Scaffold(
+      appBar: customAppbar2(context, 'Parents Doubts'),
+      body: FutureBuilder(
+        future: getDoubts(),
+        builder: (context, snapshot) {
+          if (parentDoubts.isEmpty) {
+            return const Center(
+                child: CircularProgressIndicator(color: primary2));
+          } else {
+            return parentDoubts["data"].length == 0
+                ? const Center(
+                    child: Text('No Doubts Uploaded'),
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: parentDoubts["data"].length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (ctx, i) {
+                            return Container(
+                              margin: EdgeInsets.all(1.h),
+                              width: 93.w,
+                              decoration: k3DboxDecoration(42),
+                              padding: EdgeInsets.only(
+                                  left: 9.w, right: 2.w, top: 2.h, bottom: 2.h),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    parentDoubts["data"][i]["title"],
+                                    style: kBodyText18wNormal(black),
+                                  ),
+                                  Text(
+                                    'Posted On: ${parentDoubts["data"][i]["dt"].substring(0, parentDoubts["data"][i]["dt"].indexOf(' '))}',
+                                    style: kBodyText14w500(textColor),
+                                  ),
+                                  addVerticalSpace(1.h),
+                                  Text(
+                                    parentDoubts["data"][i]["disc"],
+                                    style: kBodyText14w500(black),
+                                  ),
+                                  addVerticalSpace(1.h),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (parentDoubts["data"][i]["file"] !=
+                                          null) {
+                                        File? image;
+                                        var imageUrl = GlobalStudent.urlPrefix +
+                                            parentDoubts["data"][i]["file"];
+                                        image = await convertImageUrlToFile(
+                                            imageUrl);
+                                        nextScreen(
+                                            context,
+                                            ImageOpener(
+                                              send: false,
+                                              showOnly: true,
+                                              baseurl: GlobalStudent.urlPrefix,
+                                              imageFile: image,
+                                            ));
+                                      }
+                                    },
+                                    child: Text(
+                                      parentDoubts["data"][i]["file"] != null
+                                          ? "Image"
+                                          : "",
+                                      style: kBodyText10wNormal(Colors.blue),
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-      },
+                      ],
+                    ),
+                  );
+          }
+        },
+      ),
     );
   }
 }

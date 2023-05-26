@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/Views/enquiry_registrations/student_registration.dart';
 import 'package:offline_classes/Views/enquiry_registrations/teachers_registration_screen.dart';
@@ -90,10 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'LOGO',
-              style: kBodyText24wBold(primary),
-            ),
+            child: Image.asset("assets/images/logo.png"),
           ),
         ),
         actions: [
@@ -121,6 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {
                 dropDownValue = newValue!;
               });
+              Get.snackbar(
+                "Feature currently not available",
+                "This feautre will be available soon",
+              );
             },
             items: dropDownList.map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem<String>(
@@ -451,14 +453,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             }),
                           ),
                           addVerticalSpace(height(context) * 0.05),
-                          CustomButton(
-                              text: 'Registration',
-                              onTap: () {
-                                widget.whoAreYou == 'student'
-                                    ? nextScreen(context, StudentRegistration())
-                                    : nextScreen(
-                                        context, TeacherRegistration());
-                              }),
+                          Center(
+                            child: CustomButton(
+                                text: 'Registration',
+                                onTap: () {
+                                  widget.whoAreYou == 'student'
+                                      ? nextScreen(
+                                          context, StudentRegistration())
+                                      : nextScreen(
+                                          context, TeacherRegistration());
+                                }),
+                          ),
                           addVerticalSpace(3.5.h),
                           Center(
                             child: Text(
@@ -592,6 +597,92 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                    contentPadding: const EdgeInsets.all(6),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    content: StatefulBuilder(
+                                      builder: (BuildContext context,
+                                          StateSetter setState) {
+                                        var height =
+                                            MediaQuery.of(context).size.height;
+                                        var width =
+                                            MediaQuery.of(context).size.width;
+
+                                        return Container(
+                                            height: height * 0.3,
+                                            // decoration: kFillBoxDecoration(0, white, 40),
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Text(
+                                                  "Are you sure you want to logout?",
+                                                  style:
+                                                      kBodyText18wBold(black),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                addVerticalSpace(6.h),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: AuthController
+                                                          .instance.logout,
+                                                      child: Container(
+                                                        height: 5.h,
+                                                        width: 30.w,
+                                                        decoration:
+                                                            kOutlineBoxDecoration(
+                                                          2,
+                                                          green,
+                                                          18,
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            'Yes',
+                                                            style:
+                                                                kBodyText16wBold(
+                                                              green,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5.h,
+                                                      width: 30.w,
+                                                      child: CustomButton(
+                                                        text: 'No',
+                                                        onTap: () {
+                                                          goBack(context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ));
+                                      },
+                                    ),
+                                  ));
+                        },
+                        child: Text(
+                          'Logout',
+                          style: kBodyText24wBold(Color(0xff48116A)),
+                        ),
+                      ),
+                    ),
+                    addVerticalSpace(3.h),
                     Container(
                       height: 10.h,
                       width: width(context),

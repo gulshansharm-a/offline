@@ -1,310 +1,424 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:offline_classes/model/statics_list.dart';
+
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
-import 'package:offline_classes/widget/custom_back_button.dart';
 import 'package:offline_classes/widget/custom_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:table_calendar/table_calendar.dart';
+// import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../../global_data/GlobalData.dart';
+import '../../../global_data/student_global_data.dart';
 import '../../../utils/constants.dart';
-import '../../auth/succesfull_login_screen.dart';
 
-class FeePaymentScreen extends StatelessWidget {
-  const FeePaymentScreen({super.key});
+class AttendaceCalendarView extends StatefulWidget {
+  const AttendaceCalendarView(
+      {super.key, required this.map, required this.name, required this.amount});
+
+  final Map<String, dynamic> map;
+  final String name;
+  final double amount;
+
+  @override
+  State<AttendaceCalendarView> createState() => _AttendaceCalendarViewState();
+}
+
+class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
+  DateRangePickerController _datePickerController = DateRangePickerController();
+
+  late Map<String, dynamic> map;
+  late String name;
+
+  @override
+  initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppbar2(context, 'Fee Payment'),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(10),
+    var now = DateTime.now();
+    var formatter1 = DateFormat('MM');
+    String month = formatter1.format(now);
+    var formatter2 = DateFormat('yyyy');
+    String year = formatter2.format(now);
+    var formatter3 = DateFormat('d');
+    String day = formatter3.format(now);
+    map = widget.map;
+    name = widget.name;
+    log(map.toString());
+    int d = int.parse(day);
+    int m = int.parse(month);
+    int y = int.parse(year);
 
-              padding:
-                  EdgeInsets.only(left: 4.w, right: 3.w, top: 2.h, bottom: 2.h),
-              // height: 12.h,
-              width: 93.w,
-              decoration: kGradientBoxDecoration(35, purpleGradident()),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Current Month',
-                        style: kBodyText20wBold(white),
-                      ),
-                      Text(
-                        '13th Jan 23 - Today ',
-                        style: kBodyText14wNormal(white),
-                      ),
-                      addVerticalSpace(10),
-                      Text(
-                        'Total No. of classes: 09 ',
-                        style: kBodyText14wNormal(white),
-                      ),
-                      addVerticalSpace(1.3.h),
-                      InkWell(
-                        onTap: () {
-                          nextScreen(context, ShowFeePaymnetOfMonth());
-                        },
-                        child: Container(
-                          height: 4.h,
-                          width: 30.w,
-                          decoration:
-                              kGradientBoxDecoration(30, greenGradient()),
-                          child: Center(
-                            child: Text(
-                              'Pay Fee',
-                              style: kBodyText12wBold(white),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Spacer(),
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 12.h,
-                        child: Image.asset('assets/images/fee.png'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            addVerticalSpace(3.h),
-            Text(
-              'Previous Months ',
-              style: kBodyText18wBold(black),
-            ),
-            addVerticalSpace(1.h),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: 4,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (ctx, i) {
-                  return Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.only(
-                        left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                    // height: 16.h,
-                    width: width(context) * 0.93,
-                    decoration: k3DboxDecoration(42),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 16.h,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Dec 22 - Jan 23',
-                                style: kBodyText18wNormal(black),
-                              ),
-                              Text(
-                                'Total No. of classes: 22 ',
-                                style: kBodyText12wBold(textColor),
-                              ),
-                              addVerticalSpace(1.h),
-                              Text(
-                                'Total Fee: 2200/-',
-                                style: kBodyText18wNormal(black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          'Paid',
-                          style: kBodyText24wBold(green),
-                        )
-                      ],
+    int totalClassesTaken = 0;
+    int present = 0;
+    int absent = 0;
+    int holidays = 0;
+
+    List<DateTime> abs = [];
+    List<DateTime> spl = [];
+    List<int> weekend = [];
+
+    print(map);
+
+    for (int i = 0; i < map[name].length; i++) {
+      Map temp = map[name][i];
+      print(temp);
+      if (temp["isHolyday"] == 'yes' ||
+          temp["isSunday"] == 'yes' ||
+          temp["isSecondSaturday"] == 'yes' ||
+          temp["isFourtSaturday"] == 'yes') {
+        weekend.add(int.parse(temp["dt"].trim().substring(8, 10)));
+        holidays++;
+      } else {
+        if (temp["student_attend"].toString().trim() == "yes" &&
+            temp["techer_attend"].toString().trim() == "yes") {
+          totalClassesTaken++;
+          spl.add(
+              DateTime(y, m, int.parse(temp["dt"].trim().substring(8, 10))));
+          present++;
+        } else {
+          abs.add(
+              DateTime(y, m, int.parse(temp["dt"].trim().substring(8, 10))));
+          absent++;
+        }
+      }
+    }
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            decoration: k3DboxDecoration(15),
+            margin: EdgeInsets.all(12),
+            height: 45.h,
+            child: SfDateRangePicker(
+                controller: _datePickerController,
+                view: DateRangePickerView.month,
+                monthViewSettings: DateRangePickerMonthViewSettings(
+                  firstDayOfWeek: 1,
+                  weekendDays: weekend,
+                  blackoutDates: abs,
+                  specialDates: spl,
+                ),
+                selectionMode: DateRangePickerSelectionMode.multiple,
+                showActionButtons: false,
+                monthCellStyle: DateRangePickerMonthCellStyle(
+                  specialDatesDecoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 133, 239, 137),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 54, 244, 130),
+                      width: 1,
                     ),
-                  );
-                })
-          ],
-        ),
+                    shape: BoxShape.circle,
+                  ),
+                  weekendDatesDecoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.4),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.6),
+                      width: 1,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  blackoutDatesDecoration: BoxDecoration(
+                    color: Colors.red,
+                    border: Border.all(
+                      color: const Color(0xFFF44436),
+                      width: 1,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                endRangeSelectionColor: Colors.red,
+                selectionColor: Colors.green,
+                rangeSelectionColor: Colors.yellow,
+                todayHighlightColor: Colors.green,
+                onSubmit: (val) {
+                  print(val);
+                },
+                onCancel: () {
+                  _datePickerController.selectedRanges = null;
+                }),
+          ),
+          addVerticalSpace(1.h),
+          Padding(
+            padding: EdgeInsets.all(2.h),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, Colors.yellow, 10),
+                      child: Center(
+                        child: Text(totalClassesTaken.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Total classes taken',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(1.h),
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, Colors.green, 10),
+                      child: Center(
+                        child: Text(present.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Present',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(1.h),
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, Colors.red, 10),
+                      child: Center(
+                        child: Text(absent.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Absent',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(1.h),
+                Row(
+                  children: [
+                    Container(
+                      height: 5.h,
+                      width: 13.w,
+                      decoration: kFillBoxDecoration(0, boxColor, 10),
+                      child: Center(
+                        child: Text(holidays.toString()),
+                      ),
+                    ),
+                    addHorizontalySpace(5.w),
+                    Text(
+                      'Holidays till now',
+                      style: kBodyText14w500(black),
+                    )
+                  ],
+                ),
+                addVerticalSpace(3.h),
+                Center(
+                  child: CustomButton(
+                    text: 'Pay: Rs ${widget.amount.toString()}',
+                    onTap: () {
+                      nextScreen(
+                        context,
+                        RazorpayScreen(
+                          amount: widget.amount.toInt() * 1.0,
+                          role: 'student',
+                          payment_type: 'renew course',
+                          courseid: map[name][0]["course_id"],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
 
-class ShowFeePaymnetOfMonth extends StatefulWidget {
-  const ShowFeePaymnetOfMonth({super.key});
+class FeePaymentScreen extends StatefulWidget {
+  const FeePaymentScreen({Key? key}) : super(key: key);
+  @override
+  FeePaymentScreenState createState() => FeePaymentScreenState();
+}
+
+/// State for MyApp
+class FeePaymentScreenState extends State<FeePaymentScreen>
+    with TickerProviderStateMixin {
+  Future<void> getAttendence() async {
+    final http.Response response = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+    attendance = json.decode(response.body);
+    if (response.statusCode == 200) {
+    } else {
+      print("Unsuccessful");
+    }
+  }
+
+  Future<void> getAmount() async {
+    final http.Response res = await http.get(Uri.parse(
+        "https://trusher.shellcode.co.in/api/feeCalculation?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+    rate = json.decode(res.body);
+    if (res.statusCode == 200) {
+      log(rate.toString());
+    } else {
+      print("Unsuccessful");
+    }
+  }
 
   @override
-  State<ShowFeePaymnetOfMonth> createState() => _ShowFeePaymnetOfMonthState();
-}
+  void initState() {
+    setState(() {});
+  }
 
-class _ShowFeePaymnetOfMonthState extends State<ShowFeePaymnetOfMonth> {
-  DateRangePickerController _datePickerController = DateRangePickerController();
+  late TabController _tabController;
+
+  doit(int length) {
+    _tabController = TabController(length: length, vsync: this);
+  }
+
+  Map<String, dynamic> attendance = {};
+  Map<String, dynamic> rate = {};
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppbar2(context, 'Fee Payment'),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 6.h,
-              child: ListView.builder(
-                  itemCount: subjectList2.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (ctx, i) {
-                    return Container(
-                      margin: EdgeInsets.all(5),
-                      height: 6.h,
-                      decoration: kGradientBoxDecoration(15, purpleGradident()),
-                      padding: EdgeInsets.symmetric(horizontal: 13),
-                      child: Center(
-                        child: Text(
-                          subjectList2[i],
-                          overflow: TextOverflow.visible,
-                          style: kBodyText14wBold(white),
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-            Container(
-              decoration: k3DboxDecoration(15),
-              margin: EdgeInsets.all(12),
-              height: 45.h,
-              child: SfDateRangePicker(
-                  controller: _datePickerController,
-                  view: DateRangePickerView.month,
-                  monthViewSettings:
-                      DateRangePickerMonthViewSettings(firstDayOfWeek: 6),
-                  selectionMode: DateRangePickerSelectionMode.multiple,
-                  showActionButtons: false,
-                  endRangeSelectionColor: Colors.red,
-                  selectionColor: Colors.green,
-                  rangeSelectionColor: Colors.yellow,
-                  todayHighlightColor: Colors.green,
-                  onSubmit: (val) {
-                    print(val);
-                  },
-                  onCancel: () {
-                    _datePickerController.selectedRanges = null;
-                  }),
-            ),
-            addVerticalSpace(1.h),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
+    return FutureBuilder(
+      future: getAmount(),
+      builder: (context, snapshot) {
+        if (rate.isEmpty) {
+          return Scaffold(
+            body: Center(
+                child: CircularProgressIndicator(
+              color: primary2,
+            )),
+          );
+        } else {
+          return Scaffold(
+            appBar: customAppbar2(context, "Fee Payment"),
+            body: FutureBuilder(
+              future: getAttendence(),
+              builder: (context, snapshot) {
+                if (attendance.isEmpty) {
+                  return const Center(
+                      child: CircularProgressIndicator(color: primary2));
+                } else {
+                  List<String> subjectName = attendance["data"].keys.toList();
+                  doit(subjectName.length);
+                  return Column(
                     children: [
                       Container(
-                        height: 5.h,
-                        width: 13.w,
-                        decoration: kFillBoxDecoration(0, Colors.yellow, 10),
-                        child: Center(
-                          child: Text('25'),
+                        margin: EdgeInsets.all(4),
+
+                        padding: EdgeInsets.only(
+                            left: 9.w, right: 3.w, top: 2.h, bottom: 2.h),
+                        // height: 12.h,
+                        width: 93.w,
+                        decoration:
+                            kGradientBoxDecoration(35, purpleGradident()),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Current Month',
+                                  style: kBodyText20wBold(white),
+                                ),
+                                Text(
+                                  'Reward your teachers',
+                                  style: kBodyText14wNormal(white),
+                                ),
+                                addVerticalSpace(10),
+                                Text(
+                                  'with what they deserve',
+                                  style: kBodyText14wNormal(white),
+                                ),
+                                addVerticalSpace(1.3.h),
+                                InkWell(
+                                  child: Container(
+                                    height: 4.h,
+                                    width: 30.w,
+                                    decoration: kGradientBoxDecoration(
+                                        30, greenGradient()),
+                                    child: Center(
+                                      child: Text(
+                                        'Pay Fee',
+                                        style: kBodyText12wBold(white),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 9.h,
+                                  child: Image.asset('assets/images/fee.png'),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                      addVerticalSpace(1.3.h),
-                      Text(
-                        'Total \nclasses taken',
-                        style: kBodyText12wNormal(black),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                  addHorizontalySpace(3.w),
-                  Column(
-                    children: [
-                      Container(
-                        height: 5.h,
-                        width: 13.w,
-                        decoration: kFillBoxDecoration(0, Colors.green, 10),
-                        child: Center(
-                          child: Text('21'),
+                      addVerticalSpace(4.h),
+                      PreferredSize(
+                        preferredSize: Size.fromHeight(60),
+                        child: TabBar(
+                            onTap: (value) {},
+                            indicator: BoxDecoration(
+                              gradient: purpleGradident(),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            controller: _tabController,
+                            tabs: List.generate(
+                              attendance["data"].length,
+                              (index) => Text(
+                                subjectName[index],
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            )),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: List.generate(
+                            attendance["data"].length,
+                            (index) => AttendaceCalendarView(
+                              map: attendance["data"],
+                              name: subjectName[index],
+                              amount: rate["data"][subjectName[index]] * 1.0,
+                            ),
+                          ),
                         ),
                       ),
-                      addVerticalSpace(3.h),
-                      Text(
-                        'Present',
-                        style: kBodyText14w500(black),
-                      )
                     ],
-                  ),
-                  addHorizontalySpace(7.w),
-                  Column(
-                    children: [
-                      Container(
-                        height: 5.h,
-                        width: 13.w,
-                        decoration: kFillBoxDecoration(0, Colors.red, 10),
-                        child: Center(
-                          child: Text('4'),
-                        ),
-                      ),
-                      addVerticalSpace(3.h),
-                      Text(
-                        'Absent',
-                        style: kBodyText12wNormal(black),
-                      )
-                    ],
-                  ),
-                  addHorizontalySpace(7.w),
-                  Column(
-                    children: [
-                      Container(
-                        height: 5.h,
-                        width: 13.w,
-                        decoration: kFillBoxDecoration(0, boxColor, 10),
-                        child: Center(
-                          child: Text('2'),
-                        ),
-                      ),
-                      addVerticalSpace(1.3.h),
-                      Text(
-                        'Class \nnot taken',
-                        textAlign: TextAlign.center,
-                        style: kBodyText12wNormal(black),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                  );
+                }
+              },
             ),
-            addVerticalSpace(2.h),
-            Text(
-              'Total Amount: Rs. 2200',
-              style: kBodyText20wBold(primary),
-            ),
-            addVerticalSpace(3.h),
-            Center(
-              child: CustomButton(text: 'Pay Rs.2200', onTap: () {}),
-            ),
-            addVerticalSpace(2.h),
-            CustomButtonOutline(
-                textWidget: Text(
-                  'Pay All Course Fee',
-                  style: kBodyText16wBold(green),
-                ),
-                ontap: () {
-                  nextScreen(context, PaymentSuccessFullScreen());
-                },
-                width: width(context) * 0.9,
-                height: 6.5.h),
-            addVerticalSpace(3.h)
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

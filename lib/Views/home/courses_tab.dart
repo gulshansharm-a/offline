@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,7 @@ class _CoursesTabState extends State<CoursesTab> {
         "https://trusher.shellcode.co.in/api/courses?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&class=${GlobalStudent.specificProfile["data"][0]["class"]}&medium=${GlobalStudent.specificProfile["data"][0]["medium"]}"));
     courses = json.decode(response.body);
     if (response.statusCode == 200) {
-      print(courses);
+      log(courses.toString());
     } else {
       print("Unsuccessful");
     }
@@ -90,6 +91,10 @@ class _CoursesTabState extends State<CoursesTab> {
               return const Center(
                   child: CircularProgressIndicator(color: primary2));
             } else {
+              if (courses["mycourse"].length == 0) {
+                GlobalStudent.moveCourse = [];
+                GlobalStudent().destroy();
+              }
               GlobalStudent().updateCourses(courses);
               return SingleChildScrollView(
                 child: Column(

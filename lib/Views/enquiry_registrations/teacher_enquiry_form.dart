@@ -68,7 +68,7 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppbar2(context, ''),
+      appBar: customAppbar2(context, 'Teacher Enquiry'),
       body: FutureBuilder(
           future: GlobalData().getInfoStudentHome("/studentHome",
               GlobalData.auth1, GlobalData.phoneNumber.substring(1)),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../global_data/GlobalData.dart';
@@ -28,19 +29,7 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: white,
-          foregroundColor: black,
-          elevation: 0,
-          leadingWidth: width(context) * 0.4,
-          leading: Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Text(
-              'Cancel Courses',
-              style: kBodyText20wBold(primary),
-            ),
-          ),
-        ),
+        appBar: customAppbar2(context, "Cancel Courses"),
         body: FutureBuilder(
             future: delete(),
             builder: (context, snapshot) {

@@ -62,6 +62,7 @@ class LogoutScreen extends StatelessWidget {
             CustomButton(
               text: 'Logout',
               onTap: () {
+                GlobalStudent().destroy();
                 AuthController.instance.logout();
               },
             ),

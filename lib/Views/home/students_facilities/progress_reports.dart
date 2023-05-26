@@ -107,78 +107,91 @@ class ProgressReports extends StatelessWidget {
                     style: kBodyText18wBold(black),
                   ),
                   addVerticalSpace(1.h),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: progress["data"].length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        margin: EdgeInsets.all(10),
-                        padding: EdgeInsets.only(
-                            left: 8.w, right: 12, top: 2.h, bottom: 2.h),
-                        // height: 16.h,
-                        width: width(context) * 0.93,
-                        decoration: k3DboxDecoration(35),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                  progress["data"].length == 0
+                      ? Column(
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  progress["data"][i]["course_name"],
-                                  style: kBodyText18wNormal(black),
-                                ),
-                                Text(
-                                  progress["data"][i]["dt"].substring(0,
-                                      progress["data"][i]["dt"].indexOf(' ')),
-                                  style: kBodyText12wBold(textColor),
-                                ),
-                                addVerticalSpace(1.2.h),
-                                SizedBox(
-                                  width: width(context) * 0.55,
-                                  child: Text(
-                                    'Total Marks Obtained: ${progress["data"][i]["obtain_marks"]}/${progress["data"][i]["total_marks"]}',
-                                    style: kBodyText12wNormal(black),
-                                  ),
-                                ),
-                              ],
+                            addVerticalSpace(20),
+                            Text(
+                              'No reports to show',
+                              style: kBodyText12wBold(black),
                             ),
-                            Spacer(),
-                            InkWell(
-                              onTap: () async {
-                                var imageUrl = GlobalStudent.urlPrefix +
-                                    progress["data"][i]["file"];
-                                File imageFile =
-                                    await convertImageUrlToFile(imageUrl);
-                                nextScreen(
-                                  context,
-                                  ImageOpener(
-                                    imageFile: imageFile,
-                                    showOnly: true,
-                                    send: false,
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: width(context) * 0.26,
-                                height: 4.h,
-                                decoration:
-                                    kGradientBoxDecoration(40, greenGradient()),
-                                child: Center(
-                                  child: Text(
-                                    'View Report',
-                                    style: kBodyText10wBold(white),
-                                  ),
-                                ),
-                              ),
-                            )
                           ],
-                        ),
-                      );
-                    },
-                  )
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: progress["data"].length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (ctx, i) {
+                            return Container(
+                              margin: EdgeInsets.all(10),
+                              padding: EdgeInsets.only(
+                                  left: 8.w, right: 12, top: 2.h, bottom: 2.h),
+                              // height: 16.h,
+                              width: width(context) * 0.93,
+                              decoration: k3DboxDecoration(35),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        progress["data"][i]["course_name"],
+                                        style: kBodyText18wNormal(black),
+                                      ),
+                                      Text(
+                                        progress["data"][i]["dt"].substring(
+                                            0,
+                                            progress["data"][i]["dt"]
+                                                .indexOf(' ')),
+                                        style: kBodyText12wBold(textColor),
+                                      ),
+                                      addVerticalSpace(1.2.h),
+                                      SizedBox(
+                                        width: width(context) * 0.55,
+                                        child: Text(
+                                          'Total Marks Obtained: ${progress["data"][i]["obtain_marks"]}/${progress["data"][i]["total_marks"]}',
+                                          style: kBodyText12wNormal(black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  InkWell(
+                                    onTap: () async {
+                                      var imageUrl = GlobalStudent.urlPrefix +
+                                          progress["data"][i]["file"];
+                                      File imageFile =
+                                          await convertImageUrlToFile(imageUrl);
+                                      nextScreen(
+                                        context,
+                                        ImageOpener(
+                                          imageFile: imageFile,
+                                          showOnly: true,
+                                          send: false,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: width(context) * 0.26,
+                                      height: 4.h,
+                                      decoration: kGradientBoxDecoration(
+                                          40, greenGradient()),
+                                      child: Center(
+                                        child: Text(
+                                          'View Report',
+                                          style: kBodyText10wBold(white),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        )
                 ],
               ),
             );

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
 import 'package:offline_classes/Views/auth/splash_screen.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:sizer/sizer.dart';
 
 import 'Views/auth/auth_controller.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    GlobalStudent.moveCourse = [];
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
         title: 'Offline Classes',

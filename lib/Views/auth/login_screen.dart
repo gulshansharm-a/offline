@@ -69,6 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 0,
         foregroundColor: black,
         leadingWidth: width(context) * 0.3,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset("assets/images/logo.png"),
+        ),
         actions: [
           DropdownButton<String>(
             value: dropDownValue,
@@ -94,6 +98,10 @@ class _LoginScreenState extends State<LoginScreen> {
               setState(() {
                 dropDownValue = newValue!;
               });
+              Get.snackbar(
+                "Feature currently not available",
+                "This feautre will be available soon",
+              );
             },
             items: dropDownList.map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem<String>(

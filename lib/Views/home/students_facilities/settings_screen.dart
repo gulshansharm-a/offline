@@ -6,8 +6,10 @@ import 'package:offline_classes/Views/home/students_facilities/change_mobile_num
 import 'package:offline_classes/Views/home/students_facilities/contact_us.dart';
 import 'package:offline_classes/Views/home/students_facilities/my_profile_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/parents_doubts_saved.dart';
+import 'package:offline_classes/Views/home/students_facilities/select_student_profile.dart';
 import 'package:offline_classes/Views/home/students_facilities/terms_conditions.dart';
 import 'package:offline_classes/Views/home/students_facilities/your_doubts.dart';
+import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
 
@@ -347,13 +349,26 @@ class SettingsScreen extends StatelessWidget {
                             ),
                             Spacer(),
                             Icon(Icons.arrow_forward_ios),
-                            addHorizontalySpace(2.w),
                           ],
                         ),
                       ),
                     ),
                   ],
                 ),
+                addVerticalSpace(10.w),
+                GestureDetector(
+                  onTap: () {
+                    GlobalStudent().destroy();
+                    nextScreen(context, SelectStudentProfile());
+                  },
+                  child: Center(
+                    child: Text(
+                      "Switch Student Account?",
+                      style: kBodyText12wBold(Colors.blue),
+                    ),
+                  ),
+                ),
+                addHorizontalySpace(10.w)
               ],
             ),
           ),

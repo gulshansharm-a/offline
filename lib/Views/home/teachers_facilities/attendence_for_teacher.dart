@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -17,110 +16,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../global_data/GlobalData.dart';
 import '../../../global_data/student_global_data.dart';
+import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
 
-class AttendanceTeacersList extends StatelessWidget {
-  AttendanceTeacersList({super.key});
-
-  Future<void> getTeacherList() async {
-    final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
-    teacherList = json.decode(response.body);
-    if (response.statusCode == 200) {
-      print(teacherList);
-    } else {
-      print("Unsuccessful");
-    }
-  }
-
-  Map<String, dynamic> teacherList = {};
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppbar2(context, 'Select Techer'),
-      body: FutureBuilder(
-        future: getTeacherList(),
-        builder: (context, snapshot) {
-          if (teacherList.isEmpty) {
-            return Center(child: CircularProgressIndicator(color: primary2));
-          } else {
-            return teacherList["data"].length == 0
-                ? const Center(
-                    child: Text('Teachers will be assigned soon'),
-                  )
-                : Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: teacherList["data"].length,
-                          itemBuilder: (ctx, i) {
-                            return InkWell(
-                              onTap: () {
-                                nextScreen(context, AttendaceCalendar());
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                padding: EdgeInsets.all(12),
-                                // height: 12.h,
-                                width: 93.w,
-                                decoration: kGradientBoxDecoration(
-                                    35, purpleGradident()),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 11.h,
-                                      width: 25.w,
-                                      decoration: kGradientBoxDecoration(
-                                          18, orangeGradient()),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(12)),
-                                        child: Image.network(
-                                          GlobalStudent.urlPrefix +
-                                              teacherList["data"][i]["image"],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    addHorizontalySpace(width(context) * 0.06),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          teacherList["data"][i]["name"],
-                                          style: kBodyText22bold(white),
-                                        ),
-                                        addVerticalSpace(10),
-                                        Text(
-                                          teacherList["data"][i]["subject"],
-                                          style: kBodyText20wNormal(white),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-          }
-        },
-      ),
-    );
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------
 class AttendaceCalendarView extends StatefulWidget {
   const AttendaceCalendarView(
       {super.key, required this.map, required this.name});
@@ -143,6 +41,8 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
     super.initState();
   }
 
+  void markAbsent() {}
+
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now();
@@ -154,7 +54,6 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
     String day = formatter3.format(now);
     map = widget.map;
     name = widget.name;
-    log(map.toString());
     Timer(const Duration(seconds: 1), () {
       approvalPopup(context, day, month, year, map[name][0]);
     });
@@ -196,6 +95,7 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
         }
       }
     }
+    print(abs);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -344,18 +244,20 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
 
-class AttendaceCalendar extends StatefulWidget {
-  const AttendaceCalendar({Key? key}) : super(key: key);
+class AttendaceForTeacher extends StatefulWidget {
+  const AttendaceForTeacher({Key? key, required this.student_id})
+      : super(key: key);
   @override
-  AttendaceCalendarState createState() => AttendaceCalendarState();
+  final int student_id;
+  AttendaceForTeacherState createState() => AttendaceForTeacherState();
 }
 
 /// State for MyApp
-class AttendaceCalendarState extends State<AttendaceCalendar>
+class AttendaceForTeacherState extends State<AttendaceForTeacher>
     with TickerProviderStateMixin {
   Future<void> getAttendence() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "https://trusher.shellcode.co.in/api/teacherAttandence?authKey=${GlobalData.auth1}&student_id=${widget.student_id}&teacher_id=${GlobalTeacher.id}"));
     attendance = json.decode(response.body);
     if (response.statusCode == 200) {
       print("");
@@ -481,7 +383,7 @@ Future<dynamic> approvalPopup(BuildContext context, String day, String month,
                               Map<String, dynamic> jsonresponse = {};
                               final http.Response response = await http.get(
                                   Uri.parse(
-                                      "https://trusher.shellcode.co.in/api/teacherAbsent?authKey=${GlobalData.auth1}&teacher_id=${map["teacher_id"]}&student_id=${GlobalStudent.id}&course_id=${map["course_id"]}"));
+                                      "https://trusher.shellcode.co.in/api/studentAbsent?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}&student_id=${map["student_id"]}&course_id=${map["course_id"]}"));
                               try {
                                 jsonresponse = json.decode(response.body);
                                 if (response.statusCode == 200) {

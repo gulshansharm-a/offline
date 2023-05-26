@@ -94,10 +94,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
               leadingWidth: width(context) * 0.3,
               leading: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'LOGO',
-                  style: kBodyText24wBold(white),
-                ),
+                child: Image.asset("assets/images/logo.png"),
               ),
               actions: [
                 DropdownButton<String>(
@@ -126,6 +123,10 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                       //localizationController.changeLanguage('hi');
                       dropDownValue = newValue!;
                     });
+                    Get.snackbar(
+                      "Feature currently not available",
+                      "This feautre will be available soon",
+                    );
                   },
                   items: dropDownList.map<DropdownMenuItem<String>>((value) {
                     return DropdownMenuItem<String>(
@@ -482,7 +483,8 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                         Wrap(
                           runSpacing: 10,
                           spacing: 10,
-                          children: List.generate(offeringList.length, (i) {
+                          children:
+                              List.generate(Homescr["classes"].length, (i) {
                             return InkWell(
                               onTap: () {
                                 selectedIndex = i;
@@ -497,7 +499,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                                     : kOutlineBoxDecoration(
                                         1, Color(0xff793EFF), 30),
                                 child: Text(
-                                  offeringList[i],
+                                  Homescr["classes"][i]['class_name'],
                                   style: kBodyText15wNormal(
                                       selectedIndex == i ? white : black),
                                 ),
@@ -514,7 +516,8 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                         Wrap(
                           runSpacing: 10,
                           spacing: 10,
-                          children: List.generate(subjectList.length, (i) {
+                          children:
+                              List.generate(Homescr["subjects"].length, (i) {
                             return InkWell(
                               onTap: () {
                                 selectedIndex2 = i;
@@ -529,7 +532,7 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                                     : kOutlineBoxDecoration(
                                         1, Color(0xff793EFF), 30),
                                 child: Text(
-                                  subjectList[i],
+                                  Homescr["subjects"][i]['subject_name'],
                                   style: kBodyText15wNormal(
                                       selectedIndex2 == i ? white : black),
                                 ),

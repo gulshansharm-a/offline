@@ -69,51 +69,12 @@ class NoticeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ListView.builder(
-                    itemCount: notice["data"].length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        margin: EdgeInsets.all(1.h),
-                        width: 93.w,
-                        decoration: k3DboxDecoration(42),
-                        padding: EdgeInsets.only(
-                            left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              notice["data"][i]['title'],
-                              style: kBodyText18wNormal(black),
-                            ),
-                            Text(
-                              notice["data"][i]['dt'],
-                              style: kBodyText14w500(textColor),
-                            ),
-                            addVerticalSpace(1.h),
-                            Text(
-                              notice["data"][i]['noticedesc'],
-                              style: kBodyText14w500(black),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  Visibility(
-                    visible: GlobalData.role == 'teacher',
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            'For Specific Students',
-                            style: kBodyText18wBold(black),
-                          ),
-                        ),
-                        ListView.builder(
-                          itemCount: notice["foryou"].length,
+                  notice["data"].length == 0
+                      ? const Center(
+                          child: Text('No notices yet'),
+                        )
+                      : ListView.builder(
+                          itemCount: notice["data"].length,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (ctx, i) {
@@ -129,16 +90,16 @@ class NoticeScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    notice["foryou"][i]['title'],
+                                    notice["data"][i]['title'],
                                     style: kBodyText18wNormal(black),
                                   ),
                                   Text(
-                                    notice["foryou"][i]['dt'],
+                                    notice["data"][i]['dt'],
                                     style: kBodyText14w500(textColor),
                                   ),
                                   addVerticalSpace(1.h),
                                   Text(
-                                    notice["foryou"][i]['noticedesc'],
+                                    notice["data"][i]['noticedesc'],
                                     style: kBodyText14w500(black),
                                   )
                                 ],
@@ -146,6 +107,58 @@ class NoticeScreen extends StatelessWidget {
                             );
                           },
                         ),
+                  Visibility(
+                    visible: GlobalData.role == 'teacher',
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            'For Specific Students',
+                            style: kBodyText18wBold(black),
+                          ),
+                        ),
+                        notice["foryou"].length == 0
+                            ? const Center(
+                                child: Text('No notices yet'),
+                              )
+                            : ListView.builder(
+                                itemCount: notice["foryou"].length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (ctx, i) {
+                                  return Container(
+                                    margin: EdgeInsets.all(1.h),
+                                    width: 93.w,
+                                    decoration: k3DboxDecoration(42),
+                                    padding: EdgeInsets.only(
+                                        left: 9.w,
+                                        right: 5.w,
+                                        top: 2.h,
+                                        bottom: 2.h),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          notice["foryou"][i]['title'],
+                                          style: kBodyText18wNormal(black),
+                                        ),
+                                        Text(
+                                          notice["foryou"][i]['dt'],
+                                          style: kBodyText14w500(textColor),
+                                        ),
+                                        addVerticalSpace(1.h),
+                                        Text(
+                                          notice["foryou"][i]['noticedesc'],
+                                          style: kBodyText14w500(black),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                       ],
                     ),
                   )
@@ -157,10 +170,11 @@ class NoticeScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: CustomButton(
-                    text: 'Add Notice',
-                    onTap: () {
-                      nextScreen(context, AddNoticeScreen(type: type));
-                    }),
+                  text: 'Add Notice',
+                  onTap: () {
+                    nextScreen(context, AddNoticeScreen(type: type));
+                  },
+                ),
               ),
             ),
           );
