@@ -93,8 +93,7 @@ class GKScreenForTeacher extends StatelessWidget {
                                         ),
                                       ),
                                     )
-                                  : Image.asset("assets/images/sf9.png",
-                                      fit: BoxFit.cover),
+                                  : const SizedBox(height: 0.1),
                             ),
                             addVerticalSpace(1.h),
                             Text(
@@ -190,7 +189,11 @@ class _AddGKContentState extends State<AddGKContent> {
           setState(() {
             showSpinner = false;
           });
-          Get.snackbar("Done", "GK added successfully");
+          Get.snackbar(
+            "Done",
+            "GK added successfully",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
         } else {
           setState(() {
             showSpinner = false;
@@ -201,11 +204,19 @@ class _AddGKContentState extends State<AddGKContent> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again later");
+        Get.snackbar(
+          "Error",
+          "Try again later",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again later");
+      Get.snackbar(
+        "Error",
+        "Try again later",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -286,8 +297,11 @@ class _AddGKContentState extends State<AddGKContent> {
                       description.text.toString().isNotEmpty) {
                     postData();
                   } else {
-                    Get.snackbar("Please fill the fields",
-                        "Title and description are required");
+                    Get.snackbar(
+                      "Please fill the fields",
+                      "Title and description are required",
+                      backgroundColor: Colors.red.withOpacity(0.65),
+                    );
                   }
                 },
               ),
@@ -335,16 +349,28 @@ class _AddGKContentState extends State<AddGKContent> {
 
                             if (pickedFile != null) {
                               image = File(pickedFile.path);
-                              Get.snackbar("Success", "Image Selected");
+                              Get.snackbar(
+                                "Success",
+                                "Image Selected",
+                                backgroundColor: Colors.green.withOpacity(0.65),
+                              );
                               setState(() {
                                 showSpinner = false;
                               });
                             } else {
-                              Get.snackbar("Error", "Image Not Selected");
+                              Get.snackbar(
+                                "Error",
+                                "Image Not Selected",
+                                backgroundColor: Colors.red.withOpacity(0.65),
+                              );
                               print("No image selected");
                             }
                           } catch (e) {
-                            Get.snackbar("Access Denied", "");
+                            Get.snackbar(
+                              "Access Denied",
+                              "",
+                              backgroundColor: Colors.red.withOpacity(0.65),
+                            );
                           }
                         },
                         child: Container(
@@ -376,12 +402,20 @@ class _AddGKContentState extends State<AddGKContent> {
 
                           if (pickedFile != null) {
                             image = File(pickedFile.path);
-                            Get.snackbar("Success", "Image Selected");
+                            Get.snackbar(
+                              "Success",
+                              "Image Selected",
+                              backgroundColor: Colors.green.withOpacity(0.65),
+                            );
                             setState(() {
                               showSpinner = false;
                             });
                           } else {
-                            Get.snackbar("Error", "Image Not Selected");
+                            Get.snackbar(
+                              "Error",
+                              "Image Not Selected",
+                              backgroundColor: Colors.red.withOpacity(0.65),
+                            );
                             print("No image selected");
                           }
                         },

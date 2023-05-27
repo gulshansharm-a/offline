@@ -88,7 +88,11 @@ class _AppProgressReportState extends State<AppProgressReport> {
         if (msg == "Report add successfully") {
           setState(() {
             showSpinner = false;
-            Get.snackbar("Done", "Report Sent");
+            Get.snackbar(
+              "Done",
+              "Report Sent",
+              backgroundColor: Colors.green.withOpacity(0.65),
+            );
           });
         } else {
           setState(() {
@@ -100,17 +104,29 @@ class _AppProgressReportState extends State<AppProgressReport> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again");
+        Get.snackbar(
+          "Error",
+          "Try again",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
       print('API request failed with exception: $e');
     }
-    Get.snackbar("Error", "Try again");
+    Get.snackbar(
+      "Error",
+      "Try again",
+      backgroundColor: Colors.red.withOpacity(0.65),
+    );
     setState(() {
       showSpinner = false;
     });
@@ -185,9 +201,17 @@ class _AppProgressReportState extends State<AppProgressReport> {
                     if (pickedFile != null) {
                       File img = File(pickedFile.path);
                       image = img;
-                      Get.snackbar("Success", "Image Selected");
+                      Get.snackbar(
+                        "Success",
+                        "Image Selected",
+                        backgroundColor: Colors.green.withOpacity(0.65),
+                      );
                     } else {
-                      Get.snackbar("Error", "Image Not Selected");
+                      Get.snackbar(
+                        "Error",
+                        "Image Not Selected",
+                        backgroundColor: Colors.red.withOpacity(0.65),
+                      );
                       print("No image selected");
                     }
                     setState(() {});
@@ -251,17 +275,20 @@ class _AppProgressReportState extends State<AppProgressReport> {
                       Get.snackbar(
                         "All fields are mandatory",
                         "Please fill all the fields",
+                        backgroundColor: Colors.red.withOpacity(0.65),
                       );
                     } else if (tfMarks.text.isEmpty ||
                         tfTotalMarks.text.isEmail) {
                       Get.snackbar(
                         "All fields are mandatory",
                         "Please fill marks details",
+                        backgroundColor: Colors.red.withOpacity(0.65),
                       );
                     } else {
                       Get.snackbar(
                         "Image is required",
                         "Please upload report image",
+                        backgroundColor: Colors.red.withOpacity(0.65),
                       );
                     }
                   }
@@ -311,10 +338,12 @@ class AppProgressReportList extends StatelessWidget {
                       return InkWell(
                         onTap: () {
                           nextScreen(
-                              context,
-                              AppProgressReport(
-                                  student_id: student_id,
-                                  test_id: courseTests["test"][i]["id"]));
+                            context,
+                            AppProgressReport(
+                              student_id: student_id,
+                              test_id: courseTests["test"][i]["id"],
+                            ),
+                          );
                         },
                         child: Container(
                           margin: EdgeInsets.all(10),

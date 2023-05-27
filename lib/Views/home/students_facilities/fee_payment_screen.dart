@@ -103,8 +103,13 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
             child: SfDateRangePicker(
                 controller: _datePickerController,
                 view: DateRangePickerView.month,
+                allowViewNavigation: false,
+                enableMultiView: false,
+                enablePastDates: false,
+                selectionTextStyle: const TextStyle(color: black),
                 monthViewSettings: DateRangePickerMonthViewSettings(
                   firstDayOfWeek: 1,
+                  enableSwipeSelection: false,
                   weekendDays: weekend,
                   blackoutDates: abs,
                   specialDates: spl,
@@ -138,7 +143,7 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                   ),
                 ),
                 endRangeSelectionColor: Colors.red,
-                selectionColor: Colors.green,
+                selectionColor: Colors.transparent,
                 rangeSelectionColor: Colors.yellow,
                 todayHighlightColor: Colors.green,
                 onSubmit: (val) {
@@ -227,7 +232,9 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                 addVerticalSpace(3.h),
                 Center(
                   child: CustomButton(
-                    text: 'Pay: Rs ${widget.amount.toString()}',
+                    text: widget.amount != 0.0
+                        ? 'Pay: Rs ${widget.amount.toString()}'
+                        : 'Fee Paid',
                     onTap: () {
                       nextScreen(
                         context,
@@ -271,6 +278,8 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
     } else {
       print("Unsuccessful");
     }
+    List<String> subjectName = attendance["data"].keys.toList();
+    doit(subjectName.length);
   }
 
   Future<void> getAmount() async {
@@ -289,14 +298,22 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
     setState(() {});
   }
 
-  late TabController _tabController;
+  late TabController _tabController = TabController(length: 3, vsync: this);
 
   doit(int length) {
     _tabController = TabController(length: length, vsync: this);
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
   Map<String, dynamic> attendance = {};
   Map<String, dynamic> rate = {};
+
+  int i = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +321,7 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
       future: getAmount(),
       builder: (context, snapshot) {
         if (rate.isEmpty) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(
                 child: CircularProgressIndicator(
               color: primary2,
@@ -322,6 +339,7 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
                 } else {
                   List<String> subjectName = attendance["data"].keys.toList();
                   doit(subjectName.length);
+                  _tabController.index = i;
                   return Column(
                     children: [
                       Container(
@@ -353,16 +371,19 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
                                   style: kBodyText14wNormal(white),
                                 ),
                                 addVerticalSpace(1.3.h),
-                                InkWell(
-                                  child: Container(
-                                    height: 4.h,
-                                    width: 30.w,
-                                    decoration: kGradientBoxDecoration(
-                                        30, greenGradient()),
-                                    child: Center(
-                                      child: Text(
-                                        'Pay Fee',
-                                        style: kBodyText12wBold(white),
+                                Visibility(
+                                  visible: false,
+                                  child: InkWell(
+                                    child: Container(
+                                      height: 4.h,
+                                      width: 30.w,
+                                      decoration: kGradientBoxDecoration(
+                                          30, greenGradient()),
+                                      child: Center(
+                                        child: Text(
+                                          'Pay Fee',
+                                          style: kBodyText12wBold(white),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -384,17 +405,29 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
                       PreferredSize(
                         preferredSize: Size.fromHeight(60),
                         child: TabBar(
-                            onTap: (value) {},
+                            onTap: (value) {
+                              setState(() {
+                                i = value;
+                              });
+                            },
                             indicator: BoxDecoration(
                               gradient: purpleGradident(),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             controller: _tabController,
+                            isScrollable: true,
                             tabs: List.generate(
                               attendance["data"].length,
-                              (index) => Text(
-                                subjectName[index],
-                                style: TextStyle(color: Colors.black),
+                              (index) => Container(
+                                height: 30,
+                                child: Center(
+                                  child: Text(
+                                    subjectName[index],
+                                    style: TextStyle(
+                                        color:
+                                            i == index ? Colors.white : black),
+                                  ),
+                                ),
                               ),
                             )),
                       ),

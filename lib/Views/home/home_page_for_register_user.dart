@@ -96,6 +96,16 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
           for (Map<String, dynamic> map in Homescr["subjects"]) {
             GlobalStudent.subjects.add(map["subject_name"]);
           }
+          GlobalTeacher.classes.clear();
+          GlobalTeacher.subjects.clear();
+          GlobalTeacher.classes.add("Class");
+          GlobalTeacher.subjects.add("Subject");
+          for (Map<String, dynamic> map in Homescr["classes"]) {
+            GlobalTeacher.classes.add(map["class_name"]);
+          }
+          for (Map<String, dynamic> map in Homescr["subjects"]) {
+            GlobalTeacher.subjects.add(map["subject_name"]);
+          }
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xff48116a),

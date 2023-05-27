@@ -25,9 +25,7 @@ class ContactUs extends StatefulWidget {
 
 class _ContactUsState extends State<ContactUs> {
   TextEditingController tfname = TextEditingController();
-
   TextEditingController tfmail = TextEditingController();
-
   TextEditingController tfmessage = TextEditingController();
 
   bool showSpinner = false;
@@ -51,14 +49,22 @@ class _ContactUsState extends State<ContactUs> {
       Future.delayed(const Duration(seconds: 4), () {
         if (response.statusCode == 200) {
           // Request successfulful, parse the response
-          Get.snackbar("Success", "Queries sent!!");
+          Get.snackbar(
+            "Success",
+            "Queries sent!!",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
           print('Response body: ${response.body}');
           setState(() {
             showSpinner = false;
           });
         } else {
           // Request failed
-          Get.snackbar("Error", "Please try again later.");
+          Get.snackbar(
+            "Error",
+            "Please try again later.",
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
           print('Request failed with status: ${response.statusCode}');
           print(json.decode(response.body)["Message"]);
           Get.to(
@@ -74,7 +80,11 @@ class _ContactUsState extends State<ContactUs> {
     } catch (e) {
       // Error occurred during HTTP request
       print('Error: $e');
-      Get.snackbar("Error", "Please try again later.");
+      Get.snackbar(
+        "Error",
+        "Please try again later.",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -148,7 +158,10 @@ class _ContactUsState extends State<ContactUs> {
                   sendEmail();
                 } else {
                   Get.snackbar(
-                      "Please fill all the fields", "All fields are mandatory");
+                    "Please fill all the fields",
+                    "All fields are mandatory",
+                    backgroundColor: Colors.red.withOpacity(0.65),
+                  );
                 }
               },
             )),

@@ -55,7 +55,7 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
           serviceList: teacherServiceList,
           sliderList: const [
             'Trusted Teachers',
-            'Home to Home tuition service'
+            'Home to Home tuition service',
           ],
           heading:
               'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
@@ -274,7 +274,7 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
                               Get.snackbar(
                                 "Error",
                                 "All fields are mandatory.",
-                                backgroundGradient: purpleGradident(),
+                                backgroundColor: Colors.red.withOpacity(0.65),
                               );
                             }
                           })

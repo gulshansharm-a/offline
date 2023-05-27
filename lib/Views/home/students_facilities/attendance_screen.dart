@@ -201,7 +201,10 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
             margin: EdgeInsets.all(12),
             height: 45.h,
             child: SfDateRangePicker(
+                enableMultiView: false,
+                selectionTextStyle: const TextStyle(color: black),
                 controller: _datePickerController,
+                enablePastDates: false,
                 view: DateRangePickerView.month,
                 monthViewSettings: DateRangePickerMonthViewSettings(
                   firstDayOfWeek: 1,
@@ -209,7 +212,7 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                   blackoutDates: abs,
                   specialDates: spl,
                 ),
-                selectionMode: DateRangePickerSelectionMode.multiple,
+                allowViewNavigation: false,
                 showActionButtons: false,
                 monthCellStyle: DateRangePickerMonthCellStyle(
                   specialDatesDecoration: BoxDecoration(
@@ -238,7 +241,7 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                   ),
                 ),
                 endRangeSelectionColor: Colors.red,
-                selectionColor: Colors.green,
+                selectionColor: Colors.transparent,
                 rangeSelectionColor: Colors.yellow,
                 todayHighlightColor: Colors.green,
                 onSubmit: (val) {
@@ -366,29 +369,33 @@ class AttendaceCalendarState extends State<AttendaceCalendar>
     } else {
       print("Unsuccessful");
     }
+    List<String> subjectName = attendance["data"].keys.toList();
+    doit(subjectName.length);
   }
 
-  late TabController _tabController;
+  late TabController _tabController = TabController(length: 3, vsync: this);
 
   doit(int length) {
     _tabController = TabController(length: length, vsync: this);
   }
 
   Map<String, dynamic> attendance = {};
+
   int i = 0;
 
   @override
   Widget build(BuildContext context) {
-    _tabController.index = i;
     return FutureBuilder(
       future: getAttendence(),
       builder: (context, snapshot) {
         if (attendance.isEmpty) {
-          return const Center(
-              child: CircularProgressIndicator(color: primary2));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator(color: primary2)),
+          );
         } else {
           List<String> subjectName = attendance["data"].keys.toList();
           doit(subjectName.length);
+          _tabController.index = i;
           return Scaffold(
             appBar: customAppbar2(context, 'Attendance'),
             body: Column(
@@ -396,35 +403,27 @@ class AttendaceCalendarState extends State<AttendaceCalendar>
                 PreferredSize(
                   preferredSize: Size.fromHeight(60),
                   child: TabBar(
-                      isScrollable: true,
                       onTap: (value) {
                         setState(() {
                           i = value;
                         });
                       },
-                      // indicatorPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                      isScrollable: true,
                       indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1),
+                        gradient: purpleGradident(),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       controller: _tabController,
                       tabs: List.generate(
                         attendance["data"].length,
                         (index) => Container(
-                          decoration: i != index
-                              ? null
-                              : BoxDecoration(
-                                  gradient: purpleGradident(),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                          child: Column(
-                            children: [
-                              Text(
-                                "  ${subjectName[index]}  ",
-                                style: TextStyle(
-                                  color: i == index ? white : black,
-                                ),
-                              ),
-                            ],
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              subjectName[index],
+                              style: TextStyle(
+                                  color: i == index ? Colors.white : black),
+                            ),
                           ),
                         ),
                       )),

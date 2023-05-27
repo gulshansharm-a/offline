@@ -166,11 +166,19 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again");
+        Get.snackbar(
+          "Error",
+          "Try again",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -764,12 +772,22 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                 if (pickedFile != null) {
                                   File image = File(pickedFile.path);
                                   allImages[index] = image;
-                                  Get.snackbar("Success", "Image Uploaded");
+                                  Get.snackbar(
+                                    "Success",
+                                    "Image Uploaded",
+                                    backgroundColor:
+                                        Colors.green.withOpacity(0.65),
+                                  );
                                   setState(() {
                                     showSpinner = false;
                                   });
                                 } else {
-                                  Get.snackbar("Error", "Image Not Uploaded");
+                                  Get.snackbar(
+                                    "Error",
+                                    "Image Not Uploaded",
+                                    backgroundColor:
+                                        Colors.red.withOpacity(0.65),
+                                  );
                                   print("No image selected");
                                 }
                               },
@@ -889,7 +907,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                             Get.snackbar(
                               "Error",
                               "All Fields Mandatory",
-                              backgroundGradient: purpleGradident(),
+                              backgroundColor: Colors.red.withOpacity(0.65),
                             );
                           }
                           //Get.to(() => Ztest(message: text));
@@ -897,7 +915,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                           Get.snackbar(
                             "Error",
                             "Select Images",
-                            backgroundGradient: purpleGradident(),
+                            backgroundColor: Colors.red.withOpacity(0.65),
                           );
                         }
                         // nextScreen(
@@ -910,7 +928,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                         Get.snackbar(
                           "Error",
                           "Agree to the terms and conditions",
-                          backgroundGradient: purpleGradident(),
+                          backgroundColor: Colors.red.withOpacity(0.65),
                         );
                       }
                     }),

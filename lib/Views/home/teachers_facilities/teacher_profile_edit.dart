@@ -50,6 +50,9 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
     super.initState();
   }
 
+  String classValue = "Class";
+  String subjectValue = "Subject";
+
   Future<File> convertImageUrlToFile(String imageUrl) async {
     var response = await http.get(Uri.parse(imageUrl));
     var filePath =
@@ -82,9 +85,9 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
     request.fields['teacher_id'] = GlobalTeacher.id.toString();
     request.fields['teacher_name'] = tfname.text.toString().trim();
     request.fields['dob'] = datofBirthControler.text.toString().trim();
-    request.fields['class'] = tfclass.text;
-    request.fields['medium'] = tfsubject.text;
-    request.fields['subject'] = tfsubject.text;
+    request.fields['class'] = classValue;
+    request.fields['medium'] = tfmedium.text;
+    request.fields['subject'] = subjectValue;
     request.fields['address'] = tfadd.text;
 
     http.MultipartFile multiPart;
@@ -132,7 +135,11 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
           setState(() {
             showSpinner = false;
           });
-          Get.snackbar("Done", "Updation successful");
+          Get.snackbar(
+            "Done",
+            "Updation successful",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
         } else {
           setState(() {
             showSpinner = false;
@@ -143,11 +150,19 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Request Sent", "Changes may take some time to implement");
+        Get.snackbar(
+          "Request Sent",
+          "Changes may take some time to implement",
+          backgroundColor: Colors.yellow.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.green.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -219,9 +234,16 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
                         if (pickedFile != null) {
                           image = File(pickedFile.path);
                           Get.snackbar(
-                              "Success", "Image Selected Successfully");
+                            "Success",
+                            "Image Selected Successfully",
+                            backgroundColor: Colors.green.withOpacity(0.65),
+                          );
                         } else {
-                          Get.snackbar("Error", "Image Not Selected");
+                          Get.snackbar(
+                            "Error",
+                            "Image Not Selected",
+                            backgroundColor: Colors.red.withOpacity(0.65),
+                          );
                           print("No image selected");
                         }
                       },
@@ -251,20 +273,130 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
                 ),
                 addVerticalSpace(20),
                 CustomTextfield(
-                  hintext: 'Preferred Class',
-                  controller: tfclass,
-                  keyBoardType: TextInputType.number,
-                ),
-                addVerticalSpace(20),
-                CustomTextfield(
                   hintext: 'Medium (English or Hindi)',
                   controller: tfmedium,
-                  keyBoardType: TextInputType.number,
                 ),
                 addVerticalSpace(20),
-                CustomTextfield(
-                  hintext: 'Subject',
-                  controller: tfsubject,
+                Container(
+                  height: 8.5.h,
+                  width: 95.w,
+                  padding: EdgeInsets.only(left: 9.w, top: 7, right: 9.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      const BoxShadow(
+                        color: textColor,
+                        offset: Offset(0, 3),
+                      ),
+                      BoxShadow(
+                        color: white.withOpacity(0.95),
+                        // spreadRadius: -2.0,
+                        blurRadius: 7.0,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: DropdownButton<String>(
+                      value: classValue,
+                      hint: const Text(
+                        'Select',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: black,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: textColor,
+                        size: 30,
+                      ),
+                      // elevation: 10,
+                      style: const TextStyle(
+                          color: textColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          tfclass.text = newValue!;
+                          classValue = newValue;
+                        });
+                      },
+                      items: GlobalTeacher.classes
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: kBodyText14wNormal(black),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                addVerticalSpace(20),
+                Container(
+                  height: 8.5.h,
+                  width: 95.w,
+                  padding: EdgeInsets.only(left: 9.w, top: 7, right: 9.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      const BoxShadow(
+                        color: textColor,
+                        offset: Offset(0, 3),
+                      ),
+                      BoxShadow(
+                        color: white.withOpacity(0.95),
+                        // spreadRadius: -2.0,
+                        blurRadius: 7.0,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: DropdownButton<String>(
+                      value: subjectValue,
+                      hint: const Text(
+                        'Select',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: black,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: textColor,
+                        size: 30,
+                      ),
+                      // elevation: 10,
+                      style: const TextStyle(
+                          color: textColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          tfsubject.text = newValue!;
+                          subjectValue = newValue;
+                        });
+                      },
+                      items: GlobalTeacher.subjects
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: kBodyText14wNormal(black),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
                 addVerticalSpace(20),
                 CustomTextfield(
@@ -275,7 +407,15 @@ class _TeacherProfileEditState extends State<TeacherProfileEdit> {
                 CustomButton(
                   text: 'Done',
                   onTap: () {
-                    postData();
+                    if (classValue != "Class" && subjectValue != "Subject") {
+                      postData();
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Enter a valid value for Class/Subject",
+                        backgroundColor: Colors.red.withOpacity(0.65),
+                      );
+                    }
                   },
                 ),
                 addVerticalSpace(40),

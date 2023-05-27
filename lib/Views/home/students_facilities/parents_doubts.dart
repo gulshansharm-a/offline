@@ -44,7 +44,11 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
     } else {
-      Get.snackbar("Error", "Call Could not be sent");
+      Get.snackbar(
+        "Error",
+        "Call Could not be sent",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
     }
   }
 
@@ -92,7 +96,11 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
           setState(() {
             showSpinner = false;
           });
-          Get.snackbar("Success", 'Sent');
+          Get.snackbar(
+            "Success",
+            'Sent',
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
         } else {
           setState(() {
             showSpinner = false;
@@ -103,11 +111,19 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again later");
+        Get.snackbar(
+          "Error",
+          "Try again later",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -154,7 +170,11 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
                           tfTitle.text.isNotEmpty) {
                         submit();
                       } else {
-                        Get.snackbar("Error", "Fill the text fields");
+                        Get.snackbar(
+                          "Error",
+                          "Fill the text fields",
+                          backgroundColor: Colors.red.withOpacity(0.65),
+                        );
                       }
                     },
                   ),
@@ -173,7 +193,10 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
                         if (pickedFile != null) {
                           image = File(pickedFile.path);
                           Get.snackbar(
-                              "Success", "Image Selected Successfully");
+                            "Success",
+                            "Image Selected Successfully",
+                            backgroundColor: Colors.green.withOpacity(0.65),
+                          );
                           setState(() {
                             showSpinner = false;
                             nextScreen(
@@ -187,7 +210,11 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
                             );
                           });
                         } else {
-                          Get.snackbar("Error", "Image Not Uploaded");
+                          Get.snackbar(
+                            "Error",
+                            "Image Not Uploaded",
+                            backgroundColor: Colors.red.withOpacity(0.65),
+                          );
                           print("No image selected");
                         }
                       },

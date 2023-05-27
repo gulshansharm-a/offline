@@ -28,7 +28,11 @@ class _TeacherProfileState extends State<TeacherProfile> {
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
     } else {
-      Get.snackbar("Error", "Cannot make a call.");
+      Get.snackbar(
+        "Error",
+        "Cannot make a call.",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
     }
   }
 

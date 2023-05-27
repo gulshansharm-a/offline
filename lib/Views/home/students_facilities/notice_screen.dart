@@ -210,12 +210,20 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
       print("done noice");
       if (notice.length != 0) {
         if (notice["Message"] == "Notice added successfully") {
-          Get.snackbar("Success", "Notice added");
+          Get.snackbar(
+            "Success",
+            "Notice added",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
         }
       }
       print(notice);
     } else {
-      Get.snackbar("Error", "Try again later");
+      Get.snackbar(
+        "Error",
+        "Try again later",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       print("Unsuccessful");
     }
     setState(() {
@@ -254,7 +262,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                   if (title.text.isNotEmpty && description.text.isNotEmpty) {
                     postNotice();
                   } else {
-                    Get.snackbar("All fields are mandatory", "");
+                    Get.snackbar(
+                      "All fields are mandatory",
+                      "",
+                      backgroundColor: Colors.red.withOpacity(0.65),
+                    );
                   }
                 },
               )

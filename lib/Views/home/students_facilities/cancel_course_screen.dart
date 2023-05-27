@@ -49,59 +49,66 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
                         ),
                       ),
                       addVerticalSpace(3.h),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: GlobalStudent.courses["mycourse"].length,
-                        itemBuilder: (ctx, i) {
-                          GlobalStudent.courses["mycourse"][i]["id"];
-                          return Container(
-                            margin: EdgeInsets.all(10),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 1.5.h),
-                            // height: 11.h,
-                            width: 93.w,
-                            decoration:
-                                kGradientBoxDecoration(35, purpleGradident()),
-                            // decoration: kFillBoxDecoration(0, Color(0xff48116a), 35),
+                      GlobalStudent.courses["mycourse"].length == 0
+                          ? Center(
+                              child: Text("No courses to delete."),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  GlobalStudent.courses["mycourse"].length,
+                              itemBuilder: (ctx, i) {
+                                GlobalStudent.courses["mycourse"][i]["id"];
+                                return Container(
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 1.5.h),
+                                  // height: 11.h,
+                                  width: 93.w,
+                                  decoration: kGradientBoxDecoration(
+                                      35, purpleGradident()),
+                                  // decoration: kFillBoxDecoration(0, Color(0xff48116a), 35),
 
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      GlobalStudent.courses["mycourse"][i]
-                                          ["course_name"],
-                                      style: kBodyText24wBold(white),
-                                    ),
-                                    Spacer(),
-                                    addHorizontalySpace(5.w),
-                                    InkWell(
-                                      onTap: () {
-                                        confirmationPopup(context, i);
-                                      },
-                                      child: const CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        radius: 10,
-                                        child: Icon(
-                                          Icons.close,
-                                          size: 15,
-                                        ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            GlobalStudent.courses["mycourse"][i]
+                                                ["course_name"],
+                                            style: kBodyText24wBold(white),
+                                          ),
+                                          Spacer(),
+                                          addHorizontalySpace(5.w),
+                                          InkWell(
+                                            onTap: () {
+                                              confirmationPopup(context, i);
+                                            },
+                                            child: const CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 10,
+                                              child: Icon(
+                                                Icons.close,
+                                                size: 15,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  'Course started on: ${GlobalStudent.courses["mycourse"][i]["dt"].toString().substring(0, GlobalStudent.courses["mycourse"][i]["dt"].indexOf(" "))}',
-                                  style: kBodyText15wNormal(white),
-                                )
-                              ],
+                                      Text(
+                                        'Course started on: ${GlobalStudent.courses["mycourse"][i]["dt"].toString().substring(0, GlobalStudent.courses["mycourse"][i]["dt"].indexOf(" "))}',
+                                        style: kBodyText15wNormal(white),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ],
                   ),
                 );
@@ -124,55 +131,57 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
             var width = MediaQuery.of(context).size.width;
 
             return Container(
-              height: height * 0.3,
-              // decoration: kFillBoxDecoration(0, white, 40),
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'Are you sure you want to cancel this Course?',
-                    style: kBodyText18wBold(black),
-                    textAlign: TextAlign.center,
-                  ),
-                  addVerticalSpace(2.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          goBack(context);
-                        },
-                        child: Container(
-                          height: 5.h,
-                          width: 20.w,
-                          decoration: kOutlineBoxDecoration(2, green, 18),
-                          child: Center(
-                            child: Text(
-                              'No',
-                              style: kBodyText16wBold(green),
+                height: height * 0.3,
+                // decoration: kFillBoxDecoration(0, white, 40),
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Are you sure you want to cancel this Course?',
+                      style: kBodyText18wBold(black),
+                      textAlign: TextAlign.center,
+                    ),
+                    addVerticalSpace(2.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            goBack(context);
+                          },
+                          child: Container(
+                            height: 5.h,
+                            width: 20.w,
+                            decoration: kOutlineBoxDecoration(2, green, 18),
+                            child: Center(
+                              child: Text(
+                                'No',
+                                style: kBodyText16wBold(green),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 5.h,
-                        width: 20.w,
-                        child: CustomButton(
-                          text: 'Yes',
-                          onTap: () {
-                            GlobalStudent.purchasedCourses.remove(
-                                GlobalStudent.courses["mycourse"][i]["id"]);
-                            goBack(context);
-                            deleteCourse(i);
-                          },
+                        SizedBox(
+                          height: 5.h,
+                          width: 20.w,
+                          child: CustomButton(
+                            text: 'Yes',
+                            onTap: () {
+                              GlobalStudent.purchasedCourses.removeWhere(
+                                  (element) =>
+                                      element ==
+                                      GlobalStudent.courses["mycourse"][i]
+                                          ["id"]);
+                              goBack(context);
+                              deleteCourse(i);
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+                      ],
+                    ),
+                  ],
+                ));
           },
         ),
       ),
@@ -196,11 +205,14 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
           backgroundColor: Colors.red.withOpacity(0.65),
         );
       } else {
+        GlobalStudent.purchasedCourses
+            .remove(GlobalStudent.courses["mycourse"][i]["id"]);
         Get.snackbar(
           "Success",
           "Course Deleted",
           backgroundColor: Colors.green.withOpacity(0.65),
         );
+        setState(() {});
       }
     } else {
       Get.snackbar(

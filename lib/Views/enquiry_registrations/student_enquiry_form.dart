@@ -235,7 +235,7 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                           Get.snackbar(
                             "Error",
                             "All fields are mandatory.",
-                            backgroundGradient: purpleGradident(),
+                            backgroundColor: Colors.red.withOpacity(0.65),
                           );
                         }
                       },

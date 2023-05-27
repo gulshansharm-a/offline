@@ -54,9 +54,6 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
     String day = formatter3.format(now);
     map = widget.map;
     name = widget.name;
-    Timer(const Duration(seconds: 1), () {
-      approvalPopup(context, day, month, year, map[name][0]);
-    });
     int d = int.parse(day);
     int m = int.parse(month);
     int y = int.parse(year);
@@ -106,13 +103,16 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
             child: SfDateRangePicker(
                 controller: _datePickerController,
                 view: DateRangePickerView.month,
+                selectionTextStyle: const TextStyle(color: black),
                 monthViewSettings: DateRangePickerMonthViewSettings(
                   firstDayOfWeek: 1,
                   weekendDays: weekend,
                   blackoutDates: abs,
                   specialDates: spl,
                 ),
-                selectionMode: DateRangePickerSelectionMode.multiple,
+                allowViewNavigation: false,
+                enableMultiView: false,
+                enablePastDates: false,
                 showActionButtons: false,
                 monthCellStyle: DateRangePickerMonthCellStyle(
                   specialDatesDecoration: BoxDecoration(
@@ -141,7 +141,7 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                   ),
                 ),
                 endRangeSelectionColor: Colors.red,
-                selectionColor: Colors.green,
+                selectionColor: Colors.transparent,
                 rangeSelectionColor: Colors.yellow,
                 todayHighlightColor: Colors.green,
                 onSubmit: (val) {
@@ -229,7 +229,14 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                 ),
                 addVerticalSpace(3.h),
                 Center(
-                  child: CustomButton(text: 'Send Approval', onTap: () {}),
+                  child: CustomButton(
+                      text: 'Send Approval',
+                      onTap: () {
+                        Timer(const Duration(seconds: 1), () {
+                          approvalPopup(
+                              context, day, month, year, map[name][0]);
+                        });
+                      }),
                 )
               ],
             ),
@@ -264,13 +271,17 @@ class AttendaceForTeacherState extends State<AttendaceForTeacher>
     } else {
       print("Unsuccessful");
     }
+    List<String> subjectName = attendance["data"].keys.toList();
+    doit(subjectName.length);
   }
 
-  late TabController _tabController;
+  late TabController _tabController = TabController(length: 3, vsync: this);
 
   doit(int length) {
     _tabController = TabController(length: length, vsync: this);
   }
+
+  int i = 0;
 
   Map<String, dynamic> attendance = {};
 
@@ -280,11 +291,13 @@ class AttendaceForTeacherState extends State<AttendaceForTeacher>
       future: getAttendence(),
       builder: (context, snapshot) {
         if (attendance.isEmpty) {
-          return const Center(
-              child: CircularProgressIndicator(color: primary2));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator(color: primary2)),
+          );
         } else {
           List<String> subjectName = attendance["data"].keys.toList();
           doit(subjectName.length);
+          _tabController.index = i;
           return Scaffold(
             appBar: customAppbar2(context, 'Attendance'),
             body: Column(
@@ -292,7 +305,12 @@ class AttendaceForTeacherState extends State<AttendaceForTeacher>
                 PreferredSize(
                   preferredSize: Size.fromHeight(60),
                   child: TabBar(
-                      onTap: (value) {},
+                      onTap: (value) {
+                        setState(() {
+                          i = value;
+                        });
+                      },
+                      isScrollable: true,
                       indicator: BoxDecoration(
                         gradient: purpleGradident(),
                         borderRadius: BorderRadius.circular(10),
@@ -300,9 +318,15 @@ class AttendaceForTeacherState extends State<AttendaceForTeacher>
                       controller: _tabController,
                       tabs: List.generate(
                         attendance["data"].length,
-                        (index) => Text(
-                          subjectName[index],
-                          style: TextStyle(color: Colors.black),
+                        (index) => Container(
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              subjectName[index],
+                              style: TextStyle(
+                                  color: i == index ? Colors.white : black),
+                            ),
+                          ),
                         ),
                       )),
                 ),

@@ -49,7 +49,11 @@ class _StudentsDoubtsState extends State<StudentsDoubts> {
 
                 if (pickedFile != null) {
                   image = File(pickedFile.path);
-                  Get.snackbar("Success", "Image Selected Successflly");
+                  Get.snackbar(
+                    "Success",
+                    "Image Selected Successflly",
+                    backgroundColor: Colors.green.withOpacity(0.65),
+                  );
                   setState(() {
                     showSpinner = false;
                   });
@@ -61,7 +65,11 @@ class _StudentsDoubtsState extends State<StudentsDoubts> {
                         send: true,
                       ));
                 } else {
-                  Get.snackbar("Error", "Image Not Uploaded");
+                  Get.snackbar(
+                    "Error",
+                    "Image Not Uploaded",
+                    backgroundColor: Colors.red.withOpacity(0.65),
+                  );
                   print("No image selected");
                 }
               },
@@ -159,7 +167,11 @@ class MyImageOpener extends StatelessWidget {
                       ? goBack(context)
                       : (imageFile != null
                           ? nextScreen(context, SelectTeacher(image: imageFile))
-                          : Get.snackbar("Error", "No image selected"));
+                          : Get.snackbar(
+                              "Error",
+                              "No image selected",
+                              backgroundColor: Colors.red.withOpacity(0.65),
+                            ));
                 },
               ),
             ),
@@ -233,7 +245,11 @@ class _SelectTeacherState extends State<SelectTeacher> {
           setState(() {
             showSpinner = false;
           });
-          Get.snackbar("Success", 'Sent');
+          Get.snackbar(
+            "Success",
+            'Sent',
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
         } else {
           setState(() {
             showSpinner = false;
@@ -244,11 +260,19 @@ class _SelectTeacherState extends State<SelectTeacher> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again later");
+        Get.snackbar(
+          "Error",
+          "Try again later",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });

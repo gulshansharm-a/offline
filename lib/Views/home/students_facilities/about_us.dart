@@ -17,8 +17,9 @@ class AboutUs extends StatelessWidget {
           children: [
             Center(
               child: SizedBox(
-                  height: 10.h,
-                  child: Image.asset('assets/images/mainLogo.png')),
+                height: 10.h,
+                child: Image.asset('assets/images/mainLogo.png'),
+              ),
             ),
             addVerticalSpace(1.h),
             Padding(

@@ -92,6 +92,10 @@ class _TeachersCourseTabState extends State<TeachersCourseTab> {
                                     style: kBodyText14w500(white),
                                   ),
                                   Text(
+                                    'End date : ${courses["data"][i]["end_date"]}',
+                                    style: kBodyText14w500(white),
+                                  ),
+                                  Text(
                                     'Subject : ${courses["data"][i]["subject"]}',
                                     style: kBodyText14w500(white),
                                   ),

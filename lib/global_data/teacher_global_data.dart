@@ -5,6 +5,8 @@ class GlobalTeacher {
   static int? id;
   static String urlPrefix = "https://trusher.shellcode.co.in/";
   static int? myStudentID;
+  static List<String> classes = [];
+  static List<String> subjects = [];
 
   updateProfiles(Map<String, dynamic> map) {
     profile = map;

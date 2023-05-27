@@ -105,7 +105,11 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
                   OtpController.instace
                       .verifyOTP(_pinPutController.text.toString());
                 } catch (e) {
-                  Get.snackbar("Wrong OTP", "Try Again");
+                  Get.snackbar(
+                    "Wrong OTP",
+                    "Try Again",
+                    backgroundColor: Colors.red.withOpacity(0.65),
+                  );
                 }
                 // try {
                 //   print(_pinPutController.text);

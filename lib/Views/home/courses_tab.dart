@@ -49,6 +49,10 @@ class _CoursesTabState extends State<CoursesTab> {
         "Demo Course Booked",
         backgroundColor: Colors.green.withOpacity(0.65),
       );
+      if (GlobalStudent.purchasedCourses.contains(id) == false) {
+        GlobalStudent.purchasedCourses.add(id);
+      }
+      setState(() {});
     } else {
       Get.snackbar(
         "Error",
@@ -84,6 +88,7 @@ class _CoursesTabState extends State<CoursesTab> {
             TextButton(
               onPressed: () {
                 nextScreen(context, CancelCourseScreen());
+                setState(() {});
               },
               child: Text(
                 'Cancel Courses',
@@ -99,6 +104,13 @@ class _CoursesTabState extends State<CoursesTab> {
               return const Center(
                   child: CircularProgressIndicator(color: primary2));
             } else {
+              GlobalStudent.purchasedCourses.clear();
+              log("Clear: " + GlobalStudent.purchasedCourses.toString());
+              for (var i in courses["mycourse"]) {
+                GlobalStudent.purchasedCourses.add(i["id"]);
+              }
+              log("PR: ${GlobalStudent.purchasedCourses}");
+              log("MC: ${GlobalStudent.moveCourse}");
               GlobalStudent().updateCourses(courses);
               return SingleChildScrollView(
                 child: Column(
@@ -116,8 +128,12 @@ class _CoursesTabState extends State<CoursesTab> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: courses["mycourse"].length,
                         itemBuilder: (ctx, i) {
-                          GlobalStudent.purchasedCourses
-                              .add(courses["mycourse"][i]["id"]);
+                          if (GlobalStudent.purchasedCourses
+                                  .contains(courses["mycourse"][i]["id"]) ==
+                              false) {
+                            GlobalStudent.purchasedCourses
+                                .add(courses["mycourse"][i]["id"]);
+                          }
                           return Container(
                             margin: EdgeInsets.all(10),
                             padding: EdgeInsets.symmetric(
