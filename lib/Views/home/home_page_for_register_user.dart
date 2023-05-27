@@ -86,6 +86,16 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
           return const Center(
               child: CircularProgressIndicator(color: primary2));
         } else {
+          GlobalStudent.classes.clear();
+          GlobalStudent.subjects.clear();
+          GlobalStudent.classes.add("Class");
+          GlobalStudent.subjects.add("Subject");
+          for (Map<String, dynamic> map in Homescr["classes"]) {
+            GlobalStudent.classes.add(map["class_name"]);
+          }
+          for (Map<String, dynamic> map in Homescr["subjects"]) {
+            GlobalStudent.subjects.add(map["subject_name"]);
+          }
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Color(0xff48116a),
@@ -97,46 +107,51 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                 child: Image.asset("assets/images/logo.png"),
               ),
               actions: [
-                DropdownButton<String>(
-                  dropdownColor: Color(0xff48116a),
-                  value: dropDownValue,
-                  hint: const Text(
-                    'Select',
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xffB1B1B3),
-                        fontWeight: FontWeight.w400),
+                Visibility(
+                  visible: false,
+                  child: DropdownButton<String>(
+                    dropdownColor: Color(0xff48116a),
+                    value: dropDownValue,
+                    hint: const Text(
+                      'Select',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xffB1B1B3),
+                          fontWeight: FontWeight.w400),
+                    ),
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: white,
+                      size: 26,
+                    ),
+                    // elevation: 10,
+                    style: const TextStyle(
+                        color: white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    // isExpanded: true,s
+                    underline: SizedBox(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        //localizationController.changeLanguage('hi');
+                        dropDownValue = newValue!;
+                      });
+                      Get.snackbar(
+                        "Feature currently not available",
+                        "This feautre will be available soon",
+                      );
+                    },
+                    items: dropDownList.map<DropdownMenuItem<String>>((value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: kBodyText14w500(white),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: white,
-                    size: 26,
-                  ),
-                  // elevation: 10,
-                  style: const TextStyle(
-                      color: white, fontSize: 18, fontWeight: FontWeight.w500),
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  // isExpanded: true,s
-                  underline: SizedBox(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      //localizationController.changeLanguage('hi');
-                      dropDownValue = newValue!;
-                    });
-                    Get.snackbar(
-                      "Feature currently not available",
-                      "This feautre will be available soon",
-                    );
-                  },
-                  items: dropDownList.map<DropdownMenuItem<String>>((value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: kBodyText14w500(white),
-                      ),
-                    );
-                  }).toList(),
                 ),
               ],
             ),

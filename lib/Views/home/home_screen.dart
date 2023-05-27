@@ -95,41 +95,44 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          DropdownButton<String>(
-            value: dropDownValue,
-            hint: const Text(
-              'Select',
-              style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xffB1B1B3),
-                  fontWeight: FontWeight.w400),
+          Visibility(
+            visible: false,
+            child: DropdownButton<String>(
+              value: dropDownValue,
+              hint: const Text(
+                'Select',
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xffB1B1B3),
+                    fontWeight: FontWeight.w400),
+              ),
+              icon: const Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: black,
+                size: 26,
+              ),
+              // elevation: 10,
+              style: const TextStyle(
+                  color: black, fontSize: 18, fontWeight: FontWeight.w500),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              // isExpanded: true,s
+              underline: SizedBox(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropDownValue = newValue!;
+                });
+                Get.snackbar(
+                  "Feature currently not available",
+                  "This feautre will be available soon",
+                );
+              },
+              items: dropDownList.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
-            icon: const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: black,
-              size: 26,
-            ),
-            // elevation: 10,
-            style: const TextStyle(
-                color: black, fontSize: 18, fontWeight: FontWeight.w500),
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            // isExpanded: true,s
-            underline: SizedBox(),
-            onChanged: (String? newValue) {
-              setState(() {
-                dropDownValue = newValue!;
-              });
-              Get.snackbar(
-                "Feature currently not available",
-                "This feautre will be available soon",
-              );
-            },
-            items: dropDownList.map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
           ),
         ],
       ),

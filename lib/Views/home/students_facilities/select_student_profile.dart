@@ -120,11 +120,6 @@ class _SelectStudentProfileState extends State<SelectStudentProfile> {
                                           ),
                                           addVerticalSpace(3),
                                           Text(
-                                            "Age: ${profiles["data"][index]["age"].toString()}",
-                                            style: kBodyText16wBold(white),
-                                          ),
-                                          addVerticalSpace(3),
-                                          Text(
                                             "Gender: ${profiles["data"][index]["gender"]}",
                                             style: kBodyText16wBold(white),
                                           ),

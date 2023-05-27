@@ -155,9 +155,6 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
     map = widget.map;
     name = widget.name;
     log(map.toString());
-    Timer(const Duration(seconds: 1), () {
-      approvalPopup(context, day, month, year, map[name][0]);
-    });
     int d = int.parse(day);
     int m = int.parse(month);
     int y = int.parse(year);
@@ -329,7 +326,14 @@ class _AttendaceCalendarViewState extends State<AttendaceCalendarView> {
                 ),
                 addVerticalSpace(3.h),
                 Center(
-                  child: CustomButton(text: 'Send Approval', onTap: () {}),
+                  child: CustomButton(
+                      text: 'Send Approval',
+                      onTap: () {
+                        Timer(const Duration(seconds: 1), () {
+                          approvalPopup(
+                              context, day, month, year, map[name][0]);
+                        });
+                      }),
                 )
               ],
             ),
@@ -371,9 +375,11 @@ class AttendaceCalendarState extends State<AttendaceCalendar>
   }
 
   Map<String, dynamic> attendance = {};
+  int i = 0;
 
   @override
   Widget build(BuildContext context) {
+    _tabController.index = i;
     return FutureBuilder(
       future: getAttendence(),
       builder: (context, snapshot) {
@@ -390,17 +396,36 @@ class AttendaceCalendarState extends State<AttendaceCalendar>
                 PreferredSize(
                   preferredSize: Size.fromHeight(60),
                   child: TabBar(
-                      onTap: (value) {},
+                      isScrollable: true,
+                      onTap: (value) {
+                        setState(() {
+                          i = value;
+                        });
+                      },
+                      // indicatorPadding: EdgeInsets.symmetric(horizontal: 20.0),
                       indicator: BoxDecoration(
-                        gradient: purpleGradident(),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(1),
                       ),
                       controller: _tabController,
                       tabs: List.generate(
                         attendance["data"].length,
-                        (index) => Text(
-                          subjectName[index],
-                          style: TextStyle(color: Colors.black),
+                        (index) => Container(
+                          decoration: i != index
+                              ? null
+                              : BoxDecoration(
+                                  gradient: purpleGradident(),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                          child: Column(
+                            children: [
+                              Text(
+                                "  ${subjectName[index]}  ",
+                                style: TextStyle(
+                                  color: i == index ? white : black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       )),
                 ),

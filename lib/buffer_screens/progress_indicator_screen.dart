@@ -81,10 +81,11 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
             if (role == 'student' || role == 'teacher') {
               if (registerCheck == "Paymnet not done yert") {
                 print(GlobalData.mapRegisterCheck["Amount"].toDouble());
-                Future.delayed(Duration(seconds: 3), () {
+                Future.delayed(const Duration(milliseconds: 1500), () {
                   Get.snackbar(
                     "Complete Fee Payment",
                     "Pay your ${role} resgistation fees to proceed ahead.",
+                    backgroundColor: Colors.yellow.withOpacity(0.65),
                   );
                 });
                 return RazorpayScreen(

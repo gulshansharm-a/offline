@@ -41,155 +41,90 @@ class GKScreen extends StatelessWidget {
         } else {
           return Scaffold(
             appBar: customAppbar2(context, 'General Knowledge'),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  addVerticalSpace(1.h),
-                  Center(
-                    child: Text(
-                      'For All Classes',
-                      style: kBodyText18wBold(black),
-                    ),
-                  ),
-                  ListView.builder(
-                    itemCount: gk["allgk"].length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        margin: EdgeInsets.all(1.h),
-                        width: 93.w,
-                        decoration: k3DboxDecoration(42),
-                        padding: EdgeInsets.only(
-                            left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              gk["allgk"][i]["tittle"],
-                              style: kBodyText18wNormal(black),
-                            ),
-                            Center(
-                              child: gk["allgk"][i]["image"] != null
-                                  ? ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(25)),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(25)),
-                                        child: Image.network(
-                                          GlobalStudent.urlPrefix +
-                                              gk["allgk"][i]["image"],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    )
-                                  : Image.asset("assets/images/sf9.png",
-                                      fit: BoxFit.cover),
-                            ),
-                            addVerticalSpace(1.h),
-                            Text(
-                              gk["allgk"][i]["disc"],
-                              style: kBodyText14w500(black),
-                            )
-                          ],
+            body: PageView.builder(
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                var map = index == 0 ? gk["allgk"] : gk["foryou"];
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      addVerticalSpace(1.h),
+                      Center(
+                        child: Text(
+                          index == 0 ? 'For All Classes' : 'For You',
+                          style: kBodyText18wBold(black),
                         ),
-                      );
-                    },
-                  ),
-                  Visibility(
-                    visible: gk["allgk"].length == 0,
-                    child: Container(
-                      margin: EdgeInsets.all(1.h),
-                      width: 93.w,
-                      decoration: k3DboxDecoration(42),
-                      padding: EdgeInsets.only(
-                          left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Content will be uploaded soon.",
-                            style: kBodyText18wNormal(black),
-                          ),
-                        ],
                       ),
-                    ),
-                  ),
-                  addVerticalSpace(2.h),
-                  Center(
-                    child: Text(
-                      'For You',
-                      style: kBodyText18wBold(black),
-                    ),
-                  ),
-                  ListView.builder(
-                    itemCount: gk["foryou"].length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        margin: EdgeInsets.all(1.h),
-                        width: 93.w,
-                        decoration: k3DboxDecoration(42),
-                        padding: EdgeInsets.only(
-                            left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              gk["foryou"][i]["tittle"],
-                              style: kBodyText18wNormal(black),
+                      ListView.builder(
+                        itemCount: map.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (ctx, i) {
+                          return Container(
+                            margin: EdgeInsets.all(1.h),
+                            width: 93.w,
+                            decoration: k3DboxDecoration(42),
+                            padding: EdgeInsets.only(
+                                left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  map[i]["tittle"],
+                                  style: kBodyText18wNormal(black),
+                                ),
+                                Center(
+                                  child: map[i]["image"] != null
+                                      ? ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(25)),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(25)),
+                                            child: Image.network(
+                                              GlobalStudent.urlPrefix +
+                                                  map[i]["image"],
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(height: 1, width: 1),
+                                ),
+                                addVerticalSpace(1.h),
+                                Text(
+                                  map[i]["disc"],
+                                  style: kBodyText14w500(black),
+                                )
+                              ],
                             ),
-                            Center(
-                              child: gk["foryou"][i]["image"] != null
-                                  ? ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(25)),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(25)),
-                                        child: Image.network(
-                                          GlobalStudent.urlPrefix +
-                                              gk["foryou"][i]["image"],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    )
-                                  : Image.asset("assets/images/sf9.png",
-                                      fit: BoxFit.cover),
-                            ),
-                            addVerticalSpace(1.h),
-                            Text(
-                              gk["foryou"][i]["disc"],
-                              style: kBodyText14w500(black),
-                            )
-                          ],
+                          );
+                        },
+                      ),
+                      Visibility(
+                        visible: map.length == 0,
+                        child: Container(
+                          margin: EdgeInsets.all(1.h),
+                          width: 93.w,
+                          decoration: k3DboxDecoration(42),
+                          padding: EdgeInsets.only(
+                              left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Content will be uploaded soon.",
+                                style: kBodyText18wNormal(black),
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                  Visibility(
-                    visible: gk["foryou"].length == 0,
-                    child: Container(
-                      margin: EdgeInsets.all(1.h),
-                      width: 93.w,
-                      decoration: k3DboxDecoration(42),
-                      padding: EdgeInsets.only(
-                          left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Content will be uploaded soon.",
-                            style: kBodyText18wNormal(black),
-                          ),
-                        ],
                       ),
-                    ),
+                      addVerticalSpace(2.h),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           );
         }

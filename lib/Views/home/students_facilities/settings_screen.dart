@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:offline_classes/Views/home/students_facilities/about_us.dart';
 import 'package:offline_classes/Views/home/students_facilities/change_mobile_number.dart';
 import 'package:offline_classes/Views/home/students_facilities/contact_us.dart';
@@ -9,15 +10,28 @@ import 'package:offline_classes/Views/home/students_facilities/parents_doubts_sa
 import 'package:offline_classes/Views/home/students_facilities/select_student_profile.dart';
 import 'package:offline_classes/Views/home/students_facilities/terms_conditions.dart';
 import 'package:offline_classes/Views/home/students_facilities/your_doubts.dart';
+import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../utils/constants.dart';
+import '../courses_tab.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key, required this.isVisible});
   final bool isVisible;
+
+  redirect(context) {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      Get.snackbar(
+        "Access Denied",
+        "You need to enroll in a course first",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
+    });
+    nextScreen(context, CoursesTab());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +154,10 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              nextScreen(context, SelectTeacherForDoubtShow());
+                              !GlobalStudent.purchased
+                                  ? redirect(context)
+                                  : nextScreen(
+                                      context, SelectTeacherForDoubtShow());
                             },
                             child: Container(
                               height: 8.h,
@@ -187,7 +204,9 @@ class SettingsScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              nextScreen(context, ParentsDoubtsSaved());
+                              !GlobalStudent.purchased
+                                  ? redirect(context)
+                                  : nextScreen(context, ParentsDoubtsSaved());
                             },
                             child: Container(
                               height: 8.h,
@@ -231,7 +250,7 @@ class SettingsScreen extends StatelessWidget {
                             kGradientBoxDecoration(20, purpleGradident()),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset('assets/images/set5.png'),
+                          child: Image.asset('assets/images/set4.png'),
                         ),
                       ),
                     ),
@@ -356,15 +375,18 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 ),
                 addVerticalSpace(10.w),
-                GestureDetector(
-                  onTap: () {
-                    GlobalStudent().destroy();
-                    nextScreen(context, SelectStudentProfile());
-                  },
-                  child: Center(
-                    child: Text(
-                      "Switch Student Account?",
-                      style: kBodyText12wBold(Colors.blue),
+                Visibility(
+                  visible: GlobalData.role == 'student',
+                  child: GestureDetector(
+                    onTap: () {
+                      GlobalStudent().destroy();
+                      nextScreen(context, SelectStudentProfile());
+                    },
+                    child: Center(
+                      child: Text(
+                        "Switch Student Account?",
+                        style: kBodyText12wBold(Colors.blue),
+                      ),
                     ),
                   ),
                 ),

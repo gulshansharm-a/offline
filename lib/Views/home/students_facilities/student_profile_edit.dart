@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,6 @@ import 'package:offline_classes/widget/custom_textfield.dart';
 import 'package:offline_classes/widget/image_opener.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../global_data/GlobalData.dart';
 import '../../../utils/constants.dart';
 import '../../../widget/custom_button.dart';
@@ -46,6 +46,9 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
     tfsubject.text = GlobalStudent.specificProfile["data"][0]["subject"];
     super.initState();
   }
+
+  String classValue = "Class";
+  String subjectValue = "Subject";
 
   Future<File> convertImageUrlToFile(String imageUrl) async {
     var response = await http.get(Uri.parse(imageUrl));
@@ -78,9 +81,9 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
     request.fields['student_name'] = tfname.text.toString().trim();
     request.fields['dob'] = datofBirthControler.text.toString().trim();
     request.fields['school_name'] = tfschool.text.trim();
-    request.fields['class'] = tfclass.text;
+    request.fields['class'] = classValue;
     request.fields['user_id'] = GlobalStudent.id.toString();
-    request.fields['subject'] = tfsubject.text;
+    request.fields['subject'] = subjectValue;
 
     var multiPart;
 
@@ -120,36 +123,46 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
     try {
       var response = await request.send();
 
-      if (response.statusCode == 200) {
-        var httpResponse = await http.Response.fromStream(response);
-        var jsonResponse = json.decode(httpResponse.body);
-        print(jsonResponse);
-        String msg = jsonResponse["Message"].toString();
-        if (msg == "Registrtion successfull") {
-          setState(() {
-            showSpinner = false;
-          });
+      Future.delayed(const Duration(seconds: 2), () async {
+        if (response.statusCode == 200) {
+          var httpResponse = await http.Response.fromStream(response);
+          var jsonResponse = json.decode(httpResponse.body);
+          print(jsonResponse);
+          String msg = jsonResponse["Message"].toString();
+          log(msg.toString());
+          if (msg == "Registrtion successfull") {
+            setState(() {
+              showSpinner = false;
+            });
+          } else {
+            setState(() {
+              showSpinner = false;
+            });
+            nextScreen(context, ErrorScreen(message: msg));
+          }
         } else {
           setState(() {
             showSpinner = false;
           });
-          nextScreen(context, ErrorScreen(message: msg));
+          Get.snackbar(
+            "Request Sent",
+            "Changes may take some time to implement",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
+          print('API request failed with status code ${response.statusCode}');
         }
-      } else {
-        setState(() {
-          showSpinner = false;
-        });
-        Get.snackbar("Request Sent", "Changes may take some time to implement");
-        print('API request failed with status code ${response.statusCode}');
-      }
+      });
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
       print('API request failed with exception: $e');
     }
-    Get.snackbar("Error", "Try again");
     setState(() {
       showSpinner = false;
     });
@@ -216,9 +229,16 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
                         if (pickedFile != null) {
                           image = File(pickedFile.path);
                           Get.snackbar(
-                              "Success", "Image Selected Successfully");
+                            "Success",
+                            "Image Selected Successfully",
+                            backgroundColor: Colors.green.withOpacity(0.65),
+                          );
                         } else {
-                          Get.snackbar("Error", "Image Not Uploaded");
+                          Get.snackbar(
+                            "Error",
+                            "Image Not Selected",
+                            backgroundColor: Colors.red.withOpacity(0.65),
+                          );
                           print("No image selected");
                         }
                       },
@@ -252,21 +272,140 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
                   controller: tfschool,
                 ),
                 addVerticalSpace(20),
-                CustomTextfield(
-                  hintext: 'Class',
-                  controller: tfclass,
-                  keyBoardType: TextInputType.number,
+                Container(
+                  height: 8.5.h,
+                  width: 95.w,
+                  padding: EdgeInsets.only(left: 9.w, top: 7, right: 9.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      const BoxShadow(
+                        color: textColor,
+                        offset: Offset(0, 3),
+                      ),
+                      BoxShadow(
+                        color: white.withOpacity(0.95),
+                        // spreadRadius: -2.0,
+                        blurRadius: 7.0,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: DropdownButton<String>(
+                      value: classValue,
+                      hint: const Text(
+                        'Select',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: black,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: textColor,
+                        size: 30,
+                      ),
+                      // elevation: 10,
+                      style: const TextStyle(
+                          color: textColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          tfclass.text = newValue!;
+                          classValue = newValue;
+                        });
+                      },
+                      items: GlobalStudent.classes
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: kBodyText14wNormal(black),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
                 addVerticalSpace(20),
-                CustomTextfield(
-                  hintext: 'Subject',
-                  controller: tfsubject,
+                Container(
+                  height: 8.5.h,
+                  width: 95.w,
+                  padding: EdgeInsets.only(left: 9.w, top: 7, right: 9.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      const BoxShadow(
+                        color: textColor,
+                        offset: Offset(0, 3),
+                      ),
+                      BoxShadow(
+                        color: white.withOpacity(0.95),
+                        // spreadRadius: -2.0,
+                        blurRadius: 7.0,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: DropdownButton<String>(
+                      value: subjectValue,
+                      hint: const Text(
+                        'Select',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: black,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: textColor,
+                        size: 30,
+                      ),
+                      // elevation: 10,
+                      style: const TextStyle(
+                          color: textColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          tfsubject.text = newValue!;
+                          subjectValue = newValue;
+                        });
+                      },
+                      items: GlobalStudent.subjects
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: kBodyText14wNormal(black),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
                 addVerticalSpace(40),
                 CustomButton(
                   text: 'Done',
                   onTap: () {
-                    postData();
+                    if (classValue != "Class" && subjectValue != "Subject") {
+                      postData();
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Enter a valid value for Class/Subject",
+                        backgroundColor: Colors.red.withOpacity(0.65),
+                      );
+                    }
                   },
                 ),
                 addVerticalSpace(40),

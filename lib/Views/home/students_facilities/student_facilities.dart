@@ -37,8 +37,12 @@ class StudentFacilities extends StatelessWidget {
   }
 
   redirect(context) {
-    Future.delayed(Duration(seconds: 3), () {
-      Get.snackbar("Access Denied", "You need to enroll in a course first");
+    Future.delayed(const Duration(milliseconds: 500), () {
+      Get.snackbar(
+        "Access Denied",
+        "You need to enroll in a course first",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
     });
     nextScreen(context, CoursesTab());
   }
@@ -202,13 +206,11 @@ class StudentFacilities extends StatelessWidget {
                                           isVisible: false,
                                         ));
                               } else if (i == 10) {
-                                !GlobalStudent.purchased
-                                    ? redirect(context)
-                                    : nextScreen(
-                                        context,
-                                        SettingsScreen(
-                                          isVisible: true,
-                                        ));
+                                nextScreen(
+                                    context,
+                                    SettingsScreen(
+                                      isVisible: true,
+                                    ));
                               } else if (i == 11) {
                                 nextScreen(context, LogoutScreen());
                               }

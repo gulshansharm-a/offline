@@ -224,6 +224,11 @@ class _StudentRegistrationState extends State<StudentRegistration> {
           setState(() {
             showSpinner = false;
           });
+          Get.snackbar(
+            "Success",
+            "Registration Done",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
           nextScreen(
               context,
               RazorpayScreen(
@@ -241,11 +246,19 @@ class _StudentRegistrationState extends State<StudentRegistration> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again");
+        Get.snackbar(
+          "Error",
+          "Try again",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -516,6 +529,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                 CustomTextfield(
                                   controller: phnoController[index],
                                   hintext: "Phone Number",
+                                  readOnly: true,
                                   keyBoardType: TextInputType.number,
                                 ),
                                 addVerticalSpace(15),
@@ -843,14 +857,23 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                                   File image =
                                                       File(pickedFile.path);
                                                   allImages[ind][index] = image;
-                                                  Get.snackbar("Success",
-                                                      "Image Uploaded");
+                                                  Get.snackbar(
+                                                    "Success",
+                                                    "Image Selected",
+                                                    backgroundColor: Colors
+                                                        .green
+                                                        .withOpacity(0.65),
+                                                  );
                                                   setState(() {
                                                     showSpinner = false;
                                                   });
                                                 } else {
-                                                  Get.snackbar("Error",
-                                                      "Image Not Uploaded");
+                                                  Get.snackbar(
+                                                    "Error",
+                                                    "Image Not Selected",
+                                                    backgroundColor: Colors.red
+                                                        .withOpacity(0.65),
+                                                  );
                                                   print("No image selected");
                                                 }
                                               },
@@ -968,6 +991,8 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                                   Get.snackbar(
                                     "Error",
                                     "All Fields Mandatory",
+                                    backgroundColor:
+                                        Colors.red.withOpacity(0.65),
                                     backgroundGradient: purpleGradident(),
                                   );
                                 }
@@ -976,7 +1001,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                               Get.snackbar(
                                 "Error",
                                 "Select Images",
-                                backgroundGradient: purpleGradident(),
+                                backgroundColor: Colors.red.withOpacity(0.65),
                               );
                             }
                             // nextScreen(
@@ -989,7 +1014,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                             Get.snackbar(
                               "Error",
                               "Agree to the terms and conditions",
-                              backgroundGradient: purpleGradident(),
+                              backgroundColor: Colors.red.withOpacity(0.65),
                             );
                           }
                         },

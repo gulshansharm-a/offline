@@ -44,9 +44,17 @@ class _CoursesTabState extends State<CoursesTab> {
     print("Demo");
     if (response.statusCode == 200) {
       print(map);
-      Get.snackbar("Success", "Demo Course Booked");
+      Get.snackbar(
+        "Success",
+        "Demo Course Booked",
+        backgroundColor: Colors.green.withOpacity(0.65),
+      );
     } else {
-      Get.snackbar("Error", "Course Booking Failed");
+      Get.snackbar(
+        "Error",
+        "Course Booking Failed",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       print("Unsuccessful");
     }
   }
@@ -91,10 +99,6 @@ class _CoursesTabState extends State<CoursesTab> {
               return const Center(
                   child: CircularProgressIndicator(color: primary2));
             } else {
-              if (courses["mycourse"].length == 0) {
-                GlobalStudent.moveCourse = [];
-                GlobalStudent().destroy();
-              }
               GlobalStudent().updateCourses(courses);
               return SingleChildScrollView(
                 child: Column(

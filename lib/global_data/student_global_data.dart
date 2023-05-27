@@ -13,6 +13,8 @@ class GlobalStudent {
   static List purchasedCourses = [];
   static bool purchased = false;
   static double feeAmount = 0.0;
+  static List<String> classes = [];
+  static List<String> subjects = [];
 
   updateProfiles(Map<String, dynamic> map) {
     profiles = map;

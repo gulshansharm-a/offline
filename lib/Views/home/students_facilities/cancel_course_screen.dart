@@ -190,12 +190,24 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
     if (response.statusCode == 200) {
       print(map["Message"]);
       if (map["Message"] == "course deletion failed ,try again!") {
-        Get.snackbar("Failure", "Course not deleted or does not exist.");
+        Get.snackbar(
+          "Failure",
+          "Course not deleted or does not exist.",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
       } else {
-        Get.snackbar("Success", "Course Deleted");
+        Get.snackbar(
+          "Success",
+          "Course Deleted",
+          backgroundColor: Colors.green.withOpacity(0.65),
+        );
       }
     } else {
-      Get.snackbar("Failure", "Course not deleted or does not exist.");
+      Get.snackbar(
+        "Failure",
+        "Course not deleted or does not exist.",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
     }
     setState(() {
       showSpinner = false;

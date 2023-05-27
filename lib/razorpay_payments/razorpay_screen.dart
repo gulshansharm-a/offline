@@ -12,8 +12,10 @@ import 'package:offline_classes/global_data/GlobalData.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:sizer/sizer.dart';
 import '../Views/enquiry_registrations/registration_successfull.dart';
 import '../global_data/student_global_data.dart';
+import '../widget/custom_button.dart';
 import 'razor_credentials.dart' as razorCredentials;
 
 // class MyHttpOverrides extends HttpOverrides {
@@ -65,7 +67,11 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     var res = response;
-    Get.snackbar("Done", "Payment Successful");
+    Get.snackbar(
+      "Done",
+      "Payment Successful",
+      backgroundColor: Colors.green.withOpacity(0.65),
+    );
     // Do something when payment succeeds
     print(response);
     capturePayment(response.paymentId);
@@ -84,7 +90,11 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
       //     whoareYou: widget.role,
       //   ),
       // )
-      Get.snackbar("Success", "Payment Captured");
+      Get.snackbar(
+        "Success",
+        "Payment Captured",
+        backgroundColor: Colors.green.withOpacity(0.65),
+      );
       //Get.back();
     } else {
       print("Payment capture failed");
@@ -101,7 +111,11 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
       if (response.statusCode == 200) {
         if (map.isNotEmpty) {
           print(map);
-          Get.snackbar("Registered", "");
+          Get.snackbar(
+            "Registered",
+            "",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
           nextScreen(
             context,
             RegistrationSuccessfull(
@@ -109,10 +123,18 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
             ),
           );
         } else {
-          Get.snackbar("Some Error Occured", "");
+          Get.snackbar(
+            "Some Error Occured",
+            "",
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
         }
       } else {
-        Get.snackbar("Some Error Occured", "");
+        Get.snackbar(
+          "Some Error Occured",
+          "",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
       }
     } else if (widget.payment_type == 'renew course') {
       Map<String, dynamic> map;
@@ -123,14 +145,26 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
       if (response.statusCode == 200) {
         if (map.isNotEmpty) {
           print(map);
-          Get.snackbar("Payment Sucessful", "Fee paid");
+          Get.snackbar(
+            "Payment Sucessful",
+            "Fee paid",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
           Timer(const Duration(seconds: 3), () {});
           Navigator.pop(context);
         } else {
-          Get.snackbar("Some Error Occured", "Fee not paid");
+          Get.snackbar(
+            "Some Error Occured",
+            "Fee not paid",
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
         }
       } else {
-        Get.snackbar("Some Error Occured", "Fee not paid");
+        Get.snackbar(
+          "Some Error Occured",
+          "Fee not paid",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
       }
     } else {
       Map<String, dynamic> map;
@@ -142,12 +176,25 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
         if (map.isNotEmpty) {
           print(map);
           Timer(const Duration(seconds: 3), () {});
+          Get.snackbar(
+            "Success",
+            "Course Added",
+            backgroundColor: Colors.green.withOpacity(0.65),
+          );
           Navigator.pop(context);
         } else {
-          Get.snackbar("Some Error Occured", "Course Not Added");
+          Get.snackbar(
+            "Some Error Occured",
+            "Course Not Added",
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
         }
       } else {
-        Get.snackbar("Some Error Occured", "Course Not Added");
+        Get.snackbar(
+          "Some Error Occured",
+          "Course Not Added",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
       }
     }
   }
@@ -332,12 +379,24 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
                       createOrder();
                     } else {
                       if (!email.isEmail) {
-                        Get.snackbar("Error", "Enter a valid email id");
+                        Get.snackbar(
+                          "Error",
+                          "Enter a valid email id",
+                          backgroundColor: Colors.red.withOpacity(0.65),
+                        );
                       }
                       if (!email.contains('@')) {
-                        Get.snackbar("Error", "Enter Valid Email");
+                        Get.snackbar(
+                          "Error",
+                          "Enter Valid Email",
+                          backgroundColor: Colors.red.withOpacity(0.65),
+                        );
                       } else {
-                        Get.snackbar("Error", "Enter Values");
+                        Get.snackbar(
+                          "Error",
+                          "Enter Values",
+                          backgroundColor: Colors.red.withOpacity(0.65),
+                        );
                       }
                     }
                   },
@@ -353,7 +412,77 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
                 padding: EdgeInsets.all(20),
                 child: TextButton(
                   onPressed: () {
-                    AuthController.instance.logout();
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              contentPadding: const EdgeInsets.all(6),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              content: StatefulBuilder(
+                                builder: (BuildContext context,
+                                    StateSetter setState) {
+                                  var height =
+                                      MediaQuery.of(context).size.height;
+                                  var width = MediaQuery.of(context).size.width;
+
+                                  return Container(
+                                      height: height * 0.3,
+                                      // decoration: kFillBoxDecoration(0, white, 40),
+                                      padding: EdgeInsets.all(10),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            "Are you sure you want to logout?",
+                                            style: kBodyText18wBold(black),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          addVerticalSpace(6.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              InkWell(
+                                                onTap: AuthController
+                                                    .instance.logout,
+                                                child: Container(
+                                                  height: 5.h,
+                                                  width: 30.w,
+                                                  decoration:
+                                                      kOutlineBoxDecoration(
+                                                    2,
+                                                    green,
+                                                    18,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Yes',
+                                                      style: kBodyText16wBold(
+                                                        green,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5.h,
+                                                width: 30.w,
+                                                child: CustomButton(
+                                                  text: 'No',
+                                                  onTap: () {
+                                                    goBack(context);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ));
+                                },
+                              ),
+                            ));
                   },
                   child: Text(
                     "Logout",

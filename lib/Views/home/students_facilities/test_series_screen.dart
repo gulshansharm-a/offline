@@ -84,7 +84,11 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         if (msg == "Report add successfully") {
           setState(() {
             showSpinner = false;
-            Get.snackbar("Done", "Test Uploaded");
+            Get.snackbar(
+              "Done",
+              "Test Uploaded",
+              backgroundColor: Colors.green.withOpacity(0.65),
+            );
           });
         } else {
           setState(() {
@@ -96,11 +100,19 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         setState(() {
           showSpinner = false;
         });
-        Get.snackbar("Error", "Try again");
+        Get.snackbar(
+          "Error",
+          "Try again",
+          backgroundColor: Colors.red.withOpacity(0.65),
+        );
         print('API request failed with status code ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Try again");
+      Get.snackbar(
+        "Error",
+        "Try again",
+        backgroundColor: Colors.red.withOpacity(0.65),
+      );
       setState(() {
         showSpinner = false;
       });
@@ -138,7 +150,8 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                         children: [
                           addVerticalSpace(1.h),
                           ListView.builder(
-                            itemCount: tests["data"].length,
+                            // itemCount: tests["data"].length,
+                            itemCount: 1,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (ctx, i) {
@@ -323,14 +336,22 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
                                               if (pickedFile != null) {
                                                 image = File(pickedFile.path);
-                                                Get.snackbar("Success",
-                                                    "Image Selected");
+                                                Get.snackbar(
+                                                  "Success",
+                                                  "Image Selected",
+                                                  backgroundColor: Colors.green
+                                                      .withOpacity(0.65),
+                                                );
                                                 setState(() {
                                                   showSpinner = false;
                                                 });
                                               } else {
-                                                Get.snackbar("Error",
-                                                    "Image Not Selected");
+                                                Get.snackbar(
+                                                  "Error",
+                                                  "Image Not Selected",
+                                                  backgroundColor: Colors.red
+                                                      .withOpacity(0.65),
+                                                );
                                                 print("No image selected");
                                               }
                                             }
@@ -390,12 +411,14 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                         Get.snackbar(
                           "Image not selected",
                           "Select an image to upload",
+                          backgroundColor: Colors.red.withOpacity(0.65),
                         );
                       }
                     } else {
                       Get.snackbar(
                         "Select a test to proceed",
                         "Select a test",
+                        backgroundColor: Colors.yellow.withOpacity(0.65),
                       );
                     }
                   }
