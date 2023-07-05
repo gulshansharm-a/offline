@@ -113,7 +113,17 @@ class EnquiryBoth extends StatelessWidget {
                 ),
                 // Image.asset('assets/images/phone.png'),
               ],
-            )
+            ),
+            addVerticalSpace(3.h),
+            InkWell(
+              onTap: () {
+                AuthController.instance.logout();
+              },
+              child: Text(
+                'Logout',
+                style: kBodyText18wBold(primary),
+              ),
+            ),
           ],
         ),
       )),

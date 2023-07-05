@@ -64,11 +64,12 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
   int? selectedIndex3;
 
   Future<void> getTestimonials() async {
+    // log("${GlobalData.baseUrl}/studentHome?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}");
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentHome?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
+        "${GlobalData.baseUrl}/studentHome?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
     Homescr = json.decode(response.body);
     if (response.statusCode == 200) {
-      print(Homescr);
+      // print(Homescr);
     } else {
       print("Unsuccessful");
     }
@@ -185,36 +186,39 @@ class _HomeScreenForRegisterUserState extends State<HomeScreenForRegisterUser> {
                               fontWeight: FontWeight.w800),
                         ),
                         addVerticalSpace(15),
-                        CarouselSlider(
-                          // carouselController: _carouselController,
-                          options: CarouselOptions(
-                              viewportFraction: 1,
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              // enlargeCenterPage: true,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  // _current = index;
-                                });
-                              }),
-                          items: imgList2.map((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                    height: height(context) * 0.2,
-                                    width: width(context) * 0.9,
-                                    // decoration: kFillBoxDecoration(0, textColor, 10),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        i,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ));
-                              },
-                            );
-                          }).toList(),
+                        StatefulBuilder(
+                          builder: (context, setState) => CarouselSlider(
+                            // carouselController: _carouselController,
+                            options: CarouselOptions(
+                                viewportFraction: 1,
+                                enlargeCenterPage: true,
+                                autoPlay: true,
+                                // enlargeCenterPage: true,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    // _current = index;
+                                  });
+                                }),
+                            items: imgList2.map((i) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return Container(
+                                      height: height(context) * 0.2,
+                                      width: width(context) * 0.9,
+                                      // decoration: kFillBoxDecoration(0, textColor, 10),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.asset(
+                                          i,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ));
+                                },
+                              );
+                            }).toList(),
+                          ),
                         ),
                         addVerticalSpace(20),
                         Text(

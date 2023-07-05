@@ -1,12 +1,8 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:offline_classes/utils/constants.dart';
-import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:sizer/sizer.dart';
-
-import 'custom_button.dart';
 
 class ImageOpener extends StatelessWidget {
   final File? imageFile;
@@ -26,7 +22,6 @@ class ImageOpener extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: customAppbar2(context, send ? "Send Doubt" : 'View'),
       body: Center(
         child: imageFile != null
             ? PhotoView(
@@ -36,19 +31,19 @@ class ImageOpener extends StatelessWidget {
               )
             : Text('No Image Selected'),
       ),
-      bottomNavigationBar: showOnly
-          ? null
-          : Container(
-              padding: EdgeInsets.only(left: 30, right: 30, bottom: 5, top: 5),
-              color: Colors.transparent,
-              width: 25.w,
-              child: CustomButton(
-                text: send ? 'Send' : 'Done',
-                onTap: () {
-                  !send ? goBack(context) : () {};
-                },
-              ),
-            ),
     );
   }
+}
+
+imageNetwork(String url, {BoxFit fit = BoxFit.cover}) {
+  return CachedNetworkImage(
+    imageUrl: url,
+    placeholder: (context, url) => SizedBox(),
+    errorWidget: (context, url, error) => Icon(Icons.error),
+    fit: fit,
+  );
+}
+
+networkImage(String url) {
+  return CachedNetworkImageProvider(url);
 }

@@ -12,6 +12,7 @@ import '../../../global_data/student_global_data.dart';
 import '../../../global_data/teacher_global_data.dart';
 import '../../../model/statics_list.dart';
 import '../../../utils/constants.dart';
+import '../students_facilities/contact_us.dart';
 import 'complaints.dart';
 import 'package:http/http.dart' as http;
 import 'my_profile_screen_teacher.dart';
@@ -115,7 +116,8 @@ class TeacherFacilities extends StatelessWidget {
                         } else if (i == 2) {
                           nextScreen(context, GKScreenForTeacher());
                         } else if (i == 3) {
-                          nextScreen(context, WriteToUsScreen());
+                          nextScreen(
+                              context, const ContactUs(title: "Write to Us"));
                         } else if (i == 4) {
                           nextScreen(
                               context,
@@ -127,9 +129,11 @@ class TeacherFacilities extends StatelessWidget {
                         } else if (i == 6) {
                           nextScreen(context, ListOfStudentsScreen());
                         } else if (i == 7) {
-                          nextScreen(context, ComplaintsScreen());
+                          nextScreen(
+                              context, const ContactUs(title: "Complaints"));
                         } else if (i == 8) {
-                          nextScreen(context, SuggestionsScreen());
+                          nextScreen(
+                              context, const ContactUs(title: "Suggestions"));
                         }
                       },
                       child: Container(

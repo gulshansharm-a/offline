@@ -20,7 +20,7 @@ class YourDoubts extends StatelessWidget {
 
   Future<void> getDoubts() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentDoubt?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}&teacher_id=$teacher_id"));
+        "${GlobalData.baseUrl}/studentDoubt?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}&teacher_id=$teacher_id"));
     mydoubts = json.decode(response.body);
     if (response.statusCode == 200) {
       print(mydoubts);
@@ -128,7 +128,7 @@ class _SelectTeacherForDoubtShowState extends State<SelectTeacherForDoubtShow> {
 
   Future<void> getTeacherList() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     teacherList = json.decode(response.body);
     if (response.statusCode == 200) {
       print(teacherList);

@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //     .toString());
   }
 
-  String baseUrl = "https://trusher.shellcode.co.in/api";
+  String baseUrl = "https://trusir.com/api";
   late Map<String, dynamic> mapResponse = {};
 
   // List<dynamic> list = [];
@@ -63,10 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
       String apiurl, String authkey, String mobno) async {
     var apiUrl = apiurl;
     var authKey = authkey;
+    print(baseUrl + apiUrl + "?authKey=" + authKey + "&mobile=" + mobno);
     // final http.Response response = await http.get(Uri.parse(
     //     "https://trusher.shellcode.co.in/api/studentHome?authKey=C4NX7IelyDl14flZGWcwDrhymzMnTcYV93dYtwfcVC1O7yabAT2Uexsd4ku7L9vlxd5nWrJDsPOfEfdDjfBGnl0ekg9droyLaPrn&mobile=917665512617"));
     final http.Response response = await http.get(Uri.parse(
         baseUrl + apiUrl + "?authKey=" + authKey + "&mobile=" + mobno));
+
     mapResponse = json.decode(response.body);
     if (response.statusCode == 200) {
       print(mapResponse);
@@ -78,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    baseUrl = "https://trusir.com/api";
     log(widget.whoAreYou);
     return Scaffold(
       appBar: AppBar(

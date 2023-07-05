@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:offline_classes/Views/auth/auth_controller.dart';
 import 'package:offline_classes/Views/auth/login_screen.dart';
 import 'package:offline_classes/buffer_screens/progress_indicator_screen.dart';
 import 'package:offline_classes/global_data/GlobalData.dart';

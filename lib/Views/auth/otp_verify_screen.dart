@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -89,7 +91,7 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
                 //     smsCode: code.toString().trim());
                 // await AuthController.instance.auth
                 //     .signInWithCredential(credential);
-                print(widget.mobno.trim());
+                log(widget.mobno.trim());
                 AuthController.instance.sendOTP(widget.mobno.trim());
               },
               child: Text(
@@ -102,8 +104,16 @@ class _OtpVeryfyScreenState extends State<OtpVeryfyScreen> {
               onTap: () async {
                 print(_pinPutController.text);
                 try {
-                  OtpController.instace
-                      .verifyOTP(_pinPutController.text.toString());
+                  if (_pinPutController.text.toString().length == 6) {
+                    OtpController.instace
+                        .verifyOTP(_pinPutController.text.toString());
+                  } else {
+                    Get.snackbar(
+                      "Error",
+                      "You need to enter the full otp",
+                      backgroundColor: Colors.red.withOpacity(0.65),
+                    );
+                  }
                 } catch (e) {
                   Get.snackbar(
                     "Wrong OTP",

@@ -57,7 +57,7 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
       showSpinner = true;
     });
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/parantsDoubt?");
+    var uri = Uri.parse("${GlobalData.baseUrl}/parantsDoubt?");
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -240,7 +240,7 @@ class _ParentsDoubtsState extends State<ParentsDoubts> {
                     ),
                     InkWell(
                       onTap: () {
-                        //_launchPhone('8577098983');
+                        // _launchPhone('8577098983');
                         nextScreen(context, TeachersListScreen());
                       },
                       child: Container(

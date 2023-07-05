@@ -9,20 +9,31 @@ import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import '../../../global_data/GlobalData.dart';
+import '../../../global_data/student_global_data.dart';
 import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
+import '../../../widget/image_opener.dart';
 
 class ListOfStudentsScreen extends StatelessWidget {
   ListOfStudentsScreen({super.key});
 
   Future<void> getStudents() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentList?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
+        "${GlobalData.baseUrl}/studentList?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
     studentlist = json.decode(response.body);
     if (response.statusCode == 200) {
       print(studentlist);
     } else {
       print("Unsuccessful");
+    }
+  }
+
+  Future<bool> checkImageURL(String imageUrl) async {
+    try {
+      final response = await http.head(Uri.parse(imageUrl));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -35,8 +46,7 @@ class ListOfStudentsScreen extends StatelessWidget {
       future: getStudents(),
       builder: (context, snapshot) {
         if (studentlist.isEmpty) {
-          return const Center(
-              child: CircularProgressIndicator(color: primary2));
+          return Center(child: Scaffold(body: Container(color: white)));
         } else {
           return Scaffold(
             appBar: customAppbar2(context, 'Students List'),
@@ -66,7 +76,26 @@ class ListOfStudentsScreen extends StatelessWidget {
                                 width: 25.w,
                                 decoration: kGradientBoxDecoration(
                                     18, orangeGradient()),
-                                child: Image.asset('assets/images/dummy1.png'),
+                                child: FutureBuilder(
+                                  future: checkImageURL(
+                                      GlobalStudent.urlPrefix +
+                                          studentlist["data"][i]["image"]),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<bool> snapshot) {
+                                    if (snapshot.connectionState ==
+                                            ConnectionState.done &&
+                                        snapshot.data == true) {
+                                      return imageNetwork(
+                                        GlobalStudent.urlPrefix +
+                                            studentlist["data"][i]["name"],
+                                        fit: BoxFit.cover,
+                                      );
+                                    } else {
+                                      return Image.asset(
+                                          'assets/images/dummy1.png');
+                                    }
+                                  },
+                                ),
                               ),
                               addHorizontalySpace(width(context) * 0.06),
                               Column(

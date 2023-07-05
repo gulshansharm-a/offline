@@ -60,9 +60,17 @@ class AuthController extends GetxController {
       },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == "invalid-phone-number") {
-          Get.snackbar("Error", "Invalid Phone Number",backgroundColor: Colors.red.withOpacity(0.65),);
+          Get.snackbar(
+            "Error",
+            "Invalid Phone Number",
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
         } else {
-          Get.snackbar("Error", "Something went wrong.",backgroundColor: Colors.red.withOpacity(0.65),);
+          Get.snackbar(
+            "Error",
+            "Something went wrong.",
+            backgroundColor: Colors.red.withOpacity(0.65),
+          );
         }
       },
       codeSent: (String verificationId, int? resendToken) {

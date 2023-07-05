@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
@@ -45,8 +45,8 @@ class _AppProgressReportState extends State<AppProgressReport> {
       showSpinner = true;
     });
 
-    var uri =
-        Uri.parse("https://trusher.shellcode.co.in/api/progressReportpost?");
+    print("Test" + widget.test_id.toString());
+    var uri = Uri.parse("${GlobalData.baseUrl}/progressReportpost?");
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -79,6 +79,8 @@ class _AppProgressReportState extends State<AppProgressReport> {
 
       Future.delayed(Duration(seconds: 6), () async {});
       response = await request.send();
+
+      log(response.toString());
 
       if (response.statusCode == 200) {
         var httpResponse = await http.Response.fromStream(response);
@@ -307,7 +309,7 @@ class AppProgressReportList extends StatelessWidget {
 
   Future<void> getStudents() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/CourseTests?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
+        "${GlobalData.baseUrl}/CourseTests?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
     courseTests = json.decode(response.body);
     if (response.statusCode == 200) {
       print(courseTests);

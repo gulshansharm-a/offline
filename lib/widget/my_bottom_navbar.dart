@@ -76,7 +76,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
       id = SelectStudentProfile().getId();
       MyBottomBar.id = SelectStudentProfile().getId();
       final http.Response response = await http.get(Uri.parse(
-          "https://trusher.shellcode.co.in/api/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
+          "${GlobalData.baseUrl}/perticularstudentProfile?authKey=${GlobalData.auth1}&user_id=${SelectStudentProfile().getId()}"));
       specificProfile = json.decode(response.body);
       if (response.statusCode == 200) {
         print(id);
@@ -94,7 +94,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
 
   Future<void> checkTeacherProfile() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherLogin?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
+        "${GlobalData.baseUrl}/teacherLogin?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
     teacherProfile = json.decode(response.body);
     print("caled");
     if (response.statusCode == 200) {
@@ -125,7 +125,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   @override
   Widget build(BuildContext context) {
     String role = widget.whoRYou;
-    print(teacherProfile);
+    print(role);
     return FutureBuilder(
       future: widget.whoRYou == 'student'
           ? checkSpecificProfiles()

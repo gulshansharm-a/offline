@@ -11,6 +11,8 @@ import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:offline_classes/widget/my_bottom_navbar.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../widget/image_opener.dart';
+
 class SelectStudentProfile extends StatefulWidget {
   SelectStudentProfile({super.key});
 
@@ -27,7 +29,7 @@ class SelectStudentProfile extends StatefulWidget {
 class _SelectStudentProfileState extends State<SelectStudentProfile> {
   Future<void> checkProfiles() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentProfiles?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
+        "${GlobalData.baseUrl}/studentProfiles?authKey=${GlobalData.auth1}&mobile=${GlobalData.phoneNumber.substring(1)}"));
     profiles = json.decode(response.body);
     if (response.statusCode == 200) {
       print(profiles);
@@ -36,7 +38,7 @@ class _SelectStudentProfileState extends State<SelectStudentProfile> {
     }
   }
 
-  String urlPrefix = "https://trusher.shellcode.co.in/";
+  String urlPrefix = "https://trusir.com/";
 
   static Map<String, dynamic> profiles = {};
 

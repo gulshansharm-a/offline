@@ -10,9 +10,10 @@ import 'package:offline_classes/Views/home/teachers_facilities/view_student_prof
 import 'package:offline_classes/global_data/student_global_data.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../global_data/teacher_global_data.dart';
 import '../../../utils/constants.dart';
+import '../../../widget/image_opener.dart';
 import 'add_progress_report.dart';
 import 'attendence_for_teacher.dart';
 
@@ -20,6 +21,15 @@ class StudentsDetails extends StatelessWidget {
   const StudentsDetails({super.key, required this.student});
 
   final Map<String, dynamic> student;
+
+  Future<bool> checkImageURL(String imageUrl) async {
+    try {
+      final response = await http.head(Uri.parse(imageUrl));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +49,26 @@ class StudentsDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 11.h,
+                  height: 12.h,
                   width: 25.w,
                   decoration: kGradientBoxDecoration(18, orangeGradient()),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                    child: Image.network(
-                      "${GlobalTeacher.urlPrefix}${student["aadhar"]}",
-                      fit: BoxFit.cover,
-                    ),
+                  child: FutureBuilder(
+                    future: checkImageURL(
+                        GlobalStudent.urlPrefix + student["image"]),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.data == true) {
+                        return ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: imageNetwork(
+                              GlobalStudent.urlPrefix + student["image"],
+                              fit: BoxFit.cover,
+                            ));
+                      } else {
+                        return Image.asset('assets/images/dummy1.png');
+                      }
+                    },
                   ),
                 ),
                 addHorizontalySpace(5.w),
@@ -180,50 +201,50 @@ class StudentsDetails extends StatelessWidget {
             ],
           ),
           addVerticalSpace(2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 8.h,
-                width: 18.w,
-                decoration: kGradientBoxDecoration(20, orangeGradient()),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset('assets/images/set3.png'),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  nextScreen(context,
-                      AppProgressReportList(student_id: student["student_id"]));
-                },
-                child: Container(
-                  height: 8.h,
-                  width: 75.w,
-                  decoration: kFillBoxDecoration(0, skinColor, 20),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Progress Report',
-                          style: kBodyText16wBold(black),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 20,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          addVerticalSpace(2.h),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     Container(
+          //       height: 8.h,
+          //       width: 18.w,
+          //       decoration: kGradientBoxDecoration(20, orangeGradient()),
+          //       child: Padding(
+          //         padding: const EdgeInsets.all(10.0),
+          //         child: Image.asset('assets/images/set3.png'),
+          //       ),
+          //     ),
+          //     InkWell(
+          //       onTap: () {
+          //         nextScreen(context,
+          //             AppProgressReportList(student_id: student["student_id"]));
+          //       },
+          //       child: Container(
+          //         height: 8.h,
+          //         width: 75.w,
+          //         decoration: kFillBoxDecoration(0, skinColor, 20),
+          //         child: Padding(
+          //           padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          //           child: Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             children: [
+          //               Text(
+          //                 'Progress Report',
+          //                 style: kBodyText16wBold(black),
+          //               ),
+          //               const Icon(
+          //                 Icons.arrow_forward_ios,
+          //                 size: 20,
+          //               )
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // addVerticalSpace(2.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,

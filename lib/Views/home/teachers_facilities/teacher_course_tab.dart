@@ -22,7 +22,7 @@ class TeachersCourseTab extends StatefulWidget {
 class _TeachersCourseTabState extends State<TeachersCourseTab> {
   Future<void> getCourses() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentList?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
+        "${GlobalData.baseUrl}/studentList?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
     courses = json.decode(response.body);
     if (response.statusCode == 200) {
       log(courses.toString());

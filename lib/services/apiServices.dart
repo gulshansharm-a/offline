@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:offline_classes/model/student_home_data_model.dart';
 
-String baseUrl = "https://trusher.shellcode.co.in/api";
+String baseUrl = "https://trusir.com/api";
 
 class ApiServices {
   Future<List<StudentHomeDataModel>> getInfoStudentHome(

@@ -264,7 +264,7 @@ class AttendaceForTeacherState extends State<AttendaceForTeacher>
     with TickerProviderStateMixin {
   Future<void> getAttendence() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherAttandence?authKey=${GlobalData.auth1}&student_id=${widget.student_id}&teacher_id=${GlobalTeacher.id}"));
+        "${GlobalData.baseUrl}/teacherAttandence?authKey=${GlobalData.auth1}&student_id=${widget.student_id}&teacher_id=${GlobalTeacher.id}"));
     attendance = json.decode(response.body);
     if (response.statusCode == 200) {
       print("");
@@ -407,7 +407,7 @@ Future<dynamic> approvalPopup(BuildContext context, String day, String month,
                               Map<String, dynamic> jsonresponse = {};
                               final http.Response response = await http.get(
                                   Uri.parse(
-                                      "https://trusher.shellcode.co.in/api/studentAbsent?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}&student_id=${map["student_id"]}&course_id=${map["course_id"]}"));
+                                      "${GlobalData.baseUrl}/studentAbsent?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}&student_id=${map["student_id"]}&course_id=${map["course_id"]}"));
                               try {
                                 jsonresponse = json.decode(response.body);
                                 if (response.statusCode == 200) {

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -37,7 +39,7 @@ class ProgressReports extends StatelessWidget {
 
   Future<void> getProgress() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/progressReport?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/progressReport?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     try {
       progress = json.decode(response.body);
       if (response.statusCode == 200) {

@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:offline_classes/Views/home/students_facilities/teacher_profile.dart';
 import 'package:offline_classes/utils/constants.dart';
 import 'package:offline_classes/utils/my_appbar.dart';
+import 'package:offline_classes/widget/custom_back_button.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../global_data/GlobalData.dart';
@@ -14,8 +16,9 @@ class TeachersListScreen extends StatelessWidget {
   TeachersListScreen({super.key});
 
   Future<void> getTeacherList() async {
+    log("${GlobalData.baseUrl}/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}");
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     teacherList = json.decode(response.body);
     if (response.statusCode == 200) {
       print(teacherList);
@@ -34,7 +37,7 @@ class TeachersListScreen extends StatelessWidget {
         future: getTeacherList(),
         builder: (context, snapshot) {
           if (teacherList.isEmpty) {
-            return Center(child: CircularProgressIndicator(color: primary2));
+            return Center(child: nullWidget());
           } else {
             return teacherList["data"].isEmpty
                 ? const Center(

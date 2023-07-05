@@ -27,10 +27,10 @@ class StudentFacilities extends StatelessWidget {
 
   Future<void> getCourses() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/courses?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&class=${GlobalStudent.specificProfile["data"][0]["class"]}&medium=${GlobalStudent.specificProfile["data"][0]["medium"]}"));
+        "${GlobalData.baseUrl}/courses?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&class=${GlobalStudent.specificProfile["data"][0]["class"]}&medium=${GlobalStudent.specificProfile["data"][0]["medium"]}"));
     courses = json.decode(response.body);
     if (response.statusCode == 200) {
-      print(courses);
+      // print(courses);
     } else {
       print("Unsuccessful");
     }

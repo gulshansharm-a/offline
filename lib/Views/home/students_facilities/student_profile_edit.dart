@@ -73,7 +73,7 @@ class _StudentProfileEditState extends State<StudentProfileEdit> {
       showSpinner = true;
     });
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/editStudent?");
+    var uri = Uri.parse("${GlobalData.baseUrl}/editStudent?");
 
     var request = http.MultipartRequest('POST', uri);
 

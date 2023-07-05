@@ -3,7 +3,7 @@
 class GlobalTeacher {
   static Map<String, dynamic> profile = {};
   static int? id;
-  static String urlPrefix = "https://trusher.shellcode.co.in/";
+  static String urlPrefix = "https://trusir.com/";
   static int? myStudentID;
   static List<String> classes = [];
   static List<String> subjects = [];

@@ -31,3 +31,10 @@ class CustomBackButton extends StatelessWidget {
     );
   }
 }
+
+Widget nullWidget() {
+  return SizedBox(
+    height: 0.01,
+    width: 0.01,
+  );
+}

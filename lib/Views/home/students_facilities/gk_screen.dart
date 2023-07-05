@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,8 +15,10 @@ class GKScreen extends StatelessWidget {
   GKScreen({super.key});
 
   Future<void> getGK() async {
+    log("${GlobalData.baseUrl}/gk?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}");
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/gk?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/gk?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}"));
+    log(json.decode(response.body));
     try {
       gk = json.decode(response.body);
       if (response.statusCode == 200) {

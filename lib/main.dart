@@ -11,7 +11,7 @@ import 'package:sizer/sizer.dart';
 import 'Views/auth/auth_controller.dart';
 import 'language/localizations.dart';
 
-Future<void> main() async {
+Future<void> main() async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Firebase.initializeApp().then((value) => Get.put(AuthController()));
@@ -51,3 +51,6 @@ class MyApp extends StatelessWidget {
     });
   }
 }
+
+//teacherenquiryform
+//teacher registration

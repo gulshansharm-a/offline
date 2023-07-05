@@ -24,7 +24,7 @@ class ParentsDoubtsSaved extends StatefulWidget {
 class _ParentsDoubtsSavedState extends State<ParentsDoubtsSaved> {
   Future<void> getDoubts() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/parantsDoubtshow?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/parantsDoubtshow?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     parentDoubts = json.decode(response.body);
     if (response.statusCode == 200) {
       print(parentDoubts);

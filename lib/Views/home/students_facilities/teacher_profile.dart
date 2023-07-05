@@ -10,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../global_data/GlobalData.dart';
+import '../../../global_data/student_global_data.dart';
 import '../../../utils/constants.dart';
 import '../../../widget/custom_back_button.dart';
 
@@ -38,7 +39,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
 
   Future<void> getTeacherProfile() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherProfile?authKey=${GlobalData.auth1}&teacher_id=${widget.id}"));
+        "${GlobalData.baseUrl}/teacherProfile?authKey=${GlobalData.auth1}&teacher_id=${widget.id}"));
     teacherProfile = json.decode(response.body);
     if (response.statusCode == 200) {
       print(teacherProfile);
@@ -86,11 +87,19 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           ),
                           addVerticalSpace(10),
                           Container(
-                            height: 17.h,
-                            width: 39.w,
+                            height: 16.h,
+                            width: 35.w,
                             decoration:
-                                kGradientBoxDecoration(40, orangeGradient()),
-                            child: Image.asset('assets/images/dummy2.png'),
+                                kGradientBoxDecoration(18, orangeGradient()),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              child: Image.network(
+                                GlobalStudent.urlPrefix +
+                                    teacherProfile["data"][0]["image"],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                           addVerticalSpace(0.5.h),
                           Text(

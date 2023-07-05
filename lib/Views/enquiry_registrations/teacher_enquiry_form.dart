@@ -42,6 +42,7 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
   TextEditingController tfname = TextEditingController();
   TextEditingController tfcity = TextEditingController();
   TextEditingController tfpincode = TextEditingController();
+  TextEditingController tfclass = TextEditingController();
 
   bool success = false;
 
@@ -224,6 +225,12 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
                         keyBoardType: TextInputType.number,
                       ),
                       addVerticalSpace(height(context) * 0.04),
+                      CustomTextfield(
+                        hintext: 'Class',
+                        controller: tfclass,
+                        keyBoardType: TextInputType.number,
+                      ),
+                      addVerticalSpace(height(context) * 0.04),
                       CustomButton(
                           text: 'Enquire',
                           onTap: () async {
@@ -242,14 +249,35 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
                             if (tfcity.text.toString().trim().length != 0 &&
                                 tfname.text.toString().trim().length != 0 &&
                                 tfpincode.text.toString().trim().length != 0 &&
+                                tfclass.text.toString().trim().length != 0 &&
                                 qualification != "Qualification" &&
                                 genderValue != "") {
                               try {
+                                // var url = Uri.parse(
+                                //     '${GlobalData.baseUrl}/teacherEnquiry?mobile=${GlobalData.phoneNumber}&authKey=${GlobalData.auth1}&teacher_name=${tfname.text.toString()}&city=${tfcity.text}&pincode=${tfpincode.text.toString()}&gender=${genderValue}&qualification=${qualification}');
+                                // var response = await http.get(url);
+                                // print(url);
+                                // print(response.statusCode);
+
                                 var url = Uri.parse(
-                                    'https://trusher.shellcode.co.in/api/teacherEnquiry?mobile=${GlobalData.phoneNumber}&authKey=${GlobalData.auth1}&teacher_name=${tfname.text.toString()}&city=${tfcity.text}&pincode=${tfpincode.text.toString()}&gender=${genderValue}&qualification=${qualification}');
-                                var response = await http.get(url);
-                                print(url);
-                                print(response.statusCode);
+                                    '${GlobalData.baseUrl}/teacherEnquiry?');
+                                var headers = {
+                                  'Content-Type': 'application/json'
+                                };
+                                var response = await http.post(
+                                  url,
+                                  body: {
+                                    'teacher_name': tfname.text.toString(),
+                                    'qualification': qualification,
+                                    'city': tfcity.text.toString(),
+                                    'pincode': tfpincode.text.toString(),
+                                    'gender': genderValue,
+                                    'mobile':
+                                        GlobalData.phoneNumber.substring(1),
+                                    'authKey': GlobalData.auth1,
+                                    'class': int.parse(tfclass.text.trim().toString()),
+                                  },
+                                );
 
                                 if (response.statusCode == 200) {
                                   // Request successful, parse the response
@@ -259,7 +287,7 @@ class _TeacherEnquiryFormState extends State<TeacherEnquiryForm> {
                                 } else {
                                   // Request failed
                                   print(
-                                      'Request failed with status: ${response.statusCode}');
+                                      'Request failed with status: ${response.statusCode} ${response.body}');
                                   print(json.decode(response.body)["Message"]);
                                   Get.to(() => ErrorScreen(
                                       message: json

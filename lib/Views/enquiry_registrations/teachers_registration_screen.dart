@@ -93,7 +93,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
     var len1 = await allImages[0]!.length();
     var len2 = await allImages[1]!.length();
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/teacherRegister?");
+    var uri = Uri.parse("https://trusir.com/api/teacherRegister");
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -140,6 +140,8 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
     try {
       var response = await request.send();
 
+      print("Code" + response.statusCode.toString());
+
       if (response.statusCode == 200) {
         print(expValue);
         var httpResponse = await http.Response.fromStream(response);
@@ -163,6 +165,10 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
           nextScreen(context, ErrorScreen(message: msg));
         }
       } else {
+        var httpResponse = await http.Response.fromStream(response);
+        var jsonResponse = json.decode(httpResponse.body);
+        print(jsonResponse);
+        print(GlobalData.phoneNumber);
         setState(() {
           showSpinner = false;
         });
@@ -658,7 +664,7 @@ class _TeacherRegistrationState extends State<TeacherRegistration> {
                                     width: width(context) * 0.15,
                                     child: Text(
                                       subjectList2[i],
-                                      style: kBodyText12wBold(textColor),
+                                      style: kBodyText10wBold(textColor),
                                     ),
                                   ),
                                   // addHorizontalySpace(15)

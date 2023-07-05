@@ -23,7 +23,7 @@ class AttendanceTeacersList extends StatelessWidget {
 
   Future<void> getTeacherList() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     teacherList = json.decode(response.body);
     if (response.statusCode == 200) {
       print(teacherList);
@@ -146,7 +146,7 @@ class AttendaceCalendarState extends State<AttendaceCalendar> {
 
   Future<void> getAttendence() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     attendance = json.decode(response.body);
     if (response.statusCode == 200) {
       print(attendance);

@@ -193,7 +193,7 @@ class _CancelCourseScreenState extends State<CancelCourseScreen> {
       showSpinner = true;
     });
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/coursesDelete?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&course_id=${GlobalStudent.courses["mycourse"][i]["id"]}"));
+        "${GlobalData.baseUrl}/coursesDelete?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&course_id=${GlobalStudent.courses["mycourse"][i]["id"]}"));
 
     Map<String, dynamic> map = json.decode(response.body);
     if (response.statusCode == 200) {

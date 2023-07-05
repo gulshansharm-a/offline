@@ -272,42 +272,45 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
     with TickerProviderStateMixin {
   Future<void> getAttendence() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/studentAttandence?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     attendance = json.decode(response.body);
     if (response.statusCode == 200) {
     } else {
       print("Unsuccessful");
     }
-    List<String> subjectName = attendance["data"].keys.toList();
-    doit(subjectName.length);
+    List<String> subjectName = [];
+    try {
+      if (attendance["data"].length != 0) {
+        subjectName = attendance["data"].keys.toList();
+      } else {
+        subjectName = [];
+      }
+    } on Exception catch (e) {
+      subjectName = [];
+    }
+    doit(subjectName.isNotEmpty ? subjectName.length : 1);
   }
 
   Future<void> getAmount() async {
+    log("${GlobalData.baseUrl}/feeCalculation?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}");
     final http.Response res = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/feeCalculation?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
-    rate = json.decode(res.body);
+        "${GlobalData.baseUrl}/feeCalculation?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     if (res.statusCode == 200) {
-      log(rate.toString());
-    } else {
-      print("Unsuccessful");
+      if (res.body.isNotEmpty) {
+        rate = json.decode(res.body);
+        if (res.statusCode == 200) {
+          log(rate.toString());
+        } else {
+          print("Unsuccessful");
+        }
+      }
     }
-  }
-
-  @override
-  void initState() {
-    setState(() {});
   }
 
   late TabController _tabController = TabController(length: 3, vsync: this);
 
   doit(int length) {
     _tabController = TabController(length: length, vsync: this);
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    _tabController.dispose();
   }
 
   Map<String, dynamic> attendance = {};
@@ -317,141 +320,176 @@ class FeePaymentScreenState extends State<FeePaymentScreen>
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getAmount(),
-      builder: (context, snapshot) {
-        if (rate.isEmpty) {
-          return const Scaffold(
-            body: Center(
-                child: CircularProgressIndicator(
-              color: primary2,
-            )),
-          );
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, "Fee Payment"),
-            body: FutureBuilder(
-              future: getAttendence(),
-              builder: (context, snapshot) {
-                if (attendance.isEmpty) {
-                  return const Center(
-                      child: CircularProgressIndicator(color: primary2));
-                } else {
-                  List<String> subjectName = attendance["data"].keys.toList();
-                  doit(subjectName.length);
-                  _tabController.index = i;
-                  return Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.all(4),
+    try {
+      return Scaffold(
+        appBar: customAppbar2(context, "Fee Payment"),
+        body: FutureBuilder(
+          future: getAmount(),
+          builder: (context, snapshot) {
+            if (rate.isEmpty) {
+              return Center(
+                  child: Text(
+                "No data yet",
+                style: kBodyText18wBold(black),
+              ));
+            } else {
+              return FutureBuilder(
+                future: getAttendence(),
+                builder: (context, snapshot) {
+                  if (attendance.isEmpty) {
+                    return const Center(
+                        child: CircularProgressIndicator(color: primary2));
+                  } else {
+                    log(3.toString());
+                    List<String> subjectName = [];
+                    try {
+                      if (attendance["data"].length != 0) {
+                        subjectName = attendance["data"].keys.toList();
+                      } else {
+                        subjectName = [];
+                      }
+                    } on Exception catch (e) {
+                      subjectName = [];
+                    }
+                    doit(subjectName.length != 0 ? subjectName.length : 1);
+                    _tabController.index = i;
+                    return subjectName.length == 0
+                        ? Center(
+                            child: Text(
+                              "No data yet",
+                              style: kBodyText18wBold(black),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(4),
 
-                        padding: EdgeInsets.only(
-                            left: 9.w, right: 3.w, top: 2.h, bottom: 2.h),
-                        // height: 12.h,
-                        width: 93.w,
-                        decoration:
-                            kGradientBoxDecoration(35, purpleGradident()),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Current Month',
-                                  style: kBodyText20wBold(white),
+                                padding: EdgeInsets.only(
+                                    left: 9.w,
+                                    right: 3.w,
+                                    top: 2.h,
+                                    bottom: 2.h),
+                                // height: 12.h,
+                                width: 93.w,
+                                decoration: kGradientBoxDecoration(
+                                    35, purpleGradident()),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Current Month',
+                                          style: kBodyText20wBold(white),
+                                        ),
+                                        Text(
+                                          'Reward your teachers',
+                                          style: kBodyText14wNormal(white),
+                                        ),
+                                        addVerticalSpace(10),
+                                        Text(
+                                          'with what they deserve',
+                                          style: kBodyText14wNormal(white),
+                                        ),
+                                        addVerticalSpace(1.3.h),
+                                        Visibility(
+                                          visible: false,
+                                          child: InkWell(
+                                            child: Container(
+                                              height: 4.h,
+                                              width: 30.w,
+                                              decoration:
+                                                  kGradientBoxDecoration(
+                                                      30, greenGradient()),
+                                              child: Center(
+                                                child: Text(
+                                                  'Pay Fee',
+                                                  style:
+                                                      kBodyText12wBold(white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 9.h,
+                                          child: Image.asset(
+                                              'assets/images/fee.png'),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
-                                Text(
-                                  'Reward your teachers',
-                                  style: kBodyText14wNormal(white),
-                                ),
-                                addVerticalSpace(10),
-                                Text(
-                                  'with what they deserve',
-                                  style: kBodyText14wNormal(white),
-                                ),
-                                addVerticalSpace(1.3.h),
-                                Visibility(
-                                  visible: false,
-                                  child: InkWell(
-                                    child: Container(
-                                      height: 4.h,
-                                      width: 30.w,
-                                      decoration: kGradientBoxDecoration(
-                                          30, greenGradient()),
-                                      child: Center(
-                                        child: Text(
-                                          'Pay Fee',
-                                          style: kBodyText12wBold(white),
+                              ),
+                              addVerticalSpace(4.h),
+                              PreferredSize(
+                                preferredSize: Size.fromHeight(60),
+                                child: TabBar(
+                                    onTap: (value) {
+                                      setState(() {
+                                        i = value;
+                                      });
+                                    },
+                                    indicator: BoxDecoration(
+                                      gradient: purpleGradident(),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    controller: _tabController,
+                                    isScrollable: true,
+                                    tabs: List.generate(
+                                      attendance["data"].length,
+                                      (index) => Container(
+                                        height: 30,
+                                        child: Center(
+                                          child: Text(
+                                            subjectName[index],
+                                            style: TextStyle(
+                                                color: i == index
+                                                    ? Colors.white
+                                                    : black),
+                                          ),
                                         ),
                                       ),
+                                    )),
+                              ),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: List.generate(
+                                    attendance["data"].length,
+                                    (index) => AttendaceCalendarView(
+                                      map: attendance["data"],
+                                      name: subjectName[index],
+                                      amount: rate["data"]
+                                              [subjectName[index]] ??
+                                          0 * 1.0,
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                SizedBox(
-                                  height: 9.h,
-                                  child: Image.asset('assets/images/fee.png'),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      addVerticalSpace(4.h),
-                      PreferredSize(
-                        preferredSize: Size.fromHeight(60),
-                        child: TabBar(
-                            onTap: (value) {
-                              setState(() {
-                                i = value;
-                              });
-                            },
-                            indicator: BoxDecoration(
-                              gradient: purpleGradident(),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            controller: _tabController,
-                            isScrollable: true,
-                            tabs: List.generate(
-                              attendance["data"].length,
-                              (index) => Container(
-                                height: 30,
-                                child: Center(
-                                  child: Text(
-                                    subjectName[index],
-                                    style: TextStyle(
-                                        color:
-                                            i == index ? Colors.white : black),
                                   ),
                                 ),
                               ),
-                            )),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: List.generate(
-                            attendance["data"].length,
-                            (index) => AttendaceCalendarView(
-                              map: attendance["data"],
-                              name: subjectName[index],
-                              amount: rate["data"][subjectName[index]] * 1.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              },
-            ),
-          );
-        }
-      },
-    );
+                            ],
+                          );
+                  }
+                },
+              );
+            }
+          },
+        ),
+      );
+    } catch (e) {
+      return Center(
+        child: Text(
+          "Please try again later",
+          style: kBodyText18wBold(black),
+        ),
+      );
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -26,10 +27,10 @@ class GKScreenForTeacher extends StatelessWidget {
 
   Future<void> getGK() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/gk?authKey=${GlobalData.auth1}&user_id=${GlobalTeacher.id}"));
+        "${GlobalData.baseUrl}/gk?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}"));
     gk = json.decode(response.body);
     if (response.statusCode == 200) {
-      print(gk);
+      log(gk.toString());
     } else {
       print("Unsuccessful");
     }
@@ -41,84 +42,144 @@ class GKScreenForTeacher extends StatelessWidget {
   Widget build(BuildContext context) {
     print(GlobalTeacher.id);
     print(gk);
-    return FutureBuilder(
-      future: getGK(),
-      builder: (context, snapshot) {
-        if (gk.isEmpty) {
-          return const Center(
-              child: CircularProgressIndicator(color: primary2));
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, 'General Knowledge'),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  addVerticalSpace(1.h),
-                  Center(
-                    child: Text(
-                      'For All Classes',
-                      style: kBodyText18wBold(black),
+    return Scaffold(
+      appBar: customAppbar2(context, 'General Knowledge'),
+      body: FutureBuilder(
+        future: getGK(),
+        builder: (context, snapshot) {
+          if (gk.isEmpty) {
+            return const Center(
+                child: CircularProgressIndicator(color: primary2));
+          } else {
+            return Scaffold(
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    addVerticalSpace(1.h),
+                    Visibility(
+                      visible: gk["allgk"].length != 0,
+                      child: Center(
+                        child: Text(
+                          'For All Classes',
+                          style: kBodyText18wBold(black),
+                        ),
+                      ),
                     ),
-                  ),
-                  ListView.builder(
-                    itemCount: gk["allgk"].length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, i) {
-                      return Container(
-                        margin: EdgeInsets.all(2.h),
-                        width: 93.w,
-                        decoration: k3DboxDecoration(42),
-                        padding: EdgeInsets.only(
-                            left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              gk["allgk"][i]["tittle"],
-                              style: kBodyText18wNormal(black),
-                            ),
-                            Center(
-                              child: gk["allgk"][i]["image"] != null
-                                  ? ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(25)),
-                                      child: ClipRRect(
+                    ListView.builder(
+                      itemCount: gk["allgk"].length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          margin: EdgeInsets.all(2.h),
+                          width: 93.w,
+                          decoration: k3DboxDecoration(42),
+                          padding: EdgeInsets.only(
+                              left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                gk["allgk"][i]["tittle"],
+                                style: kBodyText18wNormal(black),
+                              ),
+                              Center(
+                                child: gk["allgk"][i]["image"] != null
+                                    ? ClipRRect(
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(25)),
-                                        child: Image.network(
-                                          GlobalStudent.urlPrefix +
-                                              gk["allgk"][i]["image"],
-                                          fit: BoxFit.cover,
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(25)),
+                                          child: Image.network(
+                                            GlobalStudent.urlPrefix +
+                                                gk["allgk"][i]["image"],
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : const SizedBox(height: 0.1),
-                            ),
-                            addVerticalSpace(1.h),
-                            Text(
-                              gk["allgk"][i]["disc"],
-                              style: kBodyText14w500(black),
-                            )
-                          ],
+                                      )
+                                    : const SizedBox(height: 0.1),
+                              ),
+                              addVerticalSpace(1.h),
+                              Text(
+                                gk["allgk"][i]["disc"],
+                                style: kBodyText14w500(black),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    addVerticalSpace(1.h),
+                    Visibility(
+                      visible: gk["foryou"].length != 0,
+                      child: Center(
+                        child: Text(
+                          'Uploaded By You',
+                          style: kBodyText18wBold(black),
                         ),
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ),
+                    ListView.builder(
+                      itemCount: gk["foryou"].length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          margin: EdgeInsets.all(2.h),
+                          width: 93.w,
+                          decoration: k3DboxDecoration(42),
+                          padding: EdgeInsets.only(
+                              left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                gk["foryou"][i]["tittle"],
+                                style: kBodyText18wNormal(black),
+                              ),
+                              Center(
+                                child: gk["foryou"][i]["image"] != null
+                                    ? ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(25)),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(25)),
+                                          child: Image.network(
+                                            GlobalStudent.urlPrefix +
+                                                gk["foryou"][i]["image"],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox(height: 0.1),
+                              ),
+                              addVerticalSpace(1.h),
+                              Text(
+                                gk["foryou"][i]["disc"],
+                                style: kBodyText14w500(black),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: CustomButton(
-                  text: 'Add General Knowledge',
-                  onTap: () {
-                    nextScreen(context, AddGKContent(category: "gkall"));
-                  }),
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: CustomButton(
+            text: 'Add General Knowledge',
+            onTap: () {
+              nextScreen(context, AddGKContent(category: "gkall"));
+            }),
+      ),
     );
   }
 }
@@ -146,7 +207,7 @@ class _AddGKContentState extends State<AddGKContent> {
       showSpinner = true;
     });
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/addGk?");
+    var uri = Uri.parse("${GlobalData.baseUrl}/addGk?");
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -290,20 +351,22 @@ class _AddGKContentState extends State<AddGKContent> {
                 ),
               ),
               Spacer(),
-              CustomButton(
-                text: 'Post',
-                onTap: () {
-                  if (title.text.toString().isNotEmpty &&
-                      description.text.toString().isNotEmpty) {
-                    postData();
-                  } else {
-                    Get.snackbar(
-                      "Please fill the fields",
-                      "Title and description are required",
-                      backgroundColor: Colors.red.withOpacity(0.65),
-                    );
-                  }
-                },
+              Center(
+                child: CustomButton(
+                  text: 'Post',
+                  onTap: () {
+                    if (title.text.toString().isNotEmpty &&
+                        description.text.toString().isNotEmpty) {
+                      postData();
+                    } else {
+                      Get.snackbar(
+                        "Please fill the fields",
+                        "Title and description are required",
+                        backgroundColor: Colors.red.withOpacity(0.65),
+                      );
+                    }
+                  },
+                ),
               ),
             ],
           ),

@@ -159,7 +159,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
     setState(() {
       showSpinner = true;
     });
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/studentRegister?");
+    var uri = Uri.parse("${GlobalData.baseUrl}/studentRegister?");
 
     var request = http.MultipartRequest('POST', uri);
 

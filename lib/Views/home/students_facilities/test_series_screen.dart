@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +14,7 @@ import 'package:sizer/sizer.dart';
 import '../../../global_data/GlobalData.dart';
 import '../../../global_data/student_global_data.dart';
 import '../../../utils/constants.dart';
+import '../../../widget/image_opener.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   const TestSeriesScreen({super.key});
@@ -29,10 +32,10 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   Future<void> getTest() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/testSeriese?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
-    tests = json.decode(response.body);
+        "${GlobalData.baseUrl}/courses?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&class=${GlobalStudent.specificProfile["data"][0]["class"]}&medium=${GlobalStudent.specificProfile["data"][0]["medium"]}"));
+    courses = json.decode(response.body);
     if (response.statusCode == 200) {
-      print(tests);
+      log(courses.toString());
     } else {
       print("Unsuccessful");
     }
@@ -40,12 +43,12 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   int touched = 0;
 
-  Future<void> postData() async {
+  Future<void> postData(int teacherId) async {
     setState(() {
       showSpinner = true;
     });
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/uploadTest?");
+    var uri = Uri.parse("${GlobalData.baseUrl}/uploadTest?");
 
     var request = http.MultipartRequest('POST', uri);
 
@@ -123,7 +126,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     });
   }
 
-  Map<String, dynamic> tests = {};
+  Map<String, dynamic> courses = {};
 
   int ind = -1;
   String test_id = "-1";
@@ -137,11 +140,11 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         body: FutureBuilder(
           future: getTest(),
           builder: (context, snapshot) {
-            if (tests.isEmpty) {
+            if (courses.isEmpty) {
               return const Center(
                   child: CircularProgressIndicator(color: primary2));
             } else {
-              return tests["data"].length == 0
+              return courses["data"].length == 0
                   ? const Center(
                       child: Text('Tests will soon be uploaded'),
                     )
@@ -155,236 +158,69 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (ctx, i) {
-                              int y = int.parse(tests["data"][i]["shadule_date"]
-                                  .substring(0, 4));
-                              int m = int.parse(tests["data"][i]["shadule_date"]
-                                  .substring(5, 7));
-                              int d = int.parse(tests["data"][i]["shadule_date"]
-                                  .substring(8, 10));
-                              final now = DateTime.now();
-                              final today =
-                                  DateTime(now.year, now.month, now.day);
-                              final testDate = DateTime.parse(tests["data"][i]
-                                      ["shadule_date"] +
-                                  " 23:59:59");
-                              int nowd = now.day;
-                              int nowm = now.month;
-                              int nowy = now.year;
+                              return GestureDetector(
+                                onTap: () async {
+                                  FilePickerResult? result =
+                                      await FilePicker.platform.pickFiles(
+                                    allowMultiple: false,
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                      'pdf',
+                                      'doc',
+                                      'docx',
+                                      'zip'
+                                    ],
+                                  );
 
-                              bool visibility = testDate.isAfter(now);
+                                  if (result != null &&
+                                      result.files.isNotEmpty) {
+                                    image = File(result.files.single.path!);
+                                    postData(
+                                        courses["mycourse"][i]["course_name"]);
 
-                              return Visibility(
-                                visible: visibility,
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      ind = i;
-                                      touched = i;
-                                      test_id =
-                                          tests["data"][i]["id"].toString();
-                                    });
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        bottom: 5.h,
-                                        left: 3.h,
-                                        right: 3.h,
-                                        top: 2.h),
-                                    width: 97.w,
-                                    // decoration: k3DboxDecorationWithColor(
-                                    //     42,
-                                    //     i == ind
-                                    //         ? Color.fromARGB(255, 188, 119, 223)
-                                    //         : Colors.white),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(42),
-                                      color: white,
-                                      border: Border.all(
-                                        color: Colors.grey.withOpacity(0.6),
-                                        width: 1,
-                                      ),
-                                      boxShadow: const [
-                                        // BoxShadow(
-                                        //   spreadRadius: 2,
-                                        //   color: Colors.black38,
-                                        //   offset: Offset(3, 3),
-                                        // ),
-                                        BoxShadow(
-                                          color: Colors.black38,
-                                          spreadRadius: 2,
-                                          blurRadius: 2.0,
-                                          offset: Offset(4, 7),
-                                        ),
-                                      ],
-                                    ),
+                                    // Do something with the picked document
+                                    // For example, print the file path
+                                    print(image!.path);
+                                  } else {}
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 1.5.h),
+                                  // height: 11.h,
+                                  width: 93.w,
+                                  decoration: kGradientBoxDecoration(
+                                      35, purpleGradident()),
+                                  // decoration: kFillBoxDecoration(0, Color(0xff48116a), 35),
 
-                                    padding: EdgeInsets.only(
-                                        left: 3.w,
-                                        right: 3.w,
-                                        top: 2.h,
-                                        bottom: 2.h),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Center(
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              addHorizontalySpace(4),
-                                              Text(
-                                                "Test",
-                                                style: kBodyText16wBold(black),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 60.w,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Text(
+                                                courses["mycourse"][i]
+                                                    ["course_name"],
+                                                style: kBodyText24wBold(white),
                                               ),
-                                              addHorizontalySpace(10),
-                                              addHorizontalySpace(10),
-                                              Container(
-                                                width: 15,
-                                                height: 15,
-                                                decoration: BoxDecoration(
-                                                  color: ind == i
-                                                      ? const Color.fromARGB(
-                                                          255, 104, 217, 123)
-                                                      : Colors.transparent,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        addVerticalSpace(7),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                            margin: EdgeInsets.all(3),
-                                            padding: EdgeInsets.only(
-                                              left: 2.w,
-                                              // right: 5.w,
-                                              top: 2.h,
-                                              bottom: 2.h,
-                                            ),
-                                            decoration: kGradientBoxDecoration(
-                                                35, purpleGradident()),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 28.w,
-                                                  child: Image.asset(
-                                                      'assets/images/test.png'),
-                                                ),
-                                                addHorizontalySpace(10),
-                                                Container(
-                                                  // height: 14.h,
-                                                  width: 40.w,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SingleChildScrollView(
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Text(
-                                                          tests["data"][i]
-                                                              ["subject"],
-                                                          style:
-                                                              kBodyText20wBold(
-                                                                  white),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        tests["data"][i]
-                                                            ["chapter"],
-                                                        style:
-                                                            kBodyText14wNormal(
-                                                                white),
-                                                      ),
-                                                      addVerticalSpace(10),
-                                                      Text(
-                                                        tests["data"][i]
-                                                            ["shadule_date"],
-                                                        style:
-                                                            kBodyText14wNormal(
-                                                                white),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
                                             ),
                                           ),
-                                        ),
-                                        addVerticalSpace(3.h),
-                                        InkWell(
-                                          onTap: () async {
-                                            if (touched == i) {
-                                              final pickedFile =
-                                                  await _picker.pickImage(
-                                                source: ImageSource.gallery,
-                                                imageQuality: 80,
-                                              );
-
-                                              if (pickedFile != null) {
-                                                image = File(pickedFile.path);
-                                                Get.snackbar(
-                                                  "Success",
-                                                  "Image Selected",
-                                                  backgroundColor: Colors.green
-                                                      .withOpacity(0.65),
-                                                );
-                                                setState(() {
-                                                  showSpinner = false;
-                                                });
-                                              } else {
-                                                Get.snackbar(
-                                                  "Error",
-                                                  "Image Not Selected",
-                                                  backgroundColor: Colors.red
-                                                      .withOpacity(0.65),
-                                                );
-                                                print("No image selected");
-                                              }
-                                            }
-                                          },
-                                          child: Container(
-                                            // height: 17.h,
-                                            width: width(context) * 0.92,
-                                            height: 20.h,
-                                            decoration: k3DboxDecoration(38),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 10.h,
-                                                  child: Image.asset(
-                                                    'assets/images/upload.png',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                addVerticalSpace(1.5.h),
-                                                Text(
-                                                  'Upload File',
-                                                  style:
-                                                      kBodyText16wNormal(black),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        addVerticalSpace(3.h),
-                                      ],
-                                    ),
+                                          Spacer(),
+                                          addHorizontalySpace(5.w),
+                                        ],
+                                      ),
+                                      Text(
+                                        'Course started on: ${courses["mycourse"][i]["dt"].toString().substring(0, courses["mycourse"][i]["dt"].indexOf(" "))}',
+                                        style: kBodyText15wNormal(white),
+                                      )
+                                    ],
                                   ),
                                 ),
                               );
@@ -397,16 +233,18 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
           },
         ),
         bottomNavigationBar: Visibility(
-          visible: true,
+          visible: false,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: CustomButton(
                 text: 'Send',
                 onTap: () {
-                  if (tests["uploaded"].length == 0) {
+                  if (true) {
                     if (test_id != "-1") {
                       if (image != null) {
-                        postData();
+                        // if (tests["uploaded"].length == 0) {
+                        //   if (test_id != "-1") {
+                        //     if (image != null) {
                       } else {
                         Get.snackbar(
                           "Image not selected",

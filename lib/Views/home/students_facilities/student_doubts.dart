@@ -192,7 +192,7 @@ class _SelectTeacherState extends State<SelectTeacher> {
 
   Future<void> getTeacherList() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
+        "${GlobalData.baseUrl}/teacherAssign?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"));
     teacherList = json.decode(response.body);
     if (response.statusCode == 200) {
       print(teacherList);
@@ -208,7 +208,7 @@ class _SelectTeacherState extends State<SelectTeacher> {
       showSpinner = true;
     });
 
-    var uri = Uri.parse("https://trusher.shellcode.co.in/api/addstudentDoubt?");
+    var uri = Uri.parse("${GlobalData.baseUrl}/addstudentDoubt?");
 
     var request = http.MultipartRequest('POST', uri);
     print(id);
@@ -248,7 +248,7 @@ class _SelectTeacherState extends State<SelectTeacher> {
           Get.snackbar(
             "Success",
             'Sent',
-            backgroundColor: Colors.red.withOpacity(0.65),
+            backgroundColor: Colors.green.withOpacity(0.65),
           );
         } else {
           setState(() {

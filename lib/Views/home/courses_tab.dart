@@ -26,7 +26,7 @@ class _CoursesTabState extends State<CoursesTab> {
 
   Future<void> getCourses() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/courses?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&class=${GlobalStudent.specificProfile["data"][0]["class"]}&medium=${GlobalStudent.specificProfile["data"][0]["medium"]}"));
+        "${GlobalData.baseUrl}/courses?authKey=${GlobalData.auth1}&user_id=${GlobalStudent.id}&class=${GlobalStudent.specificProfile["data"][0]["class"]}&medium=${GlobalStudent.specificProfile["data"][0]["medium"]}"));
     courses = json.decode(response.body);
     if (response.statusCode == 200) {
       log(courses.toString());
@@ -37,13 +37,13 @@ class _CoursesTabState extends State<CoursesTab> {
 
   Future<void> bookDemo(String id) async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/demoCourse?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}&course_id=$id"));
+        "${GlobalData.baseUrl}/demoCourse?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}&course_id=$id"));
     var map = json.decode(response.body);
-    print("Demo");
-    print("Demo");
-    print("Demo");
+    // print("Demo");
+    // print("Demo");
+    // print("Demo");
     if (response.statusCode == 200) {
-      print(map);
+      // print(map);
       Get.snackbar(
         "Success",
         "Demo Course Booked",

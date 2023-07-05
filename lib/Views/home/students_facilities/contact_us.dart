@@ -11,13 +11,13 @@ import 'package:offline_classes/widget/custom_button.dart';
 import 'package:offline_classes/widget/custom_textfield.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../../global_data/GlobalData.dart';
 import '../../enquiry_registrations/error_screen.dart';
 
 class ContactUs extends StatefulWidget {
-  ContactUs({super.key});
+  const ContactUs({super.key, this.title = "Contact Us"});
+
+  final String title;
 
   @override
   State<ContactUs> createState() => _ContactUsState();
@@ -35,7 +35,8 @@ class _ContactUsState extends State<ContactUs> {
       showSpinner = true;
     });
     try {
-      var url = Uri.parse('https://trusher.shellcode.co.in/api/contactUs?');
+      var url = Uri.parse('${GlobalData.baseUrl}/contactUs?');
+      print(url);
       var response = await http.post(
         url,
         body: {
@@ -46,7 +47,8 @@ class _ContactUsState extends State<ContactUs> {
         },
       );
 
-      Future.delayed(const Duration(seconds: 4), () {
+      Future.delayed(const Duration(seconds: 2), () {
+        print('Response body: ${response.body}');
         if (response.statusCode == 200) {
           // Request successfulful, parse the response
           Get.snackbar(
@@ -108,11 +110,12 @@ class _ContactUsState extends State<ContactUs> {
 
   @override
   Widget build(BuildContext context) {
+    // showSpinner = false;
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: customAppbar2(context, 'Contact Us'),
+        appBar: customAppbar2(context, widget.title),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

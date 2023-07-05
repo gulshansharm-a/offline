@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:offline_classes/Views/home/home_page_for_register_user.dart';
 import 'package:offline_classes/Views/home/home_screen.dart';
 import 'package:offline_classes/Views/home/students_facilities/select_student_profile.dart';
 import 'package:offline_classes/razorpay_payments/razorpay_screen.dart';
+import 'package:offline_classes/utils/constants.dart';
 
 import '../Views/enquiry_registrations/enquiry_student_or_teachers.dart';
 import '../global_data/GlobalData.dart';
@@ -41,6 +43,8 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
     }
   }
 
+  Map<String, dynamic> mapRegisterCheck = {};
+
   String role = GlobalData.role;
 
   @override
@@ -54,7 +58,7 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
   Map<String, dynamic> mapres = {};
 
   void _startDelayedTask() {
-    Future.delayed(Duration(seconds: 7)).then((_) {
+    Future.delayed(Duration(seconds: 5)).then((_) {
       // Code to be executed after the delay
     });
   }
@@ -76,6 +80,7 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
             _startDelayedTask();
             if (GlobalData.mapRegisterCheck.isNotEmpty) {
               registerCheck = GlobalData.mapRegisterCheck["Message"];
+              // log(registerCheck);
             }
             print(registerCheck);
             if (role == 'student' || role == 'teacher') {
@@ -96,6 +101,7 @@ class _ProgressIndicatorScreenState extends State<ProgressIndicatorScreen> {
                       : "teacher registration",
                 );
               } else if (registerCheck == "Student not Registerd") {
+                // log("77");
                 return HomeScreen(
                   whoAreYou: 'student',
                   serviceList: studentServiceList,

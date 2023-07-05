@@ -23,7 +23,7 @@ class ViewStudentDoubts extends StatelessWidget {
 
   Future<void> getDoubts() async {
     final http.Response response = await http.get(Uri.parse(
-        "https://trusher.shellcode.co.in/api/studentDoubt?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}&student_id=${student_id}"));
+        "${GlobalData.baseUrl}/studentDoubt?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}&student_id=${student_id}"));
     doubts = json.decode(response.body);
     if (response.statusCode == 200) {
       log(doubts.toString());

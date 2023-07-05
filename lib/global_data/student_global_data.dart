@@ -8,7 +8,7 @@ class GlobalStudent {
   static Map<String, dynamic> courses = {};
   static Map<String, dynamic> mycourses = {};
   static int? id;
-  static String urlPrefix = "https://trusher.shellcode.co.in/";
+  static String urlPrefix = "https://trusir.com/";
   static List moveCourse = [];
   static List purchasedCourses = [];
   static bool purchased = false;

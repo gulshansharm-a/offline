@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -24,8 +26,9 @@ class NoticeScreen extends StatelessWidget {
 
   Future<void> getNotice() async {
     String url = (GlobalData.role == 'student')
-        ? "https://trusher.shellcode.co.in/api/studentnotice?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"
-        : "https://trusher.shellcode.co.in/api/studentnotice?authKey=${GlobalData.auth1}&student_id=${GlobalTeacher.id}";
+        ? "${GlobalData.baseUrl}/studentnotice?authKey=${GlobalData.auth1}&student_id=${GlobalStudent.id}"
+        : "${GlobalData.baseUrl}/studentnotice?authKey=${GlobalData.auth1}&teacher_id=${GlobalTeacher.id}";
+    print(url);
     final http.Response response = await http.get(Uri.parse(url));
     notice = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -40,146 +43,154 @@ class NoticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getNotice(),
-      builder: (context, snapshot) {
-        if (notice.isEmpty) {
-          return Center(child: CircularProgressIndicator(color: primary2));
-        } else {
-          return Scaffold(
-            appBar: customAppbar2(context, 'Notice'),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  addVerticalSpace(1.h),
-                  Center(
-                    child: Text(
-                      GlobalData.role == 'student'
-                          ? 'Notices From Teachers'
-                          : 'Notices',
-                      style: kBodyText18wBold(black),
-                    ),
-                  ),
-                  Visibility(
-                    visible: GlobalData.role == 'teacher',
-                    child: Center(
+    return Scaffold(
+      appBar: customAppbar2(context, 'Notice'),
+      body: FutureBuilder(
+        future: getNotice(),
+        builder: (context, snapshot) {
+          if (notice.isEmpty) {
+            return SizedBox(
+              width: 0.1,
+              height: 0.1,
+            );
+          } else {
+            return Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    addVerticalSpace(1.h),
+                    Center(
                       child: Text(
-                        'For All Students',
+                        GlobalData.role == 'student'
+                            ? 'Notices From Teachers'
+                            : 'Notices',
                         style: kBodyText18wBold(black),
                       ),
                     ),
-                  ),
-                  notice["data"].length == 0
-                      ? const Center(
-                          child: Text('No notices yet'),
-                        )
-                      : ListView.builder(
-                          itemCount: notice["data"].length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (ctx, i) {
-                            return Container(
-                              margin: EdgeInsets.all(1.h),
-                              width: 93.w,
-                              decoration: k3DboxDecoration(42),
-                              padding: EdgeInsets.only(
-                                  left: 9.w, right: 5.w, top: 2.h, bottom: 2.h),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    notice["data"][i]['title'],
-                                    style: kBodyText18wNormal(black),
-                                  ),
-                                  Text(
-                                    notice["data"][i]['dt'],
-                                    style: kBodyText14w500(textColor),
-                                  ),
-                                  addVerticalSpace(1.h),
-                                  Text(
-                                    notice["data"][i]['noticedesc'],
-                                    style: kBodyText14w500(black),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
+                    Visibility(
+                      visible: false,
+                      child: Center(
+                        child: Text(
+                          'For All Students',
+                          style: kBodyText18wBold(black),
                         ),
-                  Visibility(
-                    visible: GlobalData.role == 'teacher',
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            'For Specific Students',
-                            style: kBodyText18wBold(black),
-                          ),
-                        ),
-                        notice["foryou"].length == 0
-                            ? const Center(
-                                child: Text('No notices yet'),
-                              )
-                            : ListView.builder(
-                                itemCount: notice["foryou"].length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (ctx, i) {
-                                  return Container(
-                                    margin: EdgeInsets.all(1.h),
-                                    width: 93.w,
-                                    decoration: k3DboxDecoration(42),
-                                    padding: EdgeInsets.only(
-                                        left: 9.w,
-                                        right: 5.w,
-                                        top: 2.h,
-                                        bottom: 2.h),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          notice["foryou"][i]['title'],
-                                          style: kBodyText18wNormal(black),
-                                        ),
-                                        Text(
-                                          notice["foryou"][i]['dt'],
-                                          style: kBodyText14w500(textColor),
-                                        ),
-                                        addVerticalSpace(1.h),
-                                        Text(
-                                          notice["foryou"][i]['noticedesc'],
-                                          style: kBodyText14w500(black),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                      ],
+                      ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            bottomNavigationBar: Visibility(
-              visible: isVisible,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: CustomButton(
-                  text: 'Add Notice',
-                  onTap: () {
-                    nextScreen(context, AddNoticeScreen(type: type));
-                  },
+                    notice["data"].length == 0
+                        ? const Center(
+                            child: Text('No notices yet'),
+                          )
+                        : ListView.builder(
+                            itemCount: notice["data"].length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (ctx, i) {
+                              return Container(
+                                margin: EdgeInsets.all(1.h),
+                                width: 93.w,
+                                decoration: k3DboxDecoration(42),
+                                padding: EdgeInsets.only(
+                                    left: 9.w,
+                                    right: 5.w,
+                                    top: 2.h,
+                                    bottom: 2.h),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      notice["data"][i]['title'],
+                                      style: kBodyText18wNormal(black),
+                                    ),
+                                    Text(
+                                      notice["data"][i]['dt'],
+                                      style: kBodyText14w500(textColor),
+                                    ),
+                                    addVerticalSpace(1.h),
+                                    Text(
+                                      notice["data"][i]['noticedesc'],
+                                      style: kBodyText14w500(black),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                    Visibility(
+                      visible: GlobalData.role == 'teacher',
+                      child: Column(
+                        children: [
+                          /* // Center(
+                          //   child: Text(
+                          //     'For Specific Students',
+                          //     style: kBodyText18wBold(black),
+                          //   ),
+                          // ),
+                          notice["foryou"].length == 0
+                              ? const Center(
+                                  child: Text('No notices yet'),
+                                )
+                              : ListView.builder(
+                                  itemCount: notice["foryou"].length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (ctx, i) {
+                                    return Container(
+                                      margin: EdgeInsets.all(1.h),
+                                      width: 93.w,
+                                      decoration: k3DboxDecoration(42),
+                                      padding: EdgeInsets.only(
+                                          left: 9.w,
+                                          right: 5.w,
+                                          top: 2.h,
+                                          bottom: 2.h),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            notice["foryou"][i]['title'],
+                                            style: kBodyText18wNormal(black),
+                                          ),
+                                          Text(
+                                            notice["foryou"][i]['dt'],
+                                            style: kBodyText14w500(textColor),
+                                          ),
+                                          addVerticalSpace(1.h),
+                                          Text(
+                                            notice["foryou"][i]['noticedesc'],
+                                            style: kBodyText14w500(black),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),*/
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: Visibility(
+        visible: isVisible,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: CustomButton(
+            text: 'Add Notice',
+            onTap: () {
+              nextScreen(context, AddNoticeScreen(type: type));
+            },
+          ),
+        ),
+      ),
     );
   }
 }
@@ -202,8 +213,8 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
       showSpinner = false;
     });
     String url = (widget.type == 'foryou')
-        ? "https://trusher.shellcode.co.in/api/addnotice?authKey=${GlobalData.auth1}&discription=${description.text}&teacher_id=${GlobalTeacher.id}&title=${title.text}&student_id=${widget.student_id}"
-        : "https://trusher.shellcode.co.in/api/addnotice?authKey=${GlobalData.auth1}&discription=${description.text}&teacher_id=${GlobalTeacher.id}&title=${title.text}";
+        ? "${GlobalData.baseUrl}/addnotice?authKey=${GlobalData.auth1}&discription=${description.text}&teacher_id=${GlobalTeacher.id}&title=${title.text}&student_id=${widget.student_id}"
+        : "${GlobalData.baseUrl}/addnotice?authKey=${GlobalData.auth1}&discription=${description.text}&teacher_id=${GlobalTeacher.id}&title=${title.text}";
     final http.Response response = await http.get(Uri.parse(url));
     var notice = json.decode(response.body);
     if (response.statusCode == 200) {

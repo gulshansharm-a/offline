@@ -105,7 +105,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
         widget.payment_type == 'teacher registration') {
       Map<String, dynamic> map;
       var url = Uri.parse(
-          "https://trusher.shellcode.co.in/api/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&payment_id=${res.paymentId}&status=captured&amount=${amt}");
+          "${GlobalData.baseUrl}/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&payment_id=${res.paymentId}&status=captured&amount=${amt}");
       final http.Response response = await http.get(url);
       map = json.decode(response.body);
       if (response.statusCode == 200) {
@@ -139,7 +139,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     } else if (widget.payment_type == 'renew course') {
       Map<String, dynamic> map;
       var url = Uri.parse(
-          "https://trusher.shellcode.co.in/api/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&amount=${amt}&status=captured&payment_id={${res.paymentId}&user_id=${GlobalStudent.id}&courseid=${widget.courseid}");
+          "${GlobalData.baseUrl}/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&amount=${amt}&status=captured&payment_id={${res.paymentId}&user_id=${GlobalStudent.id}&courseid=${widget.courseid}");
       final http.Response response = await http.get(url);
       map = json.decode(response.body);
       if (response.statusCode == 200) {
@@ -169,7 +169,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     } else {
       Map<String, dynamic> map;
       var url = Uri.parse(
-          "https://trusher.shellcode.co.in/api/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&amount=${amt}&status=captured&payment_id={${res.paymentId}&user_id=${GlobalStudent.id}&courseid=${widget.courseid}");
+          "${GlobalData.baseUrl}/payment?mobile=${GlobalData.phoneNumber.substring(1)}&authKey=${GlobalData.auth1}&payment_type=${widget.payment_type}&amount=${amt}&status=captured&payment_id={${res.paymentId}&user_id=${GlobalStudent.id}&courseid=${widget.courseid}");
       final http.Response response = await http.get(url);
       map = json.decode(response.body);
       if (response.statusCode == 200) {
@@ -264,7 +264,7 @@ class _RazorpayScreenState extends State<RazorpayScreen> {
     var res = await http.post(
       Uri.parse(
         "https://api.razorpay.com/v1/orders",
-      ), //https://api.razorpay.com/v1/orders
+      ),
       headers: <String, String>{
         "Content-Type": "application/json",
         'authorization': basicAuth,

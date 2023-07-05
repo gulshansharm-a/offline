@@ -195,7 +195,7 @@ class _StudentEnquiryFormState extends State<StudentEnquiryForm> {
                             classValue != "Class") {
                           try {
                             var url = Uri.parse(
-                                'https://trusher.shellcode.co.in/api/studentEnquiry?');
+                                '${GlobalData.baseUrl}/studentEnquiry?');
                             var headers = {'Content-Type': 'application/json'};
                             var response = await http.post(
                               url,
